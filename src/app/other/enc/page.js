@@ -2,6 +2,12 @@
 
 import styles from "./page.module.css";
 
+const getJSEncrypt = async () => {
+    let JSEncrypt = (await import("@/lib/jsencrypt.min")).default
+    console.log("JSEncrypt loaded: ", JSEncrypt)
+
+    return new JSEncrypt({default_key_size: 2048});
+}
 
 export default function Home() {
     return (
@@ -30,8 +36,8 @@ export default function Home() {
 
                 {/* Generate Keys */}
                 <button onClick={async () => {
-                    const JSEncrypt = (await import("/src/lib/jsencrypt.min")).default
-                    const encrypt = new JSEncrypt({default_key_size: 2048});
+                    // const JSEncrypt = (await import("../lib/jsencrypt.min.js")).default
+                    const encrypt = await getJSEncrypt();
                     const publicKey = encrypt.getPublicKey();
                     const privateKey = encrypt.getPrivateKey();
                     console.log("Public Key:", publicKey);
@@ -50,8 +56,8 @@ export default function Home() {
                     const message = document.getElementById("message").value;
                     const encrypted = document.getElementById("encrypted").value;
 
-                    const JSEncrypt = (await import("/src/lib/jsencrypt.min")).default
-                    const encrypt = new JSEncrypt({default_key_size: 2048});
+                    // const JSEncrypt = (await import("/src/app/lib/jsencrypt.min")).default
+                    const encrypt = await getJSEncrypt();
 
                     if (encrypted === "") {
                         encrypt.setPublicKey(publicKey);
