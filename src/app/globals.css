@@ -14,6 +14,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 body {
@@ -42,10 +43,48 @@ a {
 }
 
 
-h1 {
+h1, h2, h3 {
   text-align: center;
 }
 
+h1 {
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
 .container {
-  background-color: cornflowerblue;
+  background-color: #4c8fec;
+  margin: auto 30vh auto 30vh;
+  padding: 14px;
+  border: 2px solid red;
+  color: #ffffff;
+}
+
+.cont-inp-header {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cont-inp {
+  width: 100%;
+  display: inline-block;
+  margin: 2px auto 8px auto;
+  padding: 4px 6px 4px 6px;
+}
+
+.cont-btn {
+  display: block;
+  margin: 10px auto 0px auto;
+  padding: 5px 10px 5px 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cont-inp-btn {
+  display: inline-block;
+  margin: 2px auto 8px auto;
+  padding: 4px 6px 4px 6px;
 }

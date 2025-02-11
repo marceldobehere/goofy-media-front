@@ -6,9 +6,24 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>Login</h1>
+        <h1>Goofy Media</h1>
 
-        <div className={"container"}>A</div>
+          <div className={"container"}>
+              <h2>Login</h2>
+
+              <p className={"cont-inp-header"}>Server Domain</p>
+              <input defaultValue={"http://localhost:3000"} className={"cont-inp"}></input><br/>
+
+              <p className={"cont-inp-header"}>Username / Public Key</p>
+              <input className={"cont-inp"}></input><br/>
+
+              <p className={"cont-inp-header"}>Password / Private Key</p>
+              <input className={"cont-inp"}></input><br/>
+
+              <input type="button" defaultValue="Login" className={"cont-btn"}></input>
+              <a href={"/guest/register"}>Register</a>
+
+          </div>
 
       </main>
         <footer className={styles.footer}>
