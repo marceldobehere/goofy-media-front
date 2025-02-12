@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import {generateKeys} from "@/lib/rsa";
 import {downloadTextFile} from "@/lib/downloadUtils";
 import {hashString, userHash} from "@/lib/cryptoUtils";
+import {compress} from "@/lib/strcomp";
 
 export default function Home() {
     const [state, setState] = useState({
@@ -114,7 +115,7 @@ export default function Home() {
                                         privateKey: state.keys.privateKey
                                     }), "personal-keys.json");
 
-                                }}>Download Keypair"
+                                }}>Download Keypair
                         </button>
                         <br/>
                     </>)}
