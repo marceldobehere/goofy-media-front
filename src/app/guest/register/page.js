@@ -92,7 +92,7 @@ export default function Home() {
                         <input value={state.keys.privateKey} readOnly={true} disabled type={"password"}
                                className={"cont-inp"}></input><br/>
 
-                        <p className={"cont-inp-header"}>Username: </p>
+                        <p className={"cont-inp-header"}>Generated Username: </p>
                         <input value={uHash} readOnly={true} disabled
                                className={"cont-inp"}></input><br/>
 
