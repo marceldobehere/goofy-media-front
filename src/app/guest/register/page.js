@@ -19,9 +19,14 @@ export default function Home() {
             privateKey: ""
         },
         registerButtonText: "Register",
+        showKeys: false,
+        firstGen: false,
     });
     const updateState = (field, value) => {
-        setState({...state, [field]: value});
+        setState((oldState) => {
+            // console.log("> Update OBJ: ", JSON.parse(JSON.stringify({...oldState, [field]: value})));
+            return {...oldState, [field]: value};
+        });
     }
     const [uHash, setUHash] = useState("");
 
@@ -44,9 +49,46 @@ export default function Home() {
         updateState("registerButtonText", "Registering");
         alert("Registering on server: " + JSON.stringify(state));
 
-
         updateState("registerButtonText", "Register");
     }
+
+    async function genKeys() {
+        updateState("keys", {publicKey: "", privateKey: ""});
+        setUHash("");
+
+        let keys = await generateKeys();
+        updateState("keys", keys);
+
+        let hash = "@" + await userHash(keys.publicKey);
+        setUHash(hash);
+    }
+
+    function canRegister() {
+        if (state.server === "" ||
+            state.keys.publicKey === "" ||
+            state.keys.privateKey === "" ||
+            uHash === "")
+            return false;
+
+        if (state.selection === "server") {
+            return state.username !== "" &&
+                state.password !== "" &&
+                state.repeatPassword !== "" &&
+                state.password === state.repeatPassword;
+        } else {
+            return true;
+        }
+    }
+
+    useEffect(() => {
+        if (state.firstGen === false) {
+            console.log("Generating keys");
+            updateState("firstGen", true);
+            genKeys().then();
+        } else {
+            console.log("Keys already generated");
+        }
+    }, []);
 
     return (
         <div className={styles.page}>
@@ -83,7 +125,17 @@ export default function Home() {
                         <input value={state.repeatPassword} type={"password"} className={"cont-inp"} onChange={(e) => {
                             updateState("repeatPassword", e.target.value)
                         }}></input><br/>
+
+                        <p className={"cont-inp-header"}>Show Key Details: <input value={state.showKeys}
+                                                                                  type={"checkbox"} onChange={(e) => {
+                            updateState("showKeys", e.target.checked)
+                        }}></input></p><br></br>
                     </>) : (<>
+
+                    </>)}
+
+
+                    {(state.showKeys || state.selection === "local") ? (<>
                         <p className={"cont-inp-header"}>Public Key</p>
                         <input value={state.keys.publicKey} readOnly={true} disabled
                                className={"cont-inp"}></input><br/>
@@ -91,19 +143,15 @@ export default function Home() {
                         <p className={"cont-inp-header"}>Private Key</p>
                         <input value={state.keys.privateKey} readOnly={true} disabled type={"password"}
                                className={"cont-inp"}></input><br/>
+                    </>) : (<></>)}
 
-                        <p className={"cont-inp-header"}>Generated Username: </p>
-                        <input value={uHash} readOnly={true} disabled
-                               className={"cont-inp"}></input><br/>
+                    <p className={"cont-inp-header"}>Generated Handle: </p>
+                    <input value={uHash} readOnly={true} disabled
+                           className={"cont-inp"}></input><br/>
 
+                    {(state.showKeys || state.selection === "local") ? (<>
                         <button className={"cont-inp-btn"}
-                                onClick={async () => {
-                                    let keys = await generateKeys(1024);
-                                    updateState("keys", keys);
-
-                                    let hash = await userHash(keys.publicKey);
-                                    setUHash(hash);
-                                }}>Generate Keypair
+                                onClick={genKeys}>Generate Keypair
                         </button>
                         &nbsp;
                         <button className={"cont-inp-btn"}
@@ -118,13 +166,11 @@ export default function Home() {
                                 }}>Download Keypair
                         </button>
                         <br/>
-                    </>)}
+                    </>) : (<></>)}
 
-
-                    <input type="button" value={state.registerButtonText} className={"cont-btn"}
+                    <input disabled={!canRegister()} type="button" value={state.registerButtonText} className={"cont-btn"}
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
                     <a href={"/guest/login"}>Login</a>
-
                 </div>
             </main>
             <footer className={styles.footer}>
