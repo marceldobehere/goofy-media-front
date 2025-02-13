@@ -88,3 +88,11 @@ h2 {
   margin: 2px auto 8px auto;
   padding: 4px 6px 4px 6px;
 }
+
+input, button {
+  background-color: #0a0a0a;
+}
+
+input:disabled {
+    background-color: #2a2a2a;
+}

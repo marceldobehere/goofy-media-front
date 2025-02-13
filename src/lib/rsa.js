@@ -75,7 +75,12 @@ export const generateKeys = async (keySize) => {
 
     let tempRes = await genKey2(keySize);
     if (tempRes != undefined)
+    {
+        console.log("> Fast key gen successful");
         return tempRes;
+    }
+    else
+        console.error("> Fast key gen unavailable")
 
     const encrypt = await getJSEncrypt({default_key_size: keySize});
 
@@ -98,9 +103,13 @@ export const generateKeys = async (keySize) => {
 
 
 export const encryptObj = async (obj, publicKey) => {
-
+    const encrypt = await getJSEncrypt();
+    encrypt.setPublicKey(publicKey);
+    return encrypt.encrypt(JSON.stringify(obj));
 }
 
 export const decryptObj = async (obj, privateKey) => {
-
+    const encrypt = await getJSEncrypt();
+    encrypt.setPrivateKey(privateKey);
+    return JSON.parse(encrypt.decrypt(obj));
 }

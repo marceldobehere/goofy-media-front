@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
-import {generateKeys} from "@/lib/rsa";
+import {decryptObj, encryptObj, generateKeys} from "@/lib/rsa";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import {hashString, userHash} from "@/lib/cryptoUtils";
 import {compress} from "@/lib/strcomp";
@@ -32,13 +32,10 @@ export default function Home() {
 
     async function registerLocal() {
         updateState("registerButtonText", "Registering");
-        if (state.keys.publicKey === "" || state.keys.privateKey === "") {
+        if (state.keys.publicKey === "" || state.keys.privateKey === "" || state.username === "") {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
-
-        let hash = await userHash(state.keys.publicKey);
-        console.log("Hash 2:", hash);
 
         alert("Registering locally: " + JSON.stringify(state));
 
@@ -47,6 +44,11 @@ export default function Home() {
 
     async function registerServer() {
         updateState("registerButtonText", "Registering");
+        if (state.keys.publicKey === "" || state.keys.privateKey === "" || state.username === "") {
+            alert("Please generate a keypair first!");
+            return updateState("registerButtonText", "Register");
+        }
+
         alert("Registering on server: " + JSON.stringify(state));
 
         updateState("registerButtonText", "Register");
@@ -61,6 +63,18 @@ export default function Home() {
 
         let hash = await userHash(keys.publicKey);
         setUHash(hash);
+
+        console.log("test");
+        const t1 = "Hello, world!";
+        const e1 = await encryptObj(t1, keys.publicKey);
+        console.log("Encrypted:", e1);
+        const d1 = await decryptObj(e1, keys.privateKey);
+        console.log("Decrypted:", d1);
+        if (d1 !== t1) {
+            alert("Decryption failed!");
+        } else {
+            console.log("Decryption success!");
+        }
     }
 
     function canRegister() {
