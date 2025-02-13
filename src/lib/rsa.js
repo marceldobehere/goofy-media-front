@@ -95,3 +95,12 @@ export const generateKeys = async (keySize) => {
         privateKey: privateKey
     };
 }
+
+
+export const encryptObj = async (obj, publicKey) => {
+
+}
+
+export const decryptObj = async (obj, privateKey) => {
+
+}

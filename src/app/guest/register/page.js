@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
 import {generateKeys} from "@/lib/rsa";
-import {downloadTextFile} from "@/lib/downloadUtils";
+import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import {hashString, userHash} from "@/lib/cryptoUtils";
 import {compress} from "@/lib/strcomp";
 
@@ -59,7 +59,7 @@ export default function Home() {
         let keys = await generateKeys();
         updateState("keys", keys);
 
-        let hash = "@" + await userHash(keys.publicKey);
+        let hash = await userHash(keys.publicKey);
         setUHash(hash);
     }
 
@@ -146,7 +146,7 @@ export default function Home() {
                     </>) : (<></>)}
 
                     <p className={"cont-inp-header"}>Generated Handle: </p>
-                    <input value={uHash} readOnly={true} disabled
+                    <input value={(uHash === "") ? "" : ("@" + uHash)} readOnly={true} disabled
                            className={"cont-inp"}></input><br/>
 
                     {(state.showKeys || state.selection === "local") ? (<>
@@ -164,6 +164,36 @@ export default function Home() {
                                     }), "personal-keys.json");
 
                                 }}>Download Keypair
+                        </button>
+                        &nbsp;
+                        <button className={"cont-inp-btn"}
+                                onClick={async () => {
+                                    try {
+                                        let files = await uploadData();
+                                        if (files === undefined || files.length < 1)
+                                            return;
+                                        console.log(files);
+                                        let fileStr = await fileToString(files[0]);
+                                        console.log(fileStr);
+
+                                        let obj = JSON.parse(fileStr);
+                                        console.log(obj);
+
+                                        let server = obj.server;
+                                        let publicKey = obj.publicKey;
+                                        let privateKey = obj.privateKey;
+                                        if (server === undefined || publicKey === undefined || privateKey === undefined)
+                                            return alert("Invalid keypair file!");
+
+                                        updateState("server", server);
+                                        updateState("keys", {publicKey: publicKey, privateKey: privateKey});
+
+                                        let hash = await userHash(publicKey);
+                                        setUHash(hash);
+                                    } catch (e) {
+                                        alert("Error uploading keypair: " + e.message);
+                                    }
+                                }}>Upload Keypair
                         </button>
                         <br/>
                     </>) : (<></>)}
