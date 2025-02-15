@@ -96,6 +96,12 @@ export default function Home() {
 
     useEffect(() => {
         if (state.firstGen === false) {
+            let url = new URL(window.location.href);
+            let server = url.searchParams.get("server");
+            if (server !== null) {
+                updateState("server", server);
+            }
+
             console.log("Generating keys");
             updateState("firstGen", true);
             genKeys().then();
