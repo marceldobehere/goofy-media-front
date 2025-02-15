@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "@/app/page.module.css";
+import {baseServer} from "@/lib/req";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
               <h2>Login</h2>
 
               <p className={"cont-inp-header"}>Server Domain</p>
-              <input defaultValue={"http://localhost:3000"} className={"cont-inp"}></input><br/>
+              <input defaultValue={baseServer} className={"cont-inp"}></input><br/>
 
               <p className={"cont-inp-header"}>Username / Public Key</p>
               <input className={"cont-inp"}></input><br/>

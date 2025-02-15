@@ -2,15 +2,16 @@
 
 import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
-import {decryptObj, encryptObj, generateKeys} from "@/lib/rsa";
+import {decryptObj, encryptObj, generateKeys, GLOB_KEY } from "@/lib/rsa";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import {hashString, userHash} from "@/lib/cryptoUtils";
 import {compress} from "@/lib/strcomp";
+import {baseServer, getWithAuth, postWithAuth} from "@/lib/req";
 
 export default function Home() {
     const [state, setState] = useState({
         selection: "server",
-        server: "http://localhost:3000",
+        server: baseServer,
         username: "",
         password: "",
         repeatPassword: "",
@@ -60,6 +61,12 @@ export default function Home() {
 
         let keys = await generateKeys();
         updateState("keys", keys);
+        GLOB_KEY.privateKey = keys.privateKey;
+        GLOB_KEY.publicKey = keys.publicKey;
+
+        let reply = await postWithAuth("/users", {"test": "abc"});
+        console.log("> Reply: ", reply);
+
 
         let hash = await userHash(keys.publicKey);
         setUHash(hash);
