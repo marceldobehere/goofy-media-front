@@ -20,7 +20,7 @@ export async function reqNoAuth(path, method, data) {
 
 async function getSignatureAndId(body) {
     let id = getRandomIntInclusive(10000000, 10000000000);
-    let validUntil = Date.now() + 1000 * 30;
+    let validUntil = Date.now() + 1000 * 10;
     let signature = await signObj({body, id, validUntil});
     console.log("> Doing Sign of: ", {body, id, validUntil}, " got: ", signature)
     return {signature, id, validUntil, publicKey: GLOB_KEY.publicKey};
@@ -62,6 +62,10 @@ export async function putWithAuth(path, data) {
 
 export async function deleteWithAuth(path) {
     return await reqWithAuth(path, "DELETE");
+}
+
+export async function getNoAuth(path) {
+    return await reqNoAuth(path, "GET");
 }
 
 reqNoAuth("/users/", "GET").then(console.log)

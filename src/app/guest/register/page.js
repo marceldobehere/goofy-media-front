@@ -65,7 +65,26 @@ export default function Home() {
         GLOB_KEY.publicKey = keys.publicKey;
 
         let reply = await postWithAuth("/users", {"test": "abc"});
+        reply = await postWithAuth("/users", {"test": "abc"});
         console.log("> Reply: ", reply);
+
+        setTimeout(() => {
+            postWithAuth("/users", {"test": "abc1"});
+            postWithAuth("/users", {"test": "abc2"});
+            postWithAuth("/users", {"test": "abc3"});
+            postWithAuth("/users/test", {"test": "abc5"});
+            postWithAuth("/users/test", {"test": "abc6"});
+            postWithAuth("/users/test", {"test": "abc7"});
+            postWithAuth("/users/test2", {"test": "abc5"});
+            postWithAuth("/users/test2", {"test": "abc6"});
+            postWithAuth("/users/test2", {"test": "abc7"});
+            postWithAuth("/users/test2", {"test": "abc5"});
+            postWithAuth("/users/test2", {"test": "abc6"});
+            postWithAuth("/users/test2", {"test": "abc7"});
+            getWithAuth("/users/test");
+            getWithAuth("/users/test");
+            getWithAuth("/users/test");
+        }, 3000);
 
 
         let hash = await userHash(keys.publicKey);
