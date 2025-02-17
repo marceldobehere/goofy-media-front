@@ -33,10 +33,17 @@ export default function Home() {
 
     async function registerLocal() {
         updateState("registerButtonText", "Registering");
-        if (state.keys.publicKey === "" || state.keys.privateKey === "" || state.username === "") {
+        if (state.keys.publicKey === "" || state.keys.privateKey === "" || uHash === "") {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
+
+        // g4qwy6snld73cut
+        let res = await postWithAuth("/guest/register/code", {code:"g4qwy6snld73cut"});
+        console.log("> Reply: ", res);
+
+        res = await postWithAuth("/guest/register/login-test", {});
+        console.log("> Reply: ", res);
 
         alert("Registering locally: " + JSON.stringify(state));
 
@@ -49,6 +56,9 @@ export default function Home() {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
+
+        // const res = await postWithAuth("/guest/register/login-test", {});
+        // console.log("> Reply: ", res);
 
         alert("Registering on server: " + JSON.stringify(state));
 
@@ -64,27 +74,27 @@ export default function Home() {
         GLOB_KEY.privateKey = keys.privateKey;
         GLOB_KEY.publicKey = keys.publicKey;
 
-        let reply = await postWithAuth("/users", {"test": "abc"});
-        reply = await postWithAuth("/users", {"test": "abc"});
-        console.log("> Reply: ", reply);
-
-        setTimeout(() => {
-            postWithAuth("/users", {"test": "abc1"});
-            postWithAuth("/users", {"test": "abc2"});
-            postWithAuth("/users", {"test": "abc3"});
-            postWithAuth("/users/test", {"test": "abc5"});
-            postWithAuth("/users/test", {"test": "abc6"});
-            postWithAuth("/users/test", {"test": "abc7"});
-            postWithAuth("/users/test2", {"test": "abc5"});
-            postWithAuth("/users/test2", {"test": "abc6"});
-            postWithAuth("/users/test2", {"test": "abc7"});
-            postWithAuth("/users/test2", {"test": "abc5"});
-            postWithAuth("/users/test2", {"test": "abc6"});
-            postWithAuth("/users/test2", {"test": "abc7"});
-            getWithAuth("/users/test");
-            getWithAuth("/users/test");
-            getWithAuth("/users/test");
-        }, 3000);
+        // let reply = await postWithAuth("/users", {"test": "abc"});
+        // reply = await postWithAuth("/users", {"test": "abc"});
+        // console.log("> Reply: ", reply);
+        //
+        // setTimeout(() => {
+        //     postWithAuth("/users", {"test": "abc1"});
+        //     postWithAuth("/users", {"test": "abc2"});
+        //     postWithAuth("/users", {"test": "abc3"});
+        //     postWithAuth("/users/test", {"test": "abc5"});
+        //     postWithAuth("/users/test", {"test": "abc6"});
+        //     postWithAuth("/users/test", {"test": "abc7"});
+        //     postWithAuth("/users/test2", {"test": "abc5"});
+        //     postWithAuth("/users/test2", {"test": "abc6"});
+        //     postWithAuth("/users/test2", {"test": "abc7"});
+        //     postWithAuth("/users/test2", {"test": "abc5"});
+        //     postWithAuth("/users/test2", {"test": "abc6"});
+        //     postWithAuth("/users/test2", {"test": "abc7"});
+        //     getWithAuth("/users/test");
+        //     getWithAuth("/users/test");
+        //     getWithAuth("/users/test");
+        // }, 3000);
 
 
         let hash = await userHash(keys.publicKey);
