@@ -50,14 +50,12 @@ export default function Home() {
             alert("Failed to register locally!");
             return updateState("registerButtonText", "Register");
         }
-        console.log("> Reply: ", res);
 
         res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
             alert("Login test failed!");
             return updateState("registerButtonText", "Register");
         }
-        console.log("> Reply: ", res);
 
 
         alert("Register Success!");
@@ -89,7 +87,6 @@ export default function Home() {
         const check = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
         if (check) {
             alert("Username already taken!");
-            console.log("> Reply: ", check);
             return updateState("registerButtonText", "Register");
         }
 
@@ -106,14 +103,12 @@ export default function Home() {
                 alert("Failed to register locally!");
                 return updateState("registerButtonText", "Register");
             }
-            console.log("> Reply: ", res);
 
             res = await postWithAuth("/guest/register/login-test", {});
             if (res === undefined) {
                 alert("Login test failed!");
                 return updateState("registerButtonText", "Register");
             }
-            console.log("> Reply: ", res);
         }
 
         // Save data in secret storage
@@ -130,7 +125,6 @@ export default function Home() {
             alert("Failed to store data!");
             return updateState("registerButtonText", "Register");
         }
-        console.log("> Reply: ", res);
 
         {
             res = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
@@ -138,10 +132,8 @@ export default function Home() {
                 alert("Failed to get data!");
                 return updateState("registerButtonText", "Register");
             }
-            console.log("> Reply: ", res);
 
             const decData = await decryptSymm(res, passwordHash);
-            console.log("> Decrypted: ", decData);
         }
 
 
@@ -275,12 +267,8 @@ export default function Home() {
                                         let files = await uploadData();
                                         if (files === undefined || files.length < 1)
                                             return;
-                                        console.log(files);
                                         let fileStr = await fileToString(files[0]);
-                                        console.log(fileStr);
-
                                         let obj = JSON.parse(fileStr);
-                                        console.log(obj);
 
                                         let server = obj.server;
                                         let publicKey = obj.publicKey;

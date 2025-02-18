@@ -17,7 +17,7 @@ export async function reqNoAuth(path, method, data) {
     // let res = await fetch(baseServer + path, options);
     // return await res.text();
 
-    console.log("Sending request to: ", baseServer + path, " with options: ", options);
+    // console.log("Sending request to: ", baseServer + path, " with options: ", options);
     let res = await fetch(baseServer + path, options);
     if (res.status !== 200 && res.status !== 201) {
         console.info("Failed request: ", await res.text(), res);
@@ -36,7 +36,7 @@ async function getSignatureAndId(body) {
     let id = getRandomIntInclusive(10000000, 10000000000);
     let validUntil = Date.now() + 1000 * 10;
     let signature = await signObj({body, id, validUntil});
-    console.log("> Doing Sign of: ", {body, id, validUntil}, " got: ", signature)
+    // console.log("> Doing Sign of: ", {body, id, validUntil}, " got: ", signature)
     return {signature, id, validUntil, publicKey: GLOB_KEY.publicKey};
 }
 
@@ -57,7 +57,7 @@ export async function reqWithAuth(path, method, data) {
     if (data) {
         options.body = JSON.stringify(data);
     }
-    console.log("Sending request to: ", baseServer + path, " with options: ", options);
+    // console.log("Sending request to: ", baseServer + path, " with options: ", options);
     let res = await fetch(baseServer + path, options);
     if (res.status !== 200 && res.status !== 201) {
         console.info("Failed request: ", await res.text(), res);

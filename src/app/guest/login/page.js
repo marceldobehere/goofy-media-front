@@ -19,7 +19,6 @@ export default function Home() {
             alert("Login test failed!");
             return;
         }
-        console.log("> Login Reply: ", res);
         alert("Login successful!")
     }
 
@@ -36,18 +35,14 @@ export default function Home() {
             alert("Password cannot be empty");
             return;
         }
-        console.log("Doing login: ", server, username, password);
 
         if (await checkPubKeyValid(username) && await checkPrivKeyValid(password)) {
-            alert("Doing Login via Keys")
             GLOB_KEY.publicKey = username;
             GLOB_KEY.privateKey = password;
             await doLoginViaKeys(server);
         } else {
-            alert("Doing Login via Username / Password")
             const usernameHash = await hashString(username);
             const passwordHash = await hashString(password);
-            // console.log("> Hashes: ", usernameHash, passwordHash);
 
             let res = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
             if (res === undefined) {
@@ -58,7 +53,6 @@ export default function Home() {
             let decData;
             try {
                 decData = await decryptSymm(res, passwordHash);
-                console.log("> Decrypted: ", decData);
 
                 let pubKey = decData.publicKey;
                 let privKey = decData.privateKey;
@@ -122,12 +116,8 @@ export default function Home() {
                             let files = await uploadData();
                             if (files === undefined || files.length < 1)
                                 return;
-                            console.log(files);
                             let fileStr = await fileToString(files[0]);
-                            console.log(fileStr);
-
                             let obj = JSON.parse(fileStr);
-                            console.log(obj);
 
                             let server = obj.server;
                             let publicKey = obj.publicKey;
@@ -138,15 +128,12 @@ export default function Home() {
                             setServer(server);
                             setUsername(publicKey);
                             setPassword(privateKey);
-
-
                         } catch (e) {
                             alert("Error uploading keypair: " + e.message);
                         }
                     }}>Login via File</a><br/>
 
                     <a href={"/guest/register"}>Register</a>
-
                 </div>
 
             </main>
