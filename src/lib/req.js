@@ -91,5 +91,3 @@ export async function deleteWithAuth(path) {
 export async function getNoAuth(path) {
     return await reqNoAuth(path, "GET");
 }
-
-reqNoAuth("/users/", "GET").then(console.log)

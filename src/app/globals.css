@@ -96,3 +96,7 @@ input, button {
 input:disabled {
     background-color: #2a2a2a;
 }
+
+a:hover {
+  cursor: pointer;
+}

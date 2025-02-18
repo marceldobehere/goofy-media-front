@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
-import {decryptObj, encryptObj, generateKeys, GLOB_KEY } from "@/lib/rsa";
+import {decryptObj, encryptObj, generateKeys, GLOB_KEY} from "@/lib/rsa";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import {decryptSymm, encryptSymm, hashString, userHash} from "@/lib/cryptoUtils";
 import {compress} from "@/lib/strcomp";
@@ -37,13 +37,15 @@ export default function Home() {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
+        GLOB_KEY.publicKey = state.keys.publicKey;
+        GLOB_KEY.privateKey = state.keys.privateKey;
 
         const code = prompt("Enter the registration code:");
         if (code === null || code === "") {
             return updateState("registerButtonText", "Register");
         }
 
-        let res = await postWithAuth("/guest/register/code", {code:code});
+        let res = await postWithAuth("/guest/register/code", {code: code});
         if (res === undefined) {
             alert("Failed to register locally!");
             return updateState("registerButtonText", "Register");
@@ -77,9 +79,11 @@ export default function Home() {
             return updateState("registerButtonText", "Register");
         }
 
+        GLOB_KEY.publicKey = state.keys.publicKey;
+        GLOB_KEY.privateKey = state.keys.privateKey;
         const usernameHash = await hashString(state.username);
         const passwordHash = await hashString(state.password);
-        console.log("> Hashes: ", usernameHash, passwordHash);
+        // console.log("> Hashes: ", usernameHash, passwordHash);
 
         // check if username available
         const check = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
@@ -97,7 +101,7 @@ export default function Home() {
                 return updateState("registerButtonText", "Register");
             }
 
-            res = await postWithAuth("/guest/register/code", {code:code});
+            res = await postWithAuth("/guest/register/code", {code: code});
             if (res === undefined) {
                 alert("Failed to register locally!");
                 return updateState("registerButtonText", "Register");
@@ -121,7 +125,7 @@ export default function Home() {
 
         let encData = await encryptSymm(data, passwordHash);
 
-        res = await postWithAuth(`/guest/enc/secret-storage`, {data: encData, username:usernameHash});
+        res = await postWithAuth(`/guest/enc/secret-storage`, {data: encData, username: usernameHash});
         if (res === undefined) {
             alert("Failed to store data!");
             return updateState("registerButtonText", "Register");
@@ -151,46 +155,9 @@ export default function Home() {
 
         let keys = await generateKeys();
         updateState("keys", keys);
-        GLOB_KEY.privateKey = keys.privateKey;
-        GLOB_KEY.publicKey = keys.publicKey;
-
-        // let reply = await postWithAuth("/users", {"test": "abc"});
-        // reply = await postWithAuth("/users", {"test": "abc"});
-        // console.log("> Reply: ", reply);
-        //
-        // setTimeout(() => {
-        //     postWithAuth("/users", {"test": "abc1"});
-        //     postWithAuth("/users", {"test": "abc2"});
-        //     postWithAuth("/users", {"test": "abc3"});
-        //     postWithAuth("/users/test", {"test": "abc5"});
-        //     postWithAuth("/users/test", {"test": "abc6"});
-        //     postWithAuth("/users/test", {"test": "abc7"});
-        //     postWithAuth("/users/test2", {"test": "abc5"});
-        //     postWithAuth("/users/test2", {"test": "abc6"});
-        //     postWithAuth("/users/test2", {"test": "abc7"});
-        //     postWithAuth("/users/test2", {"test": "abc5"});
-        //     postWithAuth("/users/test2", {"test": "abc6"});
-        //     postWithAuth("/users/test2", {"test": "abc7"});
-        //     getWithAuth("/users/test");
-        //     getWithAuth("/users/test");
-        //     getWithAuth("/users/test");
-        // }, 3000);
-
 
         let hash = await userHash(keys.publicKey);
         setUHash(hash);
-
-        // console.log("test");
-        // const t1 = "Hello, world!";
-        // const e1 = await encryptObj(t1, keys.publicKey);
-        // console.log("Encrypted:", e1);
-        // const d1 = await decryptObj(e1, keys.privateKey);
-        // console.log("Decrypted:", d1);
-        // if (d1 !== t1) {
-        //     alert("Decryption failed!");
-        // } else {
-        //     console.log("Decryption success!");
-        // }
     }
 
     function canRegister() {
@@ -334,7 +301,8 @@ export default function Home() {
                         <br/>
                     </>) : (<></>)}
 
-                    <input disabled={!canRegister()} type="button" value={state.registerButtonText} className={"cont-btn"}
+                    <input disabled={!canRegister()} type="button" value={state.registerButtonText}
+                           className={"cont-btn"}
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
                     <a href={"/guest/login"}>Login</a>
                 </div>

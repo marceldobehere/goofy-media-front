@@ -141,3 +141,23 @@ export const verifyObj = async (obj, signature, publicKey) => {
     let hash = await getHashFromObj(obj);
     return encrypt.verify(hash, signature, (await getCryptoJS()).SHA256);
 }
+
+export const checkPubKeyValid = async (publicKey) => {
+    const encrypt = await getJSEncrypt();
+    encrypt.setPublicKey(publicKey);
+    try {
+        return encrypt.getPublicKey() != undefined;
+    } catch (e) {
+        return false;
+    }
+}
+
+export const checkPrivKeyValid = async (privateKey) => {
+    const encrypt = await getJSEncrypt();
+    encrypt.setPrivateKey(privateKey);
+    try {
+        return encrypt.getPrivateKey() != undefined;
+    } catch (e) {
+        return false;
+    }
+}
