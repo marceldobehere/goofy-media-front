@@ -16,10 +16,10 @@ export default function Home() {
               <input defaultValue={baseServer} className={"cont-inp"}></input><br/>
 
               <p className={"cont-inp-header"}>Username / Public Key</p>
-              <input className={"cont-inp"}></input><br/>
+              <input type={"username"} className={"cont-inp"}></input><br/>
 
               <p className={"cont-inp-header"}>Password / Private Key</p>
-              <input className={"cont-inp"}></input><br/>
+              <input type={"password"} className={"cont-inp"}></input><br/>
 
               <input type="button" defaultValue="Login" className={"cont-btn"}></input>
 
