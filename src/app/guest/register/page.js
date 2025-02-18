@@ -38,8 +38,12 @@ export default function Home() {
             return updateState("registerButtonText", "Register");
         }
 
-        // g4qwy6snld73cut
-        let res = await postWithAuth("/guest/register/code", {code:"ncyig8n7f7t0n2h"});
+        const code = prompt("Enter the registration code:");
+        if (code === null || code === "") {
+            return updateState("registerButtonText", "Register");
+        }
+
+        let res = await postWithAuth("/guest/register/code", {code:code});
         if (res === undefined) {
             alert("Failed to register locally!");
             return updateState("registerButtonText", "Register");
@@ -54,8 +58,7 @@ export default function Home() {
         console.log("> Reply: ", res);
 
 
-        alert("Registering locally: " + JSON.stringify(state));
-
+        alert("Register Success!");
         updateState("registerButtonText", "Register");
     }
 
@@ -66,11 +69,27 @@ export default function Home() {
             return updateState("registerButtonText", "Register");
         }
 
-        // const res = await postWithAuth("/guest/register/login-test", {});
-        // console.log("> Reply: ", res);
+        const code = prompt("Enter the registration code:");
+        if (code === null || code === "") {
+            return updateState("registerButtonText", "Register");
+        }
 
-        alert("Registering on server: " + JSON.stringify(state));
+        let res = await postWithAuth("/guest/register/code", {code:code});
+        if (res === undefined) {
+            alert("Failed to register locally!");
+            return updateState("registerButtonText", "Register");
+        }
+        console.log("> Reply: ", res);
 
+        res = await postWithAuth("/guest/register/login-test", {});
+        if (res === undefined) {
+            alert("Login test failed!");
+            return updateState("registerButtonText", "Register");
+        }
+        console.log("> Reply: ", res);
+
+
+        alert("Register Success!");
         updateState("registerButtonText", "Register");
     }
 

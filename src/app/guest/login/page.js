@@ -22,6 +22,9 @@ export default function Home() {
               <input className={"cont-inp"}></input><br/>
 
               <input type="button" defaultValue="Login" className={"cont-btn"}></input>
+
+              <a>Login via File</a><br/>
+
               <a href={"/guest/register"}>Register</a>
 
           </div>
