@@ -4,9 +4,9 @@ import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
 import {decryptObj, encryptObj, generateKeys, GLOB_KEY } from "@/lib/rsa";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
-import {hashString, userHash} from "@/lib/cryptoUtils";
+import {decryptSymm, encryptSymm, hashString, userHash} from "@/lib/cryptoUtils";
 import {compress} from "@/lib/strcomp";
-import {baseServer, getWithAuth, postWithAuth} from "@/lib/req";
+import {baseServer, getNoAuth, getWithAuth, postWithAuth} from "@/lib/req";
 
 export default function Home() {
     const [state, setState] = useState({
@@ -68,25 +68,77 @@ export default function Home() {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
-
-        const code = prompt("Enter the registration code:");
-        if (code === null || code === "") {
+        if (state.keys.password === "" || state.keys.repeatPassword === "") {
+            alert("Please enter a password!");
+            return updateState("registerButtonText", "Register");
+        }
+        if (state.keys.password !== state.keys.repeatPassword) {
+            alert("Passwords do not match!");
             return updateState("registerButtonText", "Register");
         }
 
-        let res = await postWithAuth("/guest/register/code", {code:code});
+        const usernameHash = await hashString(state.username);
+        const passwordHash = await hashString(state.password);
+        console.log("> Hashes: ", usernameHash, passwordHash);
+
+        // check if username available
+        const check = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
+        if (check) {
+            alert("Username already taken!");
+            console.log("> Reply: ", check);
+            return updateState("registerButtonText", "Register");
+        }
+
+        // Check if already registered
+        let res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
-            alert("Failed to register locally!");
+            const code = prompt("Enter the registration code:");
+            if (code === null || code === "") {
+                return updateState("registerButtonText", "Register");
+            }
+
+            res = await postWithAuth("/guest/register/code", {code:code});
+            if (res === undefined) {
+                alert("Failed to register locally!");
+                return updateState("registerButtonText", "Register");
+            }
+            console.log("> Reply: ", res);
+
+            res = await postWithAuth("/guest/register/login-test", {});
+            if (res === undefined) {
+                alert("Login test failed!");
+                return updateState("registerButtonText", "Register");
+            }
+            console.log("> Reply: ", res);
+        }
+
+        // Save data in secret storage
+        let data = {
+            username: state.username,
+            publicKey: state.keys.publicKey,
+            privateKey: state.keys.privateKey
+        };
+
+        let encData = await encryptSymm(data, passwordHash);
+
+        res = await postWithAuth(`/guest/enc/secret-storage`, {data: encData, username:usernameHash});
+        if (res === undefined) {
+            alert("Failed to store data!");
             return updateState("registerButtonText", "Register");
         }
         console.log("> Reply: ", res);
 
-        res = await postWithAuth("/guest/register/login-test", {});
-        if (res === undefined) {
-            alert("Login test failed!");
-            return updateState("registerButtonText", "Register");
+        {
+            res = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
+            if (res === undefined) {
+                alert("Failed to get data!");
+                return updateState("registerButtonText", "Register");
+            }
+            console.log("> Reply: ", res);
+
+            const decData = await decryptSymm(res, passwordHash);
+            console.log("> Decrypted: ", decData);
         }
-        console.log("> Reply: ", res);
 
 
         alert("Register Success!");
@@ -128,17 +180,17 @@ export default function Home() {
         let hash = await userHash(keys.publicKey);
         setUHash(hash);
 
-        console.log("test");
-        const t1 = "Hello, world!";
-        const e1 = await encryptObj(t1, keys.publicKey);
-        console.log("Encrypted:", e1);
-        const d1 = await decryptObj(e1, keys.privateKey);
-        console.log("Decrypted:", d1);
-        if (d1 !== t1) {
-            alert("Decryption failed!");
-        } else {
-            console.log("Decryption success!");
-        }
+        // console.log("test");
+        // const t1 = "Hello, world!";
+        // const e1 = await encryptObj(t1, keys.publicKey);
+        // console.log("Encrypted:", e1);
+        // const d1 = await decryptObj(e1, keys.privateKey);
+        // console.log("Decrypted:", d1);
+        // if (d1 !== t1) {
+        //     alert("Decryption failed!");
+        // } else {
+        //     console.log("Decryption success!");
+        // }
     }
 
     function canRegister() {

@@ -24,27 +24,6 @@ const getWordList = async () => {
 };
 getWordList().then();
 
-let hashStringMap = new Map();
-export async function hashString(str)
-{
-    let res = hashStringMap.get(str);
-    if (res)
-        return res;
-
-    let CryptoJS = await getCryptoJS();
-
-    let hash = CryptoJS.PBKDF2(str, "GoofyHash123", {keySize: 16,iterations: 50000})["words"][0];
-
-    if (hash < 0)
-        hash *= -1;
-
-    if (hashStringMap.size > 5_000)
-        hashStringMap.clear();
-
-    hashStringMap.set(str, hash);
-    return hash;
-}
-
 async function userHashInternal(str) {
     let CryptoJS = await getCryptoJS();
     let words = await getWordList();
@@ -113,4 +92,53 @@ export async function getHashFromObj(obj)
     let CryptoJS = await getCryptoJS();
     let hash = CryptoJS.SHA256(JSON.stringify(obj)).toString(CryptoJS.enc.Base64);
     return hash;
+}
+
+let hashStringMap = new Map();
+export async function hashString(str)
+{
+    let res = hashStringMap.get(str);
+    if (res)
+        return res;
+
+    let CryptoJS = await getCryptoJS();
+
+    let hash = CryptoJS.PBKDF2(str, "GoofyHash123", {keySize: 16,iterations: 5000}).toString(CryptoJS.enc.Base64);
+
+    if (hashStringMap.size > 5_000)
+        hashStringMap.clear();
+
+    hashStringMap.set(str, hash);
+    return hash;
+}
+
+
+/*
+function _encryptTheValue(word, key) {
+    const encJson = CryptoJS.AES.encrypt(JSON.stringify(word), key).toString();
+    const encData = CryptoJS.enc.Base64.stringify(
+        CryptoJS.enc.Utf8.parse(encJson)
+    );
+    return encData;
+}
+
+function _decryptTheValue(word, key) {
+    const decData = CryptoJS.enc.Base64.parse(word).toString(CryptoJS.enc.Utf8);
+    const bytes = CryptoJS.AES.decrypt(decData, key).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(bytes);
+}
+*/
+
+export async function encryptSymm(data, key) {
+    let CryptoJS = await getCryptoJS();
+    let encJson = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
+    let encData = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
+    return encData;
+}
+
+export async function decryptSymm(enc, key) {
+    let CryptoJS = await getCryptoJS();
+    let decData = CryptoJS.enc.Base64.parse(enc).toString(CryptoJS.enc.Utf8);
+    let bytes = CryptoJS.AES.decrypt(decData, key).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(bytes);
 }

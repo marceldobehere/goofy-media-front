@@ -14,8 +14,22 @@ export async function reqNoAuth(path, method, data) {
     if (data) {
         options.body = JSON.stringify(data);
     }
+    // let res = await fetch(baseServer + path, options);
+    // return await res.text();
+
+    console.log("Sending request to: ", baseServer + path, " with options: ", options);
     let res = await fetch(baseServer + path, options);
-    return await res.text();
+    if (res.status !== 200 && res.status !== 201) {
+        console.info("Failed request: ", await res.text(), res);
+        return undefined;
+    }
+
+    const text = await res.text();
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        return text;
+    }
 }
 
 async function getSignatureAndId(body) {
@@ -54,9 +68,8 @@ export async function reqWithAuth(path, method, data) {
     try {
         return JSON.parse(text);
     } catch (e) {
+        return text;
     }
-
-    return text;
 }
 
 export async function getWithAuth(path) {
