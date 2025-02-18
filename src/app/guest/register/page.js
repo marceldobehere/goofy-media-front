@@ -39,11 +39,20 @@ export default function Home() {
         }
 
         // g4qwy6snld73cut
-        let res = await postWithAuth("/guest/register/code", {code:"g4qwy6snld73cut"});
+        let res = await postWithAuth("/guest/register/code", {code:"ncyig8n7f7t0n2h"});
+        if (res === undefined) {
+            alert("Failed to register locally!");
+            return updateState("registerButtonText", "Register");
+        }
         console.log("> Reply: ", res);
 
         res = await postWithAuth("/guest/register/login-test", {});
+        if (res === undefined) {
+            alert("Login test failed!");
+            return updateState("registerButtonText", "Register");
+        }
         console.log("> Reply: ", res);
+
 
         alert("Registering locally: " + JSON.stringify(state));
 

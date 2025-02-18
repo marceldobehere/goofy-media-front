@@ -46,10 +46,17 @@ export async function reqWithAuth(path, method, data) {
     console.log("Sending request to: ", baseServer + path, " with options: ", options);
     let res = await fetch(baseServer + path, options);
     if (res.status !== 200 && res.status !== 201) {
-        console.info("Failed request: ", res);
+        console.info("Failed request: ", await res.text(), res);
         return undefined;
     }
-    return await res.json();
+
+    const text = await res.text();
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+    }
+
+    return text;
 }
 
 export async function getWithAuth(path) {
