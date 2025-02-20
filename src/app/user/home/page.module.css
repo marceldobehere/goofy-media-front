@@ -1,13 +1,29 @@
 
-/*Should Stick on top when scroll*/
-.NavBar {
-    background-color: red;
 
+.NavBar {
+    /*background-color: red;*/
+
+    justify-self: center;
+    vertical-align: center;
+}
+
+.None {
+
+}
+
+/*Should be on the vertical center*/
+.NavBarDiv {
+    background-color: orange;
     padding: 10px;
-    position: sticky;
-    top: 0;
-    height: max-content;
-    align-self: flex-start;
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.NavBarHamburg {
+    display:none;
 }
 
 .PostDiv {
@@ -16,24 +32,97 @@
 }
 
 .NewsDiv {
-    background-color: green;
-    padding: 10px;
+    /*background-color: green;*/
+    padding: 10px 30px 10px 20px;
 }
 
-/*NavBar floats left, PostDiv in center and NewsDiv floats right*/
+.MainContent {
+    /*background-color: yellow;*/
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+
+
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+/*Space between*/
 .main {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
     padding: 20px;
+    overflow: clip;
+    height: calc(100vh - 60px);
+}
+
+:root {
+    --show_hamburg: 0;
 }
 
 /*Media Query if too small
   Make Navbar on top in hamburger menu
   Then PostDiv with full size
   At the bottom NewsDiv*/
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+    :root {
+        --show_hamburg: 1;
+    }
+
     .main {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+
+    .MainContent {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .NavBar {
+        background-color: red;
+        display: block;
+        width: 100%;
+        height: 40px;
+    }
+
+    .NavBar2 {
+        background-color: red;
+        display: block;
+        width: 100%;
+        /*height: 100px;*/
+    }
+
+    .NavBarDiv {
+        display:none;
+    }
+
+    .NavBarHamburg {
+        display:grid;
+        grid-template-columns: 40px 1fr 40px;
+    }
+
+    .NavBarHamburg button {
+        width: 40px;
+        margin: 5px;
     }
 }
+
+
+/*!*NavBar floats left, PostDiv in center and NewsDiv floats right*!*/
+/*.main {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*!*Media Query if too small*/
+/*  Make Navbar on top in hamburger menu*/
+/*  Then PostDiv with full size*/
+/*  At the bottom NewsDiv*!*/
+/*@media (max-width: 600px) {*/
+/*    .main {*/
+/*        flex-direction: column;*/
+/*    }*/
+/*}*/
 
