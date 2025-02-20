@@ -1,6 +1,7 @@
 'use client';
 
 import {getCryptoJS, getHashFromObj} from "@/lib/cryptoUtils";
+import {GlobalStuff} from "@/lib/globalStateStuff";
 
 const getJSEncrypt = async () => {
     let JSEncrypt = (await import("@/lib/jsencrypt.min")).default
@@ -103,14 +104,9 @@ export const generateKeys = async (keySize) => {
     };
 }
 
-export let GLOB_KEY = {
-    publicKey: "",
-    privateKey: ""
-};
-
 export const encryptObj = async (obj, publicKey) => {
     if (publicKey === undefined)
-        publicKey = GLOB_KEY.publicKey;
+        publicKey = GlobalStuff.publicKey;
     const encrypt = await getJSEncrypt();
     encrypt.setPublicKey(publicKey);
     return encrypt.encrypt(JSON.stringify(obj));
@@ -118,7 +114,7 @@ export const encryptObj = async (obj, publicKey) => {
 
 export const decryptObj = async (obj, privateKey) => {
     if (privateKey === undefined)
-        privateKey = GLOB_KEY.privateKey;
+        privateKey = GlobalStuff.privateKey;
     const encrypt = await getJSEncrypt();
     encrypt.setPrivateKey(privateKey);
     return JSON.parse(encrypt.decrypt(obj));
@@ -126,7 +122,7 @@ export const decryptObj = async (obj, privateKey) => {
 
 export const signObj = async (obj, privateKey) => {
     if (privateKey === undefined)
-        privateKey = GLOB_KEY.privateKey;
+        privateKey = GlobalStuff.privateKey;
     const encrypt = await getJSEncrypt();
     encrypt.setPrivateKey(privateKey);
     let hash = await getHashFromObj(obj);
@@ -135,7 +131,7 @@ export const signObj = async (obj, privateKey) => {
 
 export const verifyObj = async (obj, signature, publicKey) => {
     if (publicKey === undefined)
-        publicKey = GLOB_KEY.publicKey;
+        publicKey = GlobalStuff.publicKey;
     const encrypt = await getJSEncrypt();
     encrypt.setPublicKey(publicKey);
     let hash = await getHashFromObj(obj);

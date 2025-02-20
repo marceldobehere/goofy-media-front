@@ -100,3 +100,8 @@ input:disabled {
 a:hover {
   cursor: pointer;
 }
+
+main {
+  width: 100%;
+  min-height: calc(100vh - 50px);
+}

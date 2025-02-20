@@ -2,16 +2,17 @@
 
 import styles from "./page.module.css";
 import {useState, useEffect} from 'react';
-import {decryptObj, encryptObj, generateKeys, GLOB_KEY} from "@/lib/rsa";
+import {generateKeys} from "@/lib/rsa";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import {decryptSymm, encryptSymm, hashString, userHash} from "@/lib/cryptoUtils";
-import {compress} from "@/lib/strcomp";
-import {baseServer, getNoAuth, getWithAuth, postWithAuth} from "@/lib/req";
+import {getNoAuth, postWithAuth} from "@/lib/req";
+import {GlobalStuff, initGlobalState, saveGlobalState} from "@/lib/globalStateStuff";
+import MainFooter from "@/comp/mainFooter";
 
-export default function Home() {
+export default function Register() {
     const [state, setState] = useState({
         selection: "server",
-        server: baseServer,
+        server: "",
         username: "",
         password: "",
         repeatPassword: "",
@@ -31,14 +32,21 @@ export default function Home() {
     }
     const [uHash, setUHash] = useState("");
 
+
+    useEffect(() => {
+        initGlobalState(async () => {
+            updateState("server", GlobalStuff.server);
+        });
+    })
+
     async function registerLocal() {
         updateState("registerButtonText", "Registering");
         if (state.keys.publicKey === "" || state.keys.privateKey === "" || uHash === "") {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
-        GLOB_KEY.publicKey = state.keys.publicKey;
-        GLOB_KEY.privateKey = state.keys.privateKey;
+        GlobalStuff.publicKey = state.keys.publicKey;
+        GlobalStuff.privateKey = state.keys.privateKey;
 
         const code = prompt("Enter the registration code:");
         if (code === null || code === "") {
@@ -58,8 +66,11 @@ export default function Home() {
         }
 
 
-        alert("Register Success!");
+        await saveGlobalState();
         updateState("registerButtonText", "Register");
+
+        // go to /user/home
+        window.location.href = "/user/home";
     }
 
     async function registerServer() {
@@ -77,8 +88,8 @@ export default function Home() {
             return updateState("registerButtonText", "Register");
         }
 
-        GLOB_KEY.publicKey = state.keys.publicKey;
-        GLOB_KEY.privateKey = state.keys.privateKey;
+        GlobalStuff.publicKey = state.keys.publicKey;
+        GlobalStuff.privateKey = state.keys.privateKey;
         const usernameHash = await hashString(state.username);
         const passwordHash = await hashString(state.password);
         // console.log("> Hashes: ", usernameHash, passwordHash);
@@ -137,8 +148,11 @@ export default function Home() {
         }
 
 
-        alert("Register Success!");
+        await saveGlobalState();
         updateState("registerButtonText", "Register");
+
+        // go to /user/home
+        window.location.href = "/user/home";
     }
 
     async function genKeys() {
@@ -295,10 +309,7 @@ export default function Home() {
                     <a href={"/guest/login"}>Login</a>
                 </div>
             </main>
-            <footer className={styles.footer}>
-                <p>lol</p>
-                <a href={"/"}>Home</a>
-            </footer>
+            <MainFooter></MainFooter>
         </div>
     );
 }

@@ -1,0 +1,39 @@
+
+/*Should Stick on top when scroll*/
+.NavBar {
+    background-color: red;
+
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    height: max-content;
+    align-self: flex-start;
+}
+
+.PostDiv {
+    background-color: blue;
+    padding: 10px;
+}
+
+.NewsDiv {
+    background-color: green;
+    padding: 10px;
+}
+
+/*NavBar floats left, PostDiv in center and NewsDiv floats right*/
+.main {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/*Media Query if too small
+  Make Navbar on top in hamburger menu
+  Then PostDiv with full size
+  At the bottom NewsDiv*/
+@media (max-width: 600px) {
+    .main {
+        flex-direction: column;
+    }
+}
+

@@ -1,17 +1,35 @@
 'use client';
 
 import styles from "@/app/page.module.css";
-import {baseServer, getNoAuth, postWithAuth} from "@/lib/req";
-import {useState} from "react";
-import {checkPrivKeyValid, checkPubKeyValid, GLOB_KEY} from "@/lib/rsa";
+import {getNoAuth, postWithAuth} from "@/lib/req";
+import {useEffect, useState} from "react";
+import {checkPrivKeyValid, checkPubKeyValid} from "@/lib/rsa";
 import {decryptSymm, hashString, userHash} from "@/lib/cryptoUtils";
 import {fileToString, uploadData} from "@/lib/fileUtils";
+import {
+    GlobalStuff,
+    initGlobalState,
+    initReadyCallbackList,
+    saveGlobalState,
+    saveGlobalStateKey
+} from "@/lib/globalStateStuff";
+import MainFooter from "@/comp/mainFooter";
 
 
-export default function Home() {
-    const [server, setServer] = useState(baseServer);
+export default function Login() {
+    const [server, setServer] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        initGlobalState(async () => {
+            setServer(GlobalStuff.server);
+            if (GlobalStuff.loggedIn) {
+                setUsername(GlobalStuff.publicKey);
+                setPassword(GlobalStuff.privateKey);
+            }
+        });
+    })
 
     async function doLoginViaKeys(server) {
         let res = await postWithAuth("/guest/register/login-test", {});
@@ -19,7 +37,11 @@ export default function Home() {
             alert("Login test failed!");
             return;
         }
-        alert("Login successful!")
+
+        await saveGlobalState();
+
+        // go to /user/home
+        window.location.href = "/user/home";
     }
 
     async function doLoginPrep(server, username, password) {
@@ -37,8 +59,8 @@ export default function Home() {
         }
 
         if (await checkPubKeyValid(username) && await checkPrivKeyValid(password)) {
-            GLOB_KEY.publicKey = username;
-            GLOB_KEY.privateKey = password;
+            GlobalStuff.publicKey = username;
+            GlobalStuff.privateKey = password;
             await doLoginViaKeys(server);
         } else {
             const usernameHash = await hashString(username);
@@ -58,8 +80,8 @@ export default function Home() {
                 let privKey = decData.privateKey;
 
                 if (await checkPubKeyValid(pubKey) && await checkPrivKeyValid(privKey)) {
-                    GLOB_KEY.publicKey = pubKey;
-                    GLOB_KEY.privateKey = privKey;
+                    GlobalStuff.publicKey = pubKey;
+                    GlobalStuff.privateKey = privKey;
                     await doLoginViaKeys(server);
                 } else {
                     alert("Keys incorrect");
@@ -137,10 +159,7 @@ export default function Home() {
                 </div>
 
             </main>
-            <footer className={styles.footer}>
-                <p>lol</p>
-                <a href={"/user/home"}>Home</a>
-            </footer>
+            <MainFooter></MainFooter>
         </div>
     );
 }

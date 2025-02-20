@@ -1,7 +1,6 @@
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
-import {GLOB_KEY, signObj} from "@/lib/rsa";
-
-export let baseServer = "http://localhost:3000";
+import {signObj} from "@/lib/rsa";
+import {GlobalStuff} from "@/lib/globalStateStuff";
 
 
 export async function reqNoAuth(path, method, data) {
@@ -14,11 +13,8 @@ export async function reqNoAuth(path, method, data) {
     if (data) {
         options.body = JSON.stringify(data);
     }
-    // let res = await fetch(baseServer + path, options);
-    // return await res.text();
 
-    // console.log("Sending request to: ", baseServer + path, " with options: ", options);
-    let res = await fetch(baseServer + path, options);
+    let res = await fetch(GlobalStuff.server + path, options);
     if (res.status !== 200 && res.status !== 201) {
         console.info("Failed request: ", await res.text(), res);
         return undefined;
@@ -37,7 +33,7 @@ async function getSignatureAndId(body) {
     let validUntil = Date.now() + 1000 * 10;
     let signature = await signObj({body, id, validUntil});
     // console.log("> Doing Sign of: ", {body, id, validUntil}, " got: ", signature)
-    return {signature, id, validUntil, publicKey: GLOB_KEY.publicKey};
+    return {signature, id, validUntil, publicKey: GlobalStuff.publicKey};
 }
 
 export async function reqWithAuth(path, method, data) {
@@ -57,8 +53,7 @@ export async function reqWithAuth(path, method, data) {
     if (data) {
         options.body = JSON.stringify(data);
     }
-    // console.log("Sending request to: ", baseServer + path, " with options: ", options);
-    let res = await fetch(baseServer + path, options);
+    let res = await fetch(GlobalStuff.server + path, options);
     if (res.status !== 200 && res.status !== 201) {
         console.info("Failed request: ", await res.text(), res);
         return undefined;

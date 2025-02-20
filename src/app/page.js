@@ -1,17 +1,16 @@
 import styles from "./page.module.css";
+import MainFooter from "@/comp/mainFooter";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <h1>Hello</h1>
-      </main>
-        <footer className={styles.footer}>
-            <p>lol</p>
+    return (
+        <div className={styles.page}>
+            <main className={styles.main}>
+                <h1>Goofy Media</h1>
 
-            <a href={"/guest/login"}>Login</a><br></br>
-            <a href={"/other/enc"}>Enc</a><br></br>
-        </footer>
-    </div>
-  );
+                <a href={"/guest/login"}>Login</a><br></br>
+            </main>
+
+            <MainFooter></MainFooter>
+        </div>
+    );
 }
