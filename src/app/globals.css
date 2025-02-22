@@ -109,3 +109,9 @@ main {
 :root {
   --show_hamburg: 0;
 }
+
+@media (max-width: 900px) {
+  :root {
+    --show_hamburg: 1;
+  }
+}
