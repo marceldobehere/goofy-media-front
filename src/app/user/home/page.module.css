@@ -56,18 +56,12 @@
     height: calc(100vh - 60px);
 }
 
-:root {
-    --show_hamburg: 0;
-}
-
 /*Media Query if too small
   Make Navbar on top in hamburger menu
   Then PostDiv with full size
   At the bottom NewsDiv*/
 @media (max-width: 900px) {
-    :root {
-        --show_hamburg: 1;
-    }
+    --show_hamburg: 1;
 
     .main {
         grid-template-columns: 1fr;

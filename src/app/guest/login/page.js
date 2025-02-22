@@ -32,7 +32,6 @@ export default function Login() {
     })
 
     async function doLoginViaKeys(server) {
-        GlobalStuff.server = server;
         let res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
             alert("Login test failed!");
@@ -63,10 +62,12 @@ export default function Login() {
         if (await checkPubKeyValid(username) && await checkPrivKeyValid(password)) {
             GlobalStuff.publicKey = username;
             GlobalStuff.privateKey = password;
+            GlobalStuff.server = server;
             await doLoginViaKeys(server);
         } else {
             const usernameHash = await hashString(username);
             const passwordHash = await hashString(password);
+            GlobalStuff.server = server;
 
             let res = await getNoAuth(`/guest/enc/secret-storage/${encodeURIComponent(usernameHash)}`);
             if (res === undefined) {
