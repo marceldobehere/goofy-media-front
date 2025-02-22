@@ -16,6 +16,7 @@ export let GlobalStuff = {
     publicKey: null,
     privateKey: null,
     userId: null,
+    lastCheck: null,
 };
 
 let initDone = false;
@@ -24,14 +25,21 @@ export async function initGlobalState(needLoginTest, callback) {
     if (initDone)
         return;
     initDone = true;
-    // console.info("> initGlobalState");
+    console.info("> Starting Global State Init");
 
     await loadGlobalState();
-    if (GlobalStuff.publicKey !== null &&
-        (GlobalStuff.userId === null || GlobalStuff.userId === "")) {
+    const userIdNull = GlobalStuff.userId === null || GlobalStuff.userId === "";
+    const fiveDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 5;
+    const needsCheck = GlobalStuff.lastCheck === null ||
+        GlobalStuff.lastCheck < fiveDaysAgo ||
+        GlobalStuff.lastCheck > Date.now();
+    if (GlobalStuff.publicKey !== null && (userIdNull || needsCheck)) {
+        console.info("> Attempting to get userId: ", GlobalStuff.publicKey, userIdNull, needsCheck);
         let userId = await userHash(GlobalStuff.publicKey);
         GlobalStuff.userId = userId;
+        GlobalStuff.lastCheck = Date.now();
         await saveGlobalState();
+        console.info("> Got userId: ", userId);
     }
     GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
 
@@ -49,6 +57,8 @@ export async function initGlobalState(needLoginTest, callback) {
             return;
         }
     }
+
+    console.info("> Global State Init Done");
 
     initReadyRes();
     // initReadyCallbackList.reverse();
@@ -104,6 +114,9 @@ export async function loadGlobalState() {
     GlobalStuff.publicKey = await loadKey("publicKey");
     GlobalStuff.privateKey = await loadKey("privateKey");
     GlobalStuff.userId = await loadKey("userId");
+    GlobalStuff.lastCheck = await loadKey("lastCheck");
+
+    console.info("> Loaded Global State");
 }
 
 export async function saveGlobalState() {
@@ -111,6 +124,9 @@ export async function saveGlobalState() {
     await saveKey("publicKey", GlobalStuff.publicKey);
     await saveKey("privateKey", GlobalStuff.privateKey);
     await saveKey("userId", GlobalStuff.userId);
+    await saveKey("lastCheck", GlobalStuff.lastCheck);
+
+    console.info("> Saved Global State");
 }
 
 export async function saveGlobalStateKey(key, value) {
