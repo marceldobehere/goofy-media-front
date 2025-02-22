@@ -14,9 +14,15 @@ export async function reqNoAuth(path, method, data) {
         options.body = JSON.stringify(data);
     }
 
-    let res = await fetch(GlobalStuff.server + path, options);
-    if (res.status !== 200 && res.status !== 201) {
-        console.info("Failed request: ", await res.text(), res);
+    let res;
+    try {
+        res = await fetch(GlobalStuff.server + path, options);
+        if (res.status !== 200 && res.status !== 201) {
+            console.info("> Failed request: ", await res.text(), res);
+            return undefined;
+        }
+    } catch (e) {
+        console.info("> Failed request: ", e);
         return undefined;
     }
 
@@ -29,6 +35,8 @@ export async function reqNoAuth(path, method, data) {
 }
 
 async function getSignatureAndId(body) {
+    if (body == undefined)
+        body = {};
     let id = getRandomIntInclusive(10000000, 10000000000);
     let validUntil = Date.now() + 1000 * 10;
     let signature = await signObj({body, id, validUntil});
@@ -53,9 +61,15 @@ export async function reqWithAuth(path, method, data) {
     if (data) {
         options.body = JSON.stringify(data);
     }
-    let res = await fetch(GlobalStuff.server + path, options);
-    if (res.status !== 200 && res.status !== 201) {
-        console.info("Failed request: ", await res.text(), res);
+    let res;
+    try {
+        res = await fetch(GlobalStuff.server + path, options);
+        if (res.status !== 200 && res.status !== 201) {
+            console.info("> Failed request: ", await res.text(), res);
+            return undefined;
+        }
+    } catch (e) {
+        console.info("> Failed request: ", e);
         return undefined;
     }
 

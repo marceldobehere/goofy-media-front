@@ -1,7 +1,7 @@
 'use client';
 
 import {userHash} from "@/lib/cryptoUtils";
-import {postWithAuth} from "@/lib/req";
+import {getWithAuth, postWithAuth} from "@/lib/req";
 
 let initReadyRes;
 export const initReady = new Promise((res, rej) => {
@@ -17,11 +17,11 @@ export let GlobalStuff = {
     privateKey: null,
     userId: null,
     lastCheck: null,
+    admin: false
 };
 
 let initDone = false;
-export async function initGlobalState(needLoginTest, callback) {
-    // console.info("> Attempt initGlobalState");
+export async function initGlobalState(needLogin, needAdmin, callback) {
     if (initDone)
         return;
     initDone = true;
@@ -43,8 +43,8 @@ export async function initGlobalState(needLoginTest, callback) {
     }
     GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
 
-    if (GlobalStuff.loggedIn && needLoginTest) {
-        let res = await postWithAuth("/guest/register/login-test", {});
+    if (GlobalStuff.loggedIn && needLogin) {
+        let res = await getWithAuth("/user/verify");
         if (res === undefined) {
             alert("Login test failed!");
 
@@ -56,6 +56,19 @@ export async function initGlobalState(needLoginTest, callback) {
 
             return;
         }
+        console.info("> Login test successful");
+    }
+
+    if (GlobalStuff.loggedIn && needAdmin) {
+        let res = await getWithAuth("/admin/verify");
+        if (res === undefined) {
+            GlobalStuff.admin = false;
+            alert("Admin test failed!");
+            window.location.href = "/user/home";
+            return;
+        }
+        console.info("> Admin test successful");
+        GlobalStuff.admin = true;
     }
 
     console.info("> Global State Init Done");

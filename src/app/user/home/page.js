@@ -9,7 +9,7 @@ export default function Home() {
     let [showBurgerMenu, setBurger] =  useState(false);
 
     useEffect(() => {
-        initGlobalState(true, async () => {
+        initGlobalState(true, false, async () => {
             if (!GlobalStuff.loggedIn) {
                 window.location.href = "/guest/login";
             }
@@ -37,10 +37,10 @@ export default function Home() {
                     <div className={showBurgerMenu ? styles.None : styles.NavBarDiv}>
                         {showBurgerMenu ? <></> : <h2>Navigation</h2>}
                         <p>
-                            <a href={"/"}>Lol 1</a><br/>
-                            <a href={"/"}>Lol 2</a><br/>
-                            <a href={"/"}>Lol 3</a><br/>
-                            <a href={"/"}>Lol 4</a><br/>
+                            <a href={"/user/home"}>Home</a><br/>
+                            <a href={"/"}>Index</a><br/>
+                            <a href={"/guest/login"}>Login</a><br/>
+                            <a href={"/admin/dashboard"}>Admin Dashboard</a><br/>
                             <a href={"/"}>Lol 5</a><br/>
                         </p>
                     </div>
