@@ -9,7 +9,7 @@ export default function Home() {
     let [showBurgerMenu, setBurger] =  useState(false);
 
     useEffect(() => {
-        initGlobalState(async () => {
+        initGlobalState(true, async () => {
             if (!GlobalStuff.loggedIn) {
                 window.location.href = "/guest/login";
             }

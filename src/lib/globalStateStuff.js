@@ -19,7 +19,7 @@ export let GlobalStuff = {
 };
 
 let initDone = false;
-export async function initGlobalState(callback) {
+export async function initGlobalState(needLoginTest, callback) {
     // console.info("> Attempt initGlobalState");
     if (initDone)
         return;
@@ -27,13 +27,15 @@ export async function initGlobalState(callback) {
     // console.info("> initGlobalState");
 
     await loadGlobalState();
-    if (GlobalStuff.publicKey !== null) {
+    if (GlobalStuff.publicKey !== null &&
+        (GlobalStuff.userId === null || GlobalStuff.userId === "")) {
         let userId = await userHash(GlobalStuff.publicKey);
         GlobalStuff.userId = userId;
+        await saveGlobalState();
     }
     GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
 
-    if (GlobalStuff.loggedIn) {
+    if (GlobalStuff.loggedIn && needLoginTest) {
         let res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
             alert("Login test failed!");
@@ -65,11 +67,15 @@ export async function initGlobalState(callback) {
 }
 
 export async function loadKey(key) {
-    return localStorage.getItem(key);
+    try {
+        return JSON.parse(localStorage.getItem(key));
+    } catch (e) {
+        return null;
+    }
 }
 
 export async function saveKey(key, value) {
-    localStorage.setItem(key, value);
+    localStorage.setItem(key, JSON.stringify(value));
 }
 
 export async function removeKey(key) {
@@ -97,12 +103,14 @@ export async function loadGlobalState() {
     GlobalStuff.server = await loadKeyOrDefault("server", "http://localhost:3000");
     GlobalStuff.publicKey = await loadKey("publicKey");
     GlobalStuff.privateKey = await loadKey("privateKey");
+    GlobalStuff.userId = await loadKey("userId");
 }
 
 export async function saveGlobalState() {
     await saveKey("server", GlobalStuff.server);
     await saveKey("publicKey", GlobalStuff.publicKey);
     await saveKey("privateKey", GlobalStuff.privateKey);
+    await saveKey("userId", GlobalStuff.userId);
 }
 
 export async function saveGlobalStateKey(key, value) {

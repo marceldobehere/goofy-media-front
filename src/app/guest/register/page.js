@@ -34,7 +34,7 @@ export default function Register() {
 
 
     useEffect(() => {
-        initGlobalState(async () => {
+        initGlobalState(false, async () => {
             updateState("server", GlobalStuff.server);
         });
     })

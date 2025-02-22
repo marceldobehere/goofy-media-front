@@ -22,7 +22,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     useEffect(() => {
-        initGlobalState(async () => {
+        initGlobalState(true, async () => {
             setServer(GlobalStuff.server);
             if (GlobalStuff.loggedIn) {
                 setUsername(GlobalStuff.publicKey);
