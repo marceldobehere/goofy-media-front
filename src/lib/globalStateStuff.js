@@ -46,7 +46,7 @@ export async function initGlobalState(needLogin, needAdmin, callback) {
     if (GlobalStuff.loggedIn && needLogin) {
         let res = await getWithAuth("/user/verify");
         if (res === undefined) {
-            alert("Login test failed!");
+            // alert("Login test failed!");
 
             GlobalStuff.publicKey = null;
             GlobalStuff.privateKey = null;
@@ -63,7 +63,7 @@ export async function initGlobalState(needLogin, needAdmin, callback) {
         let res = await getWithAuth("/admin/verify");
         if (res === undefined) {
             GlobalStuff.admin = false;
-            alert("Admin test failed!");
+            // alert("Admin test failed!");
             window.location.href = "/user/home";
             return;
         }
