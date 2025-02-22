@@ -32,6 +32,7 @@ export default function Login() {
     })
 
     async function doLoginViaKeys(server) {
+        GlobalStuff.server = server;
         let res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
             alert("Login test failed!");

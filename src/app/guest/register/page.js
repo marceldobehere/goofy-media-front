@@ -48,6 +48,7 @@ export default function Register() {
         GlobalStuff.publicKey = state.keys.publicKey;
         GlobalStuff.privateKey = state.keys.privateKey;
         GlobalStuff.userId = uHash;
+        GlobalStuff.server = state.server;
 
         const code = prompt("Enter the registration code:");
         if (code === null || code === "") {
@@ -92,6 +93,7 @@ export default function Register() {
         GlobalStuff.publicKey = state.keys.publicKey;
         GlobalStuff.privateKey = state.keys.privateKey;
         GlobalStuff.userId = uHash;
+        GlobalStuff.server = state.server;
         const usernameHash = await hashString(state.username);
         const passwordHash = await hashString(state.password);
         // console.log("> Hashes: ", usernameHash, passwordHash);
