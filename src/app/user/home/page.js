@@ -4,15 +4,57 @@ import styles from "./page.module.css";
 import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
+import {getWithAuth} from "@/lib/req";
 
 export default function Home() {
-    let [showBurgerMenu, setBurger] =  useState(false);
+    let [showBurgerMenu, setBurger] = useState(false);
+    let [postArr, setPostArr] = useState([]);
+    let [newsArr, setNewsArr] = useState([]);
+
+    async function transformPostObjArr(postObjArr) {
+        let posts = [];
+        console.log("> Post Objs:", postObjArr);
+
+        for (let postObj of postObjArr) {
+            let post = {
+                title: postObj.post.title,
+                text: postObj.post.text,
+                author: postObj.userId,
+                displayName: "Display Name",
+                createdAt: postObj.post.createdAt,
+                tags: postObj.post.tags,
+            };
+            posts.push(post);
+        }
+
+        console.log("> Posts:", posts);
+        return posts;
+    }
+
+    async function loadPosts() {
+        console.log("> Loading posts");
+        let res = await getWithAuth("/user/post");
+        if (res === undefined)
+            return alert("Failed to get posts");
+        setPostArr(await transformPostObjArr(res));
+    }
+
+    async function loadNews() {
+        console.log("> Loading news");
+        let res = await getWithAuth("/user/post/news");
+        if (res === undefined)
+            return alert("Failed to get news");
+        setNewsArr(await transformPostObjArr(res));
+    }
 
     useEffect(() => {
         initGlobalState(true, false, async () => {
             if (!GlobalStuff.loggedIn) {
                 window.location.href = "/guest/login";
             }
+
+            loadPosts();
+            loadNews();
         });
 
         window.onresize = () => {
@@ -21,7 +63,6 @@ export default function Home() {
             }
         }
     })
-
 
     return (
         <div className={styles.page}>
@@ -41,7 +82,7 @@ export default function Home() {
                             <a href={"/"}>Index</a><br/>
                             <a href={"/guest/login"}>Login</a><br/>
                             <a href={"/admin/dashboard"}>Admin Dashboard</a><br/>
-                            <a href={"/"}>Lol 5</a><br/>
+                            <a href={"/user/post_composer"}>Post Composer</a><br/>
                         </p>
                     </div>
                 </nav>
@@ -50,138 +91,78 @@ export default function Home() {
                     <div className={styles.PostDiv}>
                         <h1>User Home</h1>
 
-                        Bla, Bla
+                        Cool Posts below: &nbsp;
+                        <button onClick={() => {
+                            loadPosts()
+                        }}>Refresh</button>
+
 
                         <div>
-                            <div>
-                                <h2>Post abc</h2>
-                                <p>
-                                kajsdfh adsf sadg fsadfkjadshgf ads<br/>
-                                    a afdsa fhaskdh fadskl flasjdkf lkdjsaf<br/>
-                                    sd fads fladskf asjhj fjklsa hjasf<br/>
-                                    asdf jasdh fkjadshjklhsdakljf sad fadsf
-                                    fasdfasd fasd fasd
-                                </p>
-                            </div>
-                            <div>
-                                <h2>Post abc</h2>
-                                <p>
-                                    kajsdfh adsf sadg fsadfkjadshgf ads<br/>
-                                    a afdsa fhaskdh fadskl flasjdkf lkdjsaf<br/>
-                                    sd fads fladskf asjhj fjklsa hjasf<br/>
-                                    asdf jasdh fkjadshjklhsdakljf sad fadsf
-                                    fasdfasd fasd fasd
-                                </p>
-                            </div>
-                            <div>
-                                <h2>Post abc</h2>
-                                <p>
-                                    kajsdfh adsf sadg fsadfkjadshgf ads<br/>
-                                    a afdsa fhaskdh fadskl flasjdkf lkdjsaf<br/>
-                                    sd fads fladskf asjhj fjklsa hjasf<br/>
-                                    asdf jasdh fkjadshjklhsdakljf sad fadsf<br/>
-                                    fasdfasd fasd fasd
-                                </p>
-                            </div>
-                            <div>
-                                <h2>Post abc</h2>
-                                <p>
-                                    kajsdfh adsf sadg fsadfkjadshgf ads
-                                    a afdsa fhaskdh fadskl flasjdkf lkdjsaf
-                                    sd fads fladskf asjhj fjklsa hjasf<br/>
-                                    asdf jasdh fkjadshjklhsdakljf sad fadsf<br/>
-                                    fasdfasd fasd fasd<br/>
-                                </p>
-                            </div>
-                            <div>
-                                <h2>Post abc</h2>
-                                <p>
-                                    kajsdfh adsf sadg fsadfkjadshgf ads<br/>
-                                    a afdsa fhaskdh fadskl flasjdkf lkdjsaf<br/>
-                                    sd fads fladskf asjhj fjklsa hjasf<br/>
-                                    asdf jasdh fkjadshjklhsdakljf sad fadsf
-                                    fasdfasd fasd fasd
-                                </p>
-                            </div>
+                            <ul style={{listStyle: "none"}}>
+                                {postArr.map((post, index) => {
+                                    return (
+                                        <li key={index}>
 
-
+                                            <div style={{border: "2px solid red", padding: "10px", margin: "10px"}}>
+                                                <div
+                                                    style={{textAlign: "left", marginBottom: "5px"}}>
+                                                    <b>{post.displayName}</b> @{post.author}</div>
+                                                <h3 style={{
+                                                    textAlign: "left",
+                                                    marginBottom: "15px",
+                                                    display: "block"
+                                                }}>{post.title}
+                                                </h3>
+                                                <p style={{
+                                                    marginBottom: "15px",
+                                                    whiteSpace: "pre-line"
+                                                }}>{post.text}</p>
+                                                <p>Tags: {post.tags.map((tag, idx) => {
+                                                    return (<span key={idx}><a>#{tag}</a>&nbsp;</span>);
+                                                })}</p>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         </div>
                     </div>
 
                     <div className={styles.NewsDiv}>
                         <h2>Goofy Media News</h2>
 
-                        <p>
-                            asdf sadf<br/>
-                            asdf asdf asdf<br/>
-                            asdf asd fasdf asdf<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            sdaf adsf asdf sadf sad<br/>
-                            f asdf saads
-                        </p>
+                        Cool News below: &nbsp;
+                        <button onClick={() => {
+                            loadNews()
+                        }}>Refresh</button>
+
+                        <div>
+                            <ul style={{listStyle: "none"}}>
+                                {newsArr.map((post, index) => {
+                                    return (
+                                        <li key={index}>
+
+                                            <div style={{border: "2px solid red", padding: "10px", margin: "10px"}}>
+                                                <h3 style={{
+                                                    textAlign: "left",
+                                                    marginBottom: "15px",
+                                                    display: "block"
+                                                }}>{post.title}
+                                                </h3>
+                                                <p style={{
+                                                    marginBottom: "15px",
+                                                    whiteSpace: "pre-line"
+                                                }}>{post.text}</p>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                     </div>
                 </div>
-
             </main>
             <MainFooter></MainFooter>
         </div>
-    );
+);
 }

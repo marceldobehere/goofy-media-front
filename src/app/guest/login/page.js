@@ -38,6 +38,7 @@ export default function Login() {
             return;
         }
 
+        GlobalStuff.userId = await userHash(GlobalStuff.publicKey);
         await saveGlobalState();
 
         // go to /user/home
