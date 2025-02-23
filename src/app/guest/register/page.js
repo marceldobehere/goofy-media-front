@@ -9,6 +9,7 @@ import {getNoAuth, postWithAuth} from "@/lib/req";
 import {GlobalStuff, initGlobalState, saveGlobalState} from "@/lib/globalStateStuff";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
+import {goPath} from "@/lib/goPath";
 
 export default function Register() {
     const [state, setState] = useState({
@@ -73,7 +74,7 @@ export default function Register() {
         updateState("registerButtonText", "Register");
 
         // go to /user/home
-        window.location.href = "/user/home";
+        goPath("/user/home")
     }
 
     async function registerServer() {
@@ -157,7 +158,7 @@ export default function Register() {
         updateState("registerButtonText", "Register");
 
         // go to /user/home
-        window.location.href = "/user/home";
+        goPath("/user/home")
     }
 
     async function genKeys() {

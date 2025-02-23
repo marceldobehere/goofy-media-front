@@ -15,6 +15,7 @@ import {
 } from "@/lib/globalStateStuff";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
+import {goPath} from "@/lib/goPath";
 
 
 export default function Login() {
@@ -43,7 +44,7 @@ export default function Login() {
         await saveGlobalState();
 
         // go to /user/home
-        window.location.href = "/user/home";
+        goPath("/user/home")
     }
 
     async function doLoginPrep(server, username, password) {

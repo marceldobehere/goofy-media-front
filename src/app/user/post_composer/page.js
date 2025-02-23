@@ -4,16 +4,15 @@ import styles from "./page.module.css";
 import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
-import {fileToString, uploadData} from "@/lib/fileUtils";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
+import {goPath} from "@/lib/goPath";
 
 export default function Home() {
     useEffect(() => {
         initGlobalState(true, false, async () => {
-            if (!GlobalStuff.loggedIn) {
-                window.location.href = "/guest/login";
-            }
+            if (!GlobalStuff.loggedIn)
+                goPath("/guest/login")
         });
     })
 
@@ -99,7 +98,7 @@ export default function Home() {
             return;
         }
 
-        window.location.href = "/user/home";
+        goPath("/user/home");
     }
 
     return (

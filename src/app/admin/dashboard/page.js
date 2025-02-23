@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
 import Link from "next/link";
+import {goPath} from "@/lib/goPath";
 
 export default function Home() {
     async function loadCodes() {
@@ -25,9 +26,9 @@ export default function Home() {
     useEffect(() => {
         initGlobalState(true, true, async () => {
             if (!GlobalStuff.loggedIn)
-                return window.location.href = "/guest/login";
+                return goPath("/guest/login");
             if (!GlobalStuff.admin)
-                return window.location.href = "/user/home";
+                return goPath("/admin/home");
             loadCodes();
         });
     })
@@ -48,14 +49,14 @@ export default function Home() {
                 <div style={{border: "2px solid red"}}>
                     <h2>Code List</h2>
 
-                    <div style={{display: "block", margin: "auto", width:"max-content"}}>
-                        <button style={{padding:"5px", margin:"5px"}} onClick={async () => {
+                    <div style={{display: "block", margin: "auto", width: "max-content"}}>
+                        <button style={{padding: "5px", margin: "5px"}} onClick={async () => {
                             setCodes([]);
                             loadCodes();
                         }}>List codes
                         </button>
 
-                        <button style={{padding:"5px", margin:"5px"}} onClick={async () => {
+                        <button style={{padding: "5px", margin: "5px"}} onClick={async () => {
                             // ask if code should be for admin or user
                             let prompt = window.prompt("Admin or User code?", "user");
                             if (prompt == undefined || prompt == "")
@@ -86,7 +87,10 @@ export default function Home() {
                             const createdAt = (code.createdAt == undefined) ? "N/A" : new Date(code.createdAt).toLocaleString();
                             const usedAt = (code.usedAt == undefined) ? "N/A" : new Date(code.usedAt).toLocaleString();
                             return <li key={i}>
-                                {code.code} - {admin} - {used} - {usedBy} - Created: {createdAt} - Used: {usedAt} &nbsp; &nbsp;{(code.used) ? <></> : <button onClick={() => {deleteCode(code.code)}}>Delete</button>}
+                                {code.code} - {admin} - {used} - {usedBy} - Created: {createdAt} -
+                                Used: {usedAt} &nbsp; &nbsp;{(code.used) ? <></> : <button onClick={() => {
+                                deleteCode(code.code)
+                            }}>Delete</button>}
                             </li>
                         })}
                     </ul>

@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import {getWithAuth} from "@/lib/req";
 import Link from "next/link";
+import {goPath} from "@/lib/goPath";
 
 export default function Home() {
     let [showBurgerMenu, setBurger] = useState(false);
@@ -50,9 +51,8 @@ export default function Home() {
 
     useEffect(() => {
         initGlobalState(true, false, async () => {
-            if (!GlobalStuff.loggedIn) {
-                window.location.href = "/guest/login";
-            }
+            if (!GlobalStuff.loggedIn)
+                goPath("/guest/login");
 
             loadPosts();
             loadNews();

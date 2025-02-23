@@ -2,6 +2,8 @@
 
 import {userHash} from "@/lib/cryptoUtils";
 import {getWithAuth, postWithAuth} from "@/lib/req";
+import {useRouter} from "next/router";
+import {goPath} from "@/lib/goPath";
 
 let initReadyRes;
 export const initReady = new Promise((res, rej) => {
@@ -64,7 +66,7 @@ export async function initGlobalState(needLogin, needAdmin, callback) {
         if (res === undefined) {
             GlobalStuff.admin = false;
             // alert("Admin test failed!");
-            window.location.href = "/user/home";
+            goPath("/user/home");
             return;
         }
         console.info("> Admin test successful");
