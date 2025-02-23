@@ -42,7 +42,7 @@
     grid-template-columns: 2fr 1fr;
 
 
-    height: calc(100vh - 60px);
+    height: calc(100vh - 60px - (var(--show_hamburg) * 60px));
     overflow-y: auto;
 }
 
