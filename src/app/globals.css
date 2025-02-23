@@ -57,7 +57,7 @@ h2 {
 
 .container {
   background-color: #4c8fec;
-  margin: auto 30vh auto 30vh;
+  margin: auto 60vh auto 60vh;
   padding: 14px;
   border: 2px solid red;
   color: #ffffff;
@@ -110,6 +110,19 @@ main {
   --show_hamburg: 0;
 }
 
+@media (max-width: 1500px) {
+  .container {
+    margin: auto 35vh auto 35vh;
+  }
+}
+
+
+@media (max-width: 1100px) {
+  .container {
+    margin: auto 30vh auto 30vh;
+  }
+}
+
 @media (max-width: 900px) {
   :root {
     --show_hamburg: 1;
@@ -121,10 +134,6 @@ main {
 }
 
 @media (max-width: 400px) {
-  :root {
-    --show_hamburg: 1;
-  }
-
   .container {
     margin: auto 3vh auto 3vh;
   }
