@@ -22,11 +22,12 @@ export let GlobalStuff = {
 };
 
 let lastPath = undefined;
-export async function initGlobalState(pathname, needLogin, needAdmin, callback) {
-    console.info("> Starting Global State Init: ", pathname);
-    if (lastPath == pathname)
+export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
+    pathName = pathName.split("#")[0];
+    console.info("> Starting Global State Init: ", pathName);
+    if (lastPath == pathName)
         return;
-    lastPath = pathname;
+    lastPath = pathName;
     console.info("> Starting Global State Init");
 
     await loadGlobalState();
