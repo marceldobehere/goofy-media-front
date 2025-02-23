@@ -5,6 +5,7 @@ import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import {getWithAuth} from "@/lib/req";
+import Link from "next/link";
 
 export default function Home() {
     let [showBurgerMenu, setBurger] = useState(false);
@@ -78,11 +79,11 @@ export default function Home() {
                     <div className={showBurgerMenu ? styles.None : styles.NavBarDiv}>
                         {showBurgerMenu ? <></> : <h2>Navigation</h2>}
                         <p>
-                            <a href={"/user/home"}>Home</a><br/>
-                            <a href={"/"}>Index</a><br/>
-                            <a href={"/guest/login"}>Login</a><br/>
-                            <a href={"/admin/dashboard"}>Admin Dashboard</a><br/>
-                            <a href={"/user/post_composer"}>Post Composer</a><br/>
+                            <Link href={"/user/home"}>Home</Link><br/>
+                            <Link href={"/"}>Index</Link><br/>
+                            <Link href={"/guest/login"}>Login</Link><br/>
+                            <Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/>
+                            <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
                     </div>
                 </nav>

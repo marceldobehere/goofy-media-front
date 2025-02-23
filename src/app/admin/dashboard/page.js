@@ -5,6 +5,7 @@ import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
+import Link from "next/link";
 
 export default function Home() {
     async function loadCodes() {
@@ -38,9 +39,9 @@ export default function Home() {
             <main className={styles.main}>
                 <h1>Admin Dashboard</h1>
 
-                <a href={"/guest/login"}>Login</a><br/>
-                <a href={"/guest/register"}>Register</a><br/>
-                <a href={"/user/home"}>Home</a><br/>
+                <Link href={"/guest/login"}>Login</Link><br/>
+                <Link href={"/guest/register"}>Register</Link><br/>
+                <Link href={"/user/home"}>Home</Link><br/>
 
                 <br/><br/><br/>
 

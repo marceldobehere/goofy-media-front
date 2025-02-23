@@ -14,6 +14,7 @@ import {
     saveGlobalStateKey
 } from "@/lib/globalStateStuff";
 import MainFooter from "@/comp/mainFooter";
+import Link from "next/link";
 
 
 export default function Login() {
@@ -158,7 +159,7 @@ export default function Login() {
                         }
                     }}>Login via File</a><br/>
 
-                    <a href={"/guest/register"}>Register</a>
+                    <Link href={"/guest/register"}>Register</Link>
                 </div>
 
             </main>

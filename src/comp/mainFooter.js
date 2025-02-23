@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 export default function MainFooter() {
     return (
         <footer style={{textAlign: "center", "height": "50px"}}>
             FOOTER
             <br/>
-            <a href={"/"}>Index</a> - <a href={"/user/home"}>Home</a>
+            <Link href={"/"}>Index</Link> - <Link href={"/user/home"}>Home</Link>
         </footer>
     );
 }

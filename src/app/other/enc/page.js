@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import styles from "./page.module.css";
 
 const getJSEncrypt = async () => {
@@ -80,7 +81,7 @@ export default function Home() {
             </main>
             <footer className={styles.footer}>
                 <p>lol</p>
-                <a href={"/"}>Home</a>
+                <Link href={"/"}>Home</Link>
             </footer>
         </div>
     );

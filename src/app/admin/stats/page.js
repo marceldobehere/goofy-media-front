@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
       </main>
         <footer className={styles.footer}>
             <p>lol</p>
-            <a href={"/"}>Home</a>
+            <Link href={"/"}>Home</Link>
         </footer>
     </div>
   );

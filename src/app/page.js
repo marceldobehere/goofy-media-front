@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import MainFooter from "@/comp/mainFooter";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -7,9 +8,9 @@ export default function Home() {
             <main className={styles.main}>
                 <h1>Goofy Media</h1>
 
-                <a href={"/guest/login"}>Login</a><br/>
-                <a href={"/guest/register"}>Register</a><br/>
-                <a href={"/user/home"}>Home</a><br/>
+                <Link href={"/guest/login"}>Login</Link><br/>
+                <Link href={"/guest/register"}>Register</Link><br/>
+                <Link href={"/user/home"}>Home</Link><br/>
 
             </main>
 

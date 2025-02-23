@@ -8,6 +8,7 @@ import {decryptSymm, encryptSymm, hashString, userHash} from "@/lib/cryptoUtils"
 import {getNoAuth, postWithAuth} from "@/lib/req";
 import {GlobalStuff, initGlobalState, saveGlobalState} from "@/lib/globalStateStuff";
 import MainFooter from "@/comp/mainFooter";
+import Link from "next/link";
 
 export default function Register() {
     const [state, setState] = useState({
@@ -310,7 +311,7 @@ export default function Register() {
                     <input disabled={!canRegister()} type="button" value={state.registerButtonText}
                            className={"cont-btn"}
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
-                    <a href={"/guest/login"}>Login</a>
+                    <Link href={"/guest/login"}>Login</Link>
                 </div>
             </main>
             <MainFooter></MainFooter>
