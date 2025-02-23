@@ -16,72 +16,117 @@ export let GlobalStuff = {
     admin: false
 };
 
-function showLoadingSpinner(visible) {
+
+
+let spinCounter = 0;
+function checkSpinDisplay() {
+    console.info("> Spin Level: ", spinCounter);
     // #main-loading-div
     let div = document.getElementById("main-loading-div");
     if (div === null)
         return;
-    if (visible)
-        div.style.display = "block";
-    else
-        div.style.display = "none";
+    if (spinCounter < 1)
+        return div.style.display = "none";
+    div.style.display = "block";
+
+    // set size
+    let size = 30 + spinCounter * 2.5;
+    if (size > 50)
+        size = 50;
+    div.style.width = size + "px";
+    div.style.height = size + "px";
+
+    // set right and bottom position to make it centered
+    div.style.right = (20 + (20 - size / 2)) + "px";
+    div.style.bottom = (20 + (20 - size / 2)) + "px";
+
+    // change color
+    let color = (170 + spinCounter * 30) % 360;
+    div.style.borderLeft = `4px solid hsl(${color}deg, 100%, 80%)`;
 }
 
+export function SpinLevelAdd() {
+    spinCounter++;
+    checkSpinDisplay();
+}
+
+export function SpinLevelRemove() {
+    setTimeout(() => {
+        spinCounter--;
+        if (spinCounter < 0)
+            spinCounter = 0;
+        checkSpinDisplay();
+    }, 200);
+}
+
+export async function SpinActivity(callback) {
+    SpinLevelAdd();
+    try {
+        await callback();
+    } catch (e) {
+        SpinLevelRemove();
+        throw e;
+    }
+    SpinLevelRemove();
+}
+
+
 let lastPath = undefined;
+
 export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
     pathName = pathName.split("#")[0];
     console.info("> Starting Global State Init: ", pathName);
     if (lastPath == pathName)
         return;
     lastPath = pathName;
-    showLoadingSpinner(true);
-    console.info("> Starting Global State Init");
+    await SpinActivity(async () => {
+        console.info("> Starting Global State Init");
 
-    await loadGlobalState();
-    const userIdNull = GlobalStuff.userId === null || GlobalStuff.userId === "";
-    const fiveDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 5;
-    const needsCheck = GlobalStuff.lastCheck === null ||
-        GlobalStuff.lastCheck < fiveDaysAgo ||
-        GlobalStuff.lastCheck > Date.now();
-    if (GlobalStuff.publicKey !== null && (userIdNull || needsCheck)) {
-        console.info("> Attempting to get userId: ", GlobalStuff.publicKey, userIdNull, needsCheck);
-        let userId = await userHash(GlobalStuff.publicKey);
-        GlobalStuff.userId = userId;
-        GlobalStuff.lastCheck = Date.now();
-        await saveGlobalState();
-        console.info("> Got userId: ", userId);
-    }
-    GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
-
-    if (GlobalStuff.loggedIn && needLogin) {
-        let res = await getWithAuth("/user/verify");
-        if (res === undefined) {
-            // alert("Login test failed!");
-
-            GlobalStuff.publicKey = null;
-            GlobalStuff.privateKey = null;
-            GlobalStuff.userId = null;
-            GlobalStuff.loggedIn = false;
+        await loadGlobalState();
+        const userIdNull = GlobalStuff.userId === null || GlobalStuff.userId === "";
+        const fiveDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 5;
+        const needsCheck = GlobalStuff.lastCheck === null ||
+            GlobalStuff.lastCheck < fiveDaysAgo ||
+            GlobalStuff.lastCheck > Date.now();
+        if (GlobalStuff.publicKey !== null && (userIdNull || needsCheck)) {
+            console.info("> Attempting to get userId: ", GlobalStuff.publicKey, userIdNull, needsCheck);
+            let userId = await userHash(GlobalStuff.publicKey);
+            GlobalStuff.userId = userId;
+            GlobalStuff.lastCheck = Date.now();
             await saveGlobalState();
-
-            return;
+            console.info("> Got userId: ", userId);
         }
-        console.info("> Login test successful");
-    }
+        GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
 
-    if (GlobalStuff.loggedIn && needAdmin) {
-        let res = await getWithAuth("/admin/verify");
-        if (res === undefined) {
-            GlobalStuff.admin = false;
-            // alert("Admin test failed!");
-            goPath("/user/home");
-            return;
+        if (GlobalStuff.loggedIn && needLogin) {
+            let res = await getWithAuth("/user/verify");
+            if (res === undefined) {
+                // alert("Login test failed!");
+
+                GlobalStuff.publicKey = null;
+                GlobalStuff.privateKey = null;
+                GlobalStuff.userId = null;
+                GlobalStuff.loggedIn = false;
+                await saveGlobalState();
+
+                return;
+            }
+            console.info("> Login test successful");
         }
-        console.info("> Admin test successful");
-        GlobalStuff.admin = true;
-    }
 
-    showLoadingSpinner(false);
+        if (GlobalStuff.loggedIn && needAdmin) {
+            let res = await getWithAuth("/admin/verify");
+            if (res === undefined) {
+                GlobalStuff.admin = false;
+                // alert("Admin test failed!");
+                goPath("/user/home");
+                return;
+            }
+            console.info("> Admin test successful");
+            GlobalStuff.admin = true;
+        }
+    });
+
     console.info("> Global State Init Done");
 
     // initReadyCallbackList.reverse();

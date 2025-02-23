@@ -1,6 +1,6 @@
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {signObj} from "@/lib/rsa";
-import {GlobalStuff} from "@/lib/globalStateStuff";
+import {GlobalStuff, SpinActivity} from "@/lib/globalStateStuff";
 
 
 export async function reqNoAuth(path, method, data) {
@@ -15,16 +15,18 @@ export async function reqNoAuth(path, method, data) {
     }
 
     let res;
-    try {
-        res = await fetch(GlobalStuff.server + path, options);
-        if (res.status !== 200 && res.status !== 201) {
-            console.info("> Failed request: ", await res.text(), res);
+    await SpinActivity(async () => {
+        try {
+            res = await fetch(GlobalStuff.server + path, options);
+            if (res.status !== 200 && res.status !== 201) {
+                console.info("> Failed request: ", await res.text(), res);
+                return undefined;
+            }
+        } catch (e) {
+            console.info("> Failed request: ", e);
             return undefined;
         }
-    } catch (e) {
-        console.info("> Failed request: ", e);
-        return undefined;
-    }
+    });
 
     const text = await res.text();
     try {
@@ -62,16 +64,18 @@ export async function reqWithAuth(path, method, data) {
         options.body = JSON.stringify(data);
     }
     let res;
-    try {
-        res = await fetch(GlobalStuff.server + path, options);
-        if (res.status !== 200 && res.status !== 201) {
-            console.info("> Failed request: ", await res.text(), res);
+    await SpinActivity(async () => {
+        try {
+            res = await fetch(GlobalStuff.server + path, options);
+            if (res.status !== 200 && res.status !== 201) {
+                console.info("> Failed request: ", await res.text(), res);
+                return undefined;
+            }
+        } catch (e) {
+            console.info("> Failed request: ", e);
             return undefined;
         }
-    } catch (e) {
-        console.info("> Failed request: ", e);
-        return undefined;
-    }
+    });
 
     const text = await res.text();
     try {
