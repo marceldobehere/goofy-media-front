@@ -26,8 +26,12 @@ export default function Home() {
                 createdAt: postObj.post.createdAt,
                 tags: postObj.post.tags,
             };
+
+            // TODO: verify each post with signature
+
             posts.push(post);
         }
+
 
         console.log("> Posts:", posts);
         return posts;
