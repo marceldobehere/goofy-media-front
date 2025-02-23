@@ -20,7 +20,7 @@ export let GlobalStuff = {
 
 let spinCounter = 0;
 function checkSpinDisplay() {
-    console.info("> Spin Level: ", spinCounter);
+    // console.info("> Spin Level: ", spinCounter);
     // #main-loading-div
     let div = document.getElementById("main-loading-div");
     if (div === null)
