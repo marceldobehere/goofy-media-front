@@ -20,7 +20,7 @@ export default function RootLayout({children}) {
     return (
         <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div id={"main-loading-div"} style={{position:"absolute", bottom:"20px", right:"20px", width:"40px", height:"40px", overflow:"hidden"}}>
+        <div id={"main-loading-div"} style={{position:"absolute", bottom:"20px", right:"20px", width:"40px", height:"40px", overflow:"hidden",display:"none"}}>
 
         </div>
         {children}
