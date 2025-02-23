@@ -4,11 +4,6 @@ import {userHash} from "@/lib/cryptoUtils";
 import {getWithAuth, postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 
-let initReadyRes;
-export const initReady = new Promise((res, rej) => {
-    initReadyRes = res;
-});
-
 export const initReadyCallbackList = [];
 
 export let GlobalStuff = {
@@ -21,6 +16,17 @@ export let GlobalStuff = {
     admin: false
 };
 
+function showLoadingSpinner(visible) {
+    // #main-loading-div
+    let div = document.getElementById("main-loading-div");
+    if (div === null)
+        return;
+    if (visible)
+        div.style.display = "block";
+    else
+        div.style.display = "none";
+}
+
 let lastPath = undefined;
 export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
     pathName = pathName.split("#")[0];
@@ -28,6 +34,7 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
     if (lastPath == pathName)
         return;
     lastPath = pathName;
+    showLoadingSpinner(true);
     console.info("> Starting Global State Init");
 
     await loadGlobalState();
@@ -74,9 +81,9 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         GlobalStuff.admin = true;
     }
 
+    showLoadingSpinner(false);
     console.info("> Global State Init Done");
 
-    initReadyRes();
     // initReadyCallbackList.reverse();
     for (let cb of initReadyCallbackList)
         try {
