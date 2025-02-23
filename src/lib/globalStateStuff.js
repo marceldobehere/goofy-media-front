@@ -125,7 +125,7 @@ export async function saveKeyObj(key, key2, value) {
 
 export async function loadGlobalState() {
     GlobalStuff = {};
-    GlobalStuff.server = await loadKeyOrDefault("server", "http://localhost:3000");
+    GlobalStuff.server = await loadKeyOrDefault("server", "https://media.marceldobehere.com"); // http://localhost:3000");
     GlobalStuff.publicKey = await loadKey("publicKey");
     GlobalStuff.privateKey = await loadKey("privateKey");
     GlobalStuff.userId = await loadKey("userId");
