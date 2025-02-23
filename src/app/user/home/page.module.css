@@ -29,6 +29,13 @@
 .PostDiv {
     background-color: blue;
     padding: 10px;
+    overflow-x: scroll;
+}
+
+.PostEntry {
+    overflow: auto;
+
+    max-height: 400px;
 }
 
 .NewsDiv {
