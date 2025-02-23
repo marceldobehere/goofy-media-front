@@ -114,4 +114,18 @@ main {
   :root {
     --show_hamburg: 1;
   }
+
+  .container {
+    margin: auto 10vh auto 10vh;
+  }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --show_hamburg: 1;
+  }
+
+  .container {
+    margin: auto 3vh auto 3vh;
+  }
 }
