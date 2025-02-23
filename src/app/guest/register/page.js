@@ -10,8 +10,10 @@ import {GlobalStuff, initGlobalState, saveGlobalState} from "@/lib/globalStateSt
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
+import {usePathname} from "next/navigation";
 
 export default function Register() {
+    const pathName = usePathname();
     const [state, setState] = useState({
         selection: "server",
         server: "",
@@ -36,7 +38,7 @@ export default function Register() {
 
 
     useEffect(() => {
-        initGlobalState(false, false, async () => {
+        initGlobalState(pathName, false, false, async () => {
             updateState("server", GlobalStuff.server);
         });
     })

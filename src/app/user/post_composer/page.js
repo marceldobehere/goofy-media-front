@@ -7,10 +7,12 @@ import MainFooter from "@/comp/mainFooter";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
+import {usePathname} from "next/navigation";
 
 export default function Home() {
+    const pathName = usePathname();
     useEffect(() => {
-        initGlobalState(true, false, async () => {
+        initGlobalState(pathName, true, false, async () => {
             if (!GlobalStuff.loggedIn)
                 goPath("/guest/login")
         });

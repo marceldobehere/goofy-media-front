@@ -7,8 +7,10 @@ import MainFooter from "@/comp/mainFooter";
 import {getWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
+import {usePathname} from "next/navigation";
 
 export default function Home() {
+    const pathName = usePathname();
     let [showBurgerMenu, setBurger] = useState(false);
     let [postArr, setPostArr] = useState([]);
     let [newsArr, setNewsArr] = useState([]);
@@ -54,7 +56,7 @@ export default function Home() {
     }
 
     useEffect(() => {
-        initGlobalState(true, false, async () => {
+        initGlobalState(pathName, true, false, async () => {
             if (!GlobalStuff.loggedIn)
                 goPath("/guest/login");
 

@@ -7,8 +7,10 @@ import MainFooter from "@/comp/mainFooter";
 import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
+import {usePathname} from "next/navigation";
 
 export default function Home() {
+    const pathName = usePathname();
     async function loadCodes() {
         let res = await getWithAuth("/admin/codes", {});
         if (res === undefined)
@@ -24,7 +26,7 @@ export default function Home() {
     }
 
     useEffect(() => {
-        initGlobalState(true, true, async () => {
+        initGlobalState(pathName, true, true, async () => {
             if (!GlobalStuff.loggedIn)
                 return goPath("/guest/login");
             if (!GlobalStuff.admin)

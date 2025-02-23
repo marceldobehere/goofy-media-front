@@ -2,7 +2,6 @@
 
 import {userHash} from "@/lib/cryptoUtils";
 import {getWithAuth, postWithAuth} from "@/lib/req";
-import {useRouter} from "next/router";
 import {goPath} from "@/lib/goPath";
 
 let initReadyRes;
@@ -22,11 +21,12 @@ export let GlobalStuff = {
     admin: false
 };
 
-let initDone = false;
-export async function initGlobalState(needLogin, needAdmin, callback) {
-    if (initDone)
+let lastPath = undefined;
+export async function initGlobalState(pathname, needLogin, needAdmin, callback) {
+    console.info("> Starting Global State Init: ", pathname);
+    if (lastPath == pathname)
         return;
-    initDone = true;
+    lastPath = pathname;
     console.info("> Starting Global State Init");
 
     await loadGlobalState();

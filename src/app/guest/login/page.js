@@ -16,15 +16,17 @@ import {
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
+import {usePathname} from "next/navigation";
 
 
 export default function Login() {
+    const pathName = usePathname();
     const [server, setServer] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     useEffect(() => {
-        initGlobalState(true, false, async () => {
+        initGlobalState(pathName, true, false, async () => {
             setServer(GlobalStuff.server);
             if (GlobalStuff.loggedIn) {
                 setUsername(GlobalStuff.publicKey);
