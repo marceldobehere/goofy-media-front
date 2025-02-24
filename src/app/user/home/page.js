@@ -138,7 +138,7 @@ export default function Home() {
         prevPos = pos;
 
         // check if button is visible on screen
-        if (pos < window.innerHeight + 300 && pos > 0) {
+        if (pos < window.innerHeight + 300 && pos > window.innerHeight - 180) {
             loadMorePosts();
         }
     }
