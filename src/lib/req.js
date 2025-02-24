@@ -20,13 +20,16 @@ export async function reqNoAuth(path, method, data) {
             res = await fetch(GlobalStuff.server + path, options);
             if (res.status !== 200 && res.status !== 201) {
                 console.info("> Failed request: ", await res.text(), res);
-                return undefined;
+                res = undefined;
             }
         } catch (e) {
             console.info("> Failed request: ", e);
-            return undefined;
+            res = undefined;
         }
     });
+
+    if (res === undefined)
+        return undefined;
 
     const text = await res.text();
     try {
@@ -69,13 +72,16 @@ export async function reqWithAuth(path, method, data) {
             res = await fetch(GlobalStuff.server + path, options);
             if (res.status !== 200 && res.status !== 201) {
                 console.info("> Failed request: ", await res.text(), res);
-                return undefined;
+                res = undefined;
             }
         } catch (e) {
             console.info("> Failed request: ", e);
-            return undefined;
+            res = undefined;
         }
     });
+
+    if (res === undefined)
+        return undefined;
 
     const text = await res.text();
     try {

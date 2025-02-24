@@ -19,18 +19,22 @@ export let GlobalStuff = {
 
 
 let spinCounter = 0;
+let actualSpinCounter = 0;
 function checkSpinDisplay() {
-    // console.info("> Spin Level: ", spinCounter);
+    // console.info("> Spin Level: ", spinCounter, actualSpinCounter);
     // #main-loading-div
     let div = document.getElementById("main-loading-div");
     if (div === null)
         return;
-    if (spinCounter < 1)
+    let counter = actualSpinCounter;
+    if (actualSpinCounter < 1 && spinCounter > 0)
+        counter = 1;
+    if (counter < 1)
         return div.style.display = "none";
     div.style.display = "block";
 
     // set size
-    let size = 30 + spinCounter * 2.5;
+    let size = 25 + counter * 2;
     if (size > 50)
         size = 50;
     div.style.width = size + "px";
@@ -41,21 +45,59 @@ function checkSpinDisplay() {
     div.style.bottom = (20 + (20 - size / 2)) + "px";
 
     // change color
-    let color = (170 + spinCounter * 30) % 360;
+    let color = (170 + counter * 30) % 360;
     div.style.borderLeft = `4px solid hsl(${color}deg, 100%, 80%)`;
 }
+
 
 export function SpinLevelAdd() {
     spinCounter++;
     checkSpinDisplay();
+    slowIncrease();
 }
 
 export function SpinLevelRemove() {
+    spinCounter--;
+    if (spinCounter < 0)
+        spinCounter = 0;
+    slowDecrease();
+}
+
+let slowDecreaseBusy = false;
+function slowDecrease() {
+    if (slowDecreaseBusy)
+        return;
+    slowDecreaseBusy = true;
+
     setTimeout(() => {
-        spinCounter--;
-        if (spinCounter < 0)
-            spinCounter = 0;
+        if (actualSpinCounter <= spinCounter) {
+            slowDecreaseBusy = false;
+            return;
+        }
+        actualSpinCounter--;
         checkSpinDisplay();
+
+        slowDecreaseBusy = false;
+        slowDecrease();
+    }, 300);
+}
+
+let slowIncreaseBusy = false;
+function slowIncrease() {
+    if (slowIncreaseBusy)
+        return;
+    slowIncreaseBusy = true;
+
+    setTimeout(() => {
+        if (actualSpinCounter >= spinCounter) {
+            slowIncreaseBusy = false;
+            return;
+        }
+        actualSpinCounter++;
+        checkSpinDisplay();
+
+        slowIncreaseBusy = false;
+        slowIncrease();
     }, 200);
 }
 
