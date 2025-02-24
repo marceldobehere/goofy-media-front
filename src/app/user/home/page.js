@@ -110,7 +110,7 @@ export default function Home() {
                                     return (
                                         <li key={index}>
 
-                                            <div className={styles.PostEntry} style={{border: "2px solid red", padding: "10px", margin: "10px"}}>
+                                            <div className={styles.PostEntry} style={{border: "2px solid #8080F0", padding: "10px", margin: "10px"}}>
                                                 <div
                                                     style={{textAlign: "left", marginBottom: "5px"}}>
                                                     <b>{post.displayName}</b> @{post.author} - {new Date(post.createdAt).toLocaleString()}</div>
@@ -149,7 +149,7 @@ export default function Home() {
                                     return (
                                         <li key={index}>
 
-                                            <div style={{border: "2px solid red", padding: "10px", margin: "10px"}}>
+                                            <div style={{border: "2px solid #8080D0", padding: "10px", margin: "10px"}}>
                                                 <h3 style={{
                                                     textAlign: "left",
                                                     marginBottom: "15px",

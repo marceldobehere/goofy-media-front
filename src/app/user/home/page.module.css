@@ -13,7 +13,7 @@
 
 /*Should be on the vertical center*/
 .NavBarDiv {
-    background-color: orange;
+    background-color: #303080;
     padding: 10px;
     display: inline-block;
     position: relative;
@@ -27,10 +27,12 @@
 }
 
 .PostDiv {
-    background-color: blue;
+    background-color: #101060;
     padding: 10px;
     overflow-x: auto;
+
     height: max-content;
+    min-height: 100%;
 }
 
 .PostEntry {
@@ -40,9 +42,10 @@
 }
 
 .NewsDiv {
-    /*background-color: green;*/
+    background-color: #101020;
     padding: 10px 30px 10px 20px;
     height: max-content;
+    min-height: 100%;
 }
 
 .MainContent {
@@ -81,14 +84,14 @@
     }
 
     .NavBar {
-        background-color: red;
+        background-color: #404080;
         display: block;
         width: 100%;
         height: 40px;
     }
 
     .NavBar2 {
-        background-color: red;
+        background-color: #4040A0;
         display: block;
         width: 100%;
         /*height: 100px;*/
