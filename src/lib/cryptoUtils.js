@@ -24,13 +24,53 @@ const getWordList = async () => {
 };
 getWordList().then();
 
+async function oldPbkdf2(str, salt, keySize, iterations) {
+    let CryptoJS = await getCryptoJS();
+    let hash = CryptoJS.PBKDF2(str, salt, {keySize, iterations}).toString(CryptoJS.enc.Base64);
+    return hash;
+}
+
+async function newPbkdf2(str, salt, keySize, iterations) {
+    let enc = new TextEncoder();
+    if (typeof window === 'undefined')
+        return;
+    let keyMaterial = await window.crypto.subtle.importKey(
+        "raw",
+        enc.encode(str),
+        "PBKDF2",
+        false,
+        ["deriveBits", "deriveKey"],
+    );
+
+    let key = await window.crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: enc.encode(salt),
+            iterations,
+            hash: "SHA-256",
+        },
+        keyMaterial,
+        {name: "AES-GCM", length: keySize * 8 * 4},
+        true,
+        ["encrypt", "decrypt"],
+    );
+
+    let keyData = await window.crypto.subtle.exportKey("raw", key);
+    let keyDataArray = new Uint8Array(keyData);
+    let keyDataStr = String.fromCharCode.apply(null, keyDataArray);
+    let keyDataBase64 = btoa(keyDataStr);
+    return keyDataBase64;
+}
+
 async function userHashInternal(str) {
     let CryptoJS = await getCryptoJS();
     let words = await getWordList();
 
-    let hash = CryptoJS.PBKDF2(str, "GoofyUserHash123", {keySize: 16,iterations: 50000}).toString(CryptoJS.enc.Base64);
-    let c = CryptoJS.PBKDF2(hash, "GoofyUserLenHash123", {keySize: 16,iterations: 1234}).words[0];
-    let n = CryptoJS.PBKDF2(hash, "GoofyUserValHash123", {keySize: 16,iterations: 1234}).words[0];
+    // let hash = CryptoJS.PBKDF2(str, "GoofyUserHash123", {keySize: 8, iterations: 100000}).toString(CryptoJS.enc.Base64);
+    //let hash = await oldPbkdf2(str, "GoofyUserHash123", 16, 100000);
+    let hash = await newPbkdf2(str, "GoofyUserHash123", 8, 1000000);
+    let c = CryptoJS.PBKDF2(hash, "GoofyUserLenHash123", {keySize: 16, iterations: 1234}).words[0];
+    let n = CryptoJS.PBKDF2(hash, "GoofyUserValHash123", {keySize: 16, iterations: 1234}).words[0];
     if (c < 0) c *= -1;
     if (n < 0) n *= -1;
     c = 2 + c % 3;
@@ -42,16 +82,18 @@ async function userHashInternal(str) {
     // c = 3 -> ~61 bit (134611^2 * 1000)
     // c = 4 -> ~78 bit (134611^2 * 1000)
 
-    for (let i = 0; i < c; i++)
-    {
-        let tHash = CryptoJS.PBKDF2(hash, "GoofyWordHash123", {keySize: 16,iterations: 1234}).words[0];
+    for (let i = 0; i < c; i++) {
+        let tHash = CryptoJS.PBKDF2(hash, "GoofyWordHash123", {keySize: 16, iterations: 1234}).words[0];
         if (tHash < 0) tHash *= -1;
         tHash = tHash % words.length;
         out += words[tHash];
         if (i < c - 1)
             out += "_";
 
-        hash = CryptoJS.PBKDF2(hash, "GoofyNewUserHash123", {keySize: 16,iterations: 1234}).toString(CryptoJS.enc.Base64);
+        hash = CryptoJS.PBKDF2(hash, "GoofyNewUserHash123", {
+            keySize: 16,
+            iterations: 1234
+        }).toString(CryptoJS.enc.Base64);
     }
 
 
@@ -62,8 +104,8 @@ async function userHashInternal(str) {
 
 
 let hashStringMap2 = new Map();
-export async function userHash(str)
-{
+
+export async function userHash(str) {
     str = str.replace(/\n/g, ' ');
     let res = hashStringMap2.get(str);
     if (res)
@@ -78,8 +120,7 @@ export async function userHash(str)
     return hash;
 }
 
-export function getRandomIntInclusive(min, max)
-{
+export function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     for (let i = Math.random() * 25; i >= 0; i--)
@@ -88,23 +129,22 @@ export function getRandomIntInclusive(min, max)
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export async function getHashFromObj(obj)
-{
+export async function getHashFromObj(obj) {
     let CryptoJS = await getCryptoJS();
     let hash = CryptoJS.SHA256(JSON.stringify(obj)).toString(CryptoJS.enc.Base64);
     return hash;
 }
 
 let hashStringMap = new Map();
-export async function hashString(str)
-{
+
+export async function hashString(str) {
     let res = hashStringMap.get(str);
     if (res)
         return res;
 
     let CryptoJS = await getCryptoJS();
 
-    let hash = CryptoJS.PBKDF2(str, "GoofyHash123", {keySize: 16,iterations: 5000}).toString(CryptoJS.enc.Base64);
+    let hash = CryptoJS.PBKDF2(str, "GoofyHash123", {keySize: 16, iterations: 5000}).toString(CryptoJS.enc.Base64);
 
     if (hashStringMap.size > 5_000)
         hashStringMap.clear();
@@ -143,3 +183,43 @@ export async function decryptSymm(enc, key) {
     let bytes = CryptoJS.AES.decrypt(decData, key).toString(CryptoJS.enc.Utf8);
     return JSON.parse(bytes);
 }
+
+
+
+
+
+
+
+
+async function testPbkdf2() {
+    console.log("> Testing PBKDF2");
+    let str = "Hello";
+    let salt = "Salt";
+    let keySize = 8;
+    let iterations = 100000;
+
+    let oldHash;
+    let newHash;
+
+    let date3 = new Date();
+    for (let i = 0; i < 6000; i++)
+        newHash = await newPbkdf2(str, salt, keySize, iterations);
+    let date4 = new Date();
+    console.log("> New time: ", date4 - date3);
+    console.log("New: ", newHash);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    let date1 = new Date();
+    for (let i = 0; i < 2; i++)
+        oldHash = await oldPbkdf2(str, salt, keySize, iterations);
+    let date2 = new Date();
+    console.log("> Old time: ", date2 - date1);
+    console.log("Old: ", oldHash);
+
+    if (oldHash != newHash)
+        console.log("> PBKDF2 failed");
+    else
+        console.log("> PBKDF2 success");
+}
+// setTimeout(testPbkdf2, 1000)
