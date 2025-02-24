@@ -41,12 +41,14 @@ a {
   text-decoration: underline;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/*@media (prefers-color-scheme: dark) {*/
+/*  html {*/
+/*    color-scheme: dark;*/
+/*  }*/
+/*}*/
+html {
+  color-scheme: dark;
 }
-
 
 h1, h2, h3 {
   text-align: center;
