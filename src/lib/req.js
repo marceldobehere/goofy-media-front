@@ -50,7 +50,9 @@ async function getSignatureAndId(body) {
     return {signature, id, validUntil, publicKey: GlobalStuff.publicKey};
 }
 
-export async function reqWithAuth(path, method, data) {
+export async function reqWithAuth(path, method, data, headers) {
+    if (headers === undefined)
+        headers = {};
 
     let {signature, id, validUntil, publicKey} = await getSignatureAndId(data);
 
@@ -61,7 +63,8 @@ export async function reqWithAuth(path, method, data) {
             'X-Goofy-Signature': signature,
             'X-Goofy-Id': id,
             'X-Goofy-Valid-Until': validUntil,
-            'X-Goofy-Public-Key': encodeURIComponent(publicKey)
+            'X-Goofy-Public-Key': encodeURIComponent(publicKey),
+            ...headers
         }
     };
     if (data) {
@@ -92,22 +95,22 @@ export async function reqWithAuth(path, method, data) {
     }
 }
 
-export async function getWithAuth(path) {
-    return await reqWithAuth(path, "GET");
+export async function getWithAuth(path, headers) {
+    return await reqWithAuth(path, "GET", undefined, headers);
 }
 
-export async function postWithAuth(path, data) {
-    return await reqWithAuth(path, "POST", data);
+export async function postWithAuth(path, data, headers) {
+    return await reqWithAuth(path, "POST", data, headers);
 }
 
-export async function putWithAuth(path, data) {
-    return await reqWithAuth(path, "PUT", data);
+export async function putWithAuth(path, data, headers) {
+    return await reqWithAuth(path, "PUT", data, headers);
 }
 
-export async function deleteWithAuth(path) {
-    return await reqWithAuth(path, "DELETE");
+export async function deleteWithAuth(path, headers) {
+    return await reqWithAuth(path, "DELETE", undefined, headers);
 }
 
-export async function getNoAuth(path) {
-    return await reqNoAuth(path, "GET");
+export async function getNoAuth(path, headers) {
+    return await reqNoAuth(path, "GET", undefined, headers);
 }
