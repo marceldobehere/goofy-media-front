@@ -113,7 +113,7 @@ export default function Home() {
                                             <div className={styles.PostEntry} style={{border: "2px solid red", padding: "10px", margin: "10px"}}>
                                                 <div
                                                     style={{textAlign: "left", marginBottom: "5px"}}>
-                                                    <b>{post.displayName}</b> @{post.author}</div>
+                                                    <b>{post.displayName}</b> @{post.author} - {new Date(post.createdAt).toLocaleString()}</div>
                                                 <h3 style={{
                                                     textAlign: "left",
                                                     marginBottom: "15px",

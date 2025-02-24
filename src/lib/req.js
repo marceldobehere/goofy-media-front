@@ -1,6 +1,7 @@
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {signObj} from "@/lib/rsa";
-import {GlobalStuff, SpinActivity} from "@/lib/globalStateStuff";
+import {GlobalStuff} from "@/lib/globalStateStuff";
+import {SpinActivity} from "@/lib/spinner";
 
 
 export async function reqNoAuth(path, method, data) {
