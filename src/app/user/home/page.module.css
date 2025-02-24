@@ -29,7 +29,8 @@
 .PostDiv {
     background-color: blue;
     padding: 10px;
-    overflow-x: scroll;
+    overflow-x: auto;
+    height: max-content;
 }
 
 .PostEntry {
@@ -41,13 +42,14 @@
 .NewsDiv {
     /*background-color: green;*/
     padding: 10px 30px 10px 20px;
+    height: max-content;
 }
 
 .MainContent {
     /*background-color: yellow;*/
     display: grid;
     grid-template-columns: 2fr 1fr;
-
+    grid-template-rows: 1fr;
 
     height: calc(100vh - 60px - (var(--show_hamburg) * 60px));
     overflow-y: auto;
