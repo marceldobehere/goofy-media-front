@@ -30,7 +30,7 @@ export default function Home() {
             if (!GlobalStuff.loggedIn)
                 return goPath("/guest/login");
             if (!GlobalStuff.admin)
-                return goPath("/admin/home");
+                return goPath("/user/home");
             loadCodes();
         });
     })
