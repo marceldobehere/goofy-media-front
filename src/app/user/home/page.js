@@ -177,7 +177,7 @@ export default function Home() {
                             <Link href={"/user/home"}>Home</Link><br/>
                             <Link href={"/"}>Index</Link><br/>
                             <Link href={"/guest/login"}>Login</Link><br/>
-                            <a onClick={logout}>Logout</a><br/>
+                            <a onClick={async () => {await logout(); goPath("/guest/login")}}>Logout</a><br/>
                             <Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
