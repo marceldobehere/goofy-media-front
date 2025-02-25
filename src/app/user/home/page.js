@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
-import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import {getWithAuth} from "@/lib/req";
@@ -177,7 +177,7 @@ export default function Home() {
                             <Link href={"/user/home"}>Home</Link><br/>
                             <Link href={"/"}>Index</Link><br/>
                             <Link href={"/guest/login"}>Login</Link><br/>
-                            <a onClick={() => {localStorage.clear(); goPath("/guest/login");}}>Logout</a><br/>
+                            <a onClick={logout}>Logout</a><br/>
                             <Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>

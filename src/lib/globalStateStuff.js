@@ -154,5 +154,6 @@ export async function logout() {
     GlobalStuff.privateKey = null;
     GlobalStuff.userId = null;
     GlobalStuff.loggedIn = false;
+    GlobalStuff.lastCheck = null;
     await saveGlobalState();
 }
