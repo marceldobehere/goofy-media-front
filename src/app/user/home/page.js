@@ -14,6 +14,7 @@ export default function Home() {
     let [showBurgerMenu, setBurger] = useState(false);
     let [postArr, setPostArr] = useState([]);
     let [newsArr, setNewsArr] = useState([]);
+    let [username, setUsername] = useState("...");
 
     async function transformPostObjArr(postObjArr) {
         let posts = [];
@@ -149,6 +150,18 @@ export default function Home() {
             if (!GlobalStuff.loggedIn)
                 goPath("/guest/login");
 
+            setUsername(GlobalStuff.userId);
+
+            const nav = document.getElementById("goofy-nav");
+            const posts = document.getElementById("goofy-posts");
+            nav.addEventListener('wheel', (e) => {
+                if (e.deltaY > 0) {
+                    posts.scrollBy(0, 100);
+                } else {
+                    posts.scrollBy(0, -100);
+                }
+            });
+
             loadPosts();
             loadNews();
         });
@@ -164,7 +177,7 @@ export default function Home() {
         <div className={styles.page}>
             <main className={styles.main}>
 
-                <nav className={showBurgerMenu ? styles.NavBar2 : styles.NavBar}>
+                <nav id={"goofy-nav"} className={showBurgerMenu ? styles.NavBar2 : styles.NavBar}>
                     <div className={styles.NavBarHamburg}>
                         <button onClick={() => {
                             setBurger(!showBurgerMenu);
@@ -184,9 +197,9 @@ export default function Home() {
                     </div>
                 </nav>
 
-                <div className={styles.MainContent} onScroll={onPostScroll}>
+                <div id={"goofy-posts"} className={styles.MainContent} onScroll={onPostScroll}>
                     <div className={styles.PostDiv}>
-                        <h1>User Home</h1>
+                        <h2>Hi, @{username}</h2>
 
                         Cool Posts below: &nbsp;
                         <button onClick={() => {
