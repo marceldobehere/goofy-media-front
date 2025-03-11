@@ -8,9 +8,11 @@ import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
+import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 
 export default function Home() {
     const pathName = usePathname();
+
     async function loadCodes() {
         let res = await getWithAuth("/admin/codes", {});
         if (res === undefined)
@@ -23,6 +25,34 @@ export default function Home() {
         if (res === undefined)
             return alert("Failed to delete code");
         setCodes(res);
+    }
+
+    async function exportAllData() {
+        // Get from server endpoint
+        const data = await getWithAuth("/admin/export");
+        if (data === undefined)
+            return alert("Failed to get export data");
+
+        // download as text file
+        console.log("Exported Data: ", data);
+        downloadTextFile(JSON.stringify(data), "full-data-export.json");
+    }
+
+    async function importAllData() {
+        // ask for file input and read all text
+        const files = await uploadData();
+        if (files === undefined || files.length === 0)
+            return console.log("No files selected");
+        const file = files[0];
+        const fileData = await fileToString(file);
+        const data = JSON.parse(fileData);
+        console.log("Imported Data: ", data);
+
+        // Send to server endpoint
+        const res = await postWithAuth("/admin/export", data);
+        if (res === undefined)
+            return alert("Failed to import data");
+        alert("Imported data");
     }
 
     useEffect(() => {
@@ -45,6 +75,15 @@ export default function Home() {
                 <Link href={"/guest/login"}>Login</Link><br/>
                 <Link href={"/guest/register"}>Register</Link><br/>
                 <Link href={"/user/home"}>Home</Link><br/>
+
+                <br/><br/><br/>
+
+                <h2>Complete Data Export/Import</h2>
+                <div style={{border: "2px solid blue", margin: "auto", width: "max-content"}}>
+                    <button style={{padding: "5px", margin: "5px"}} onClick={exportAllData}>Export all Data</button>
+                    <button style={{padding: "5px", margin: "5px"}} onClick={importAllData}>Import all Data</button>
+                </div>
+
 
                 <br/><br/><br/>
 
