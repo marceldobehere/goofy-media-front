@@ -93,18 +93,18 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
 
 export async function loadKey(key) {
     try {
-        return JSON.parse(localStorage.getItem(key));
+        return JSON.parse(LsGet(key));
     } catch (e) {
         return null;
     }
 }
 
 export async function saveKey(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    LsSet(key, JSON.stringify(value));
 }
 
 export async function removeKey(key) {
-    localStorage.removeItem(key);
+    LsDel(key);
 }
 
 export async function loadKeyOrDefault(key, defaultValue) {
@@ -156,4 +156,18 @@ export async function logout() {
     GlobalStuff.loggedIn = false;
     GlobalStuff.lastCheck = null;
     await saveGlobalState();
+}
+
+const ENV_LS_OFFSET = "__GOOFY_MEDIA__";
+
+function LsGet(key) {
+    return localStorage.getItem(ENV_LS_OFFSET + key);
+}
+
+function LsSet(key, value) {
+    localStorage.setItem(ENV_LS_OFFSET + key, value);
+}
+
+function LsDel(key) {
+    localStorage.removeItem(ENV_LS_OFFSET + key);
 }
