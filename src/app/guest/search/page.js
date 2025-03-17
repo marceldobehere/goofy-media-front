@@ -88,15 +88,15 @@ export default function Search() {
         <div style={{margin: "auto", textAlign: "center"}}>
             <button onClick={() => {
                 goToPage(query.page - 1)
-            }} disabled={firstPage}>Back
+            }} disabled={firstPage}>&lt;- Back
             </button>
-            &nbsp;
+            &nbsp;&nbsp;
+            <Link href={"/user/home"}>Home</Link>
+            &nbsp;&nbsp;
             <button onClick={() => {
                 goToPage(query.page + 1)
-            }} disabled={lastPage}>Next
+            }} disabled={lastPage}>Next -&gt;
             </button>
-            &nbsp;
-            <Link href={"/user/home"}>Home</Link>
         </div>
     );
 
