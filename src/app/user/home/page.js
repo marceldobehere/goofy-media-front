@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
+import postStyles from "@/app/user/home/entries/postEntry.module.css";
 import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
@@ -8,6 +9,11 @@ import {getWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
+import PostEntry from "@/app/user/home/entries/postEntry";
+import NewsEntry from "@/app/user/home/entries/newsEntry";
+import EntryList from "@/app/user/home/entries/EntryList";
+import {sleep} from "@/lib/utils";
+import {transformPostObjArr} from "@/app/user/home/postTools";
 
 export default function Home() {
     const pathName = usePathname();
@@ -15,27 +21,6 @@ export default function Home() {
     let [postArr, setPostArr] = useState([]);
     let [newsArr, setNewsArr] = useState([]);
     let [username, setUsername] = useState("...");
-
-    async function transformPostObjArr(postObjArr) {
-        let posts = [];
-        for (let postObj of postObjArr) {
-            let post = {
-                title: postObj.post.title,
-                text: postObj.post.text,
-                author: postObj.userId,
-                displayName: "Display Name",
-                createdAt: postObj.post.createdAt,
-                tags: postObj.post.tags,
-            };
-
-            // TODO: verify each post with signature
-
-            posts.push(post);
-        }
-
-        console.log("> Posts:", postObjArr, " -> ", posts);
-        return posts;
-    }
 
     async function loadPosts() {
         console.log("> Loading posts");
@@ -45,8 +30,8 @@ export default function Home() {
         setPostArr(await transformPostObjArr(res));
     }
 
-    const sleep = async (ms) => new Promise(r => setTimeout(r, ms));
     let morePostBusy = false;
+
     async function loadMorePosts() {
         // console.log("> Loading more posts");
         if (morePostBusy)
@@ -122,7 +107,8 @@ export default function Home() {
     }
 
     let prevPos = undefined;
-    async function onPostScroll(forced) {
+
+    async function onPostScroll() {
         let btn = document.getElementById("load-more-posts-btn");
         if (btn === null)
             return console.info("NO LONGER EXISTS");
@@ -143,7 +129,6 @@ export default function Home() {
             loadMorePosts();
         }
     }
-
 
     useEffect(() => {
         initGlobalState(pathName, true, false, async () => {
@@ -174,7 +159,7 @@ export default function Home() {
     })
 
     return (
-        <div className={styles.page}>
+        <div>
             <main className={styles.main}>
 
                 <nav id={"goofy-nav"} className={showBurgerMenu ? styles.NavBar2 : styles.NavBar}>
@@ -190,7 +175,10 @@ export default function Home() {
                             <Link href={"/user/home"}>Home</Link><br/>
                             <Link href={"/"}>Index</Link><br/>
                             <Link href={"/guest/login"}>Login</Link><br/>
-                            <a onClick={async () => {await logout(); goPath("/guest/login")}}>Logout</a><br/>
+                            <a onClick={async () => {
+                                await logout();
+                                goPath("/guest/login")
+                            }}>Logout</a><br/>
                             <Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
@@ -202,80 +190,21 @@ export default function Home() {
                         <h2>Hi, @{username}</h2>
 
                         Cool Posts below: &nbsp;
-                        <button onClick={() => {
-                            loadPosts()
-                        }}>Refresh</button>
-
-
-                        <div>
-                            <ul style={{listStyle: "none"}}>
-                                {postArr.map((post, index) => {
-                                    return (
-                                        <li key={index}>
-
-                                            <div className={styles.PostEntry}
-                                                 style={{border: "2px solid #8080F0", padding: "10px", margin: "10px"}}>
-                                                <div
-                                                    style={{textAlign: "left", marginBottom: "5px"}}>
-                                                    <b>{post.displayName}</b> @{post.author} - {new Date(post.createdAt).toLocaleString()}
-                                                </div>
-                                                <h3 style={{
-                                                    textAlign: "left",
-                                                    marginBottom: "15px",
-                                                    display: "block"
-                                                }}>{post.title}
-                                                </h3>
-                                                <p style={{
-                                                    marginBottom: "15px",
-                                                    whiteSpace: "pre-line"
-                                                }}>{post.text}</p>
-                                                <p>Tags: {post.tags.map((tag, idx) => {
-                                                    return (<span key={idx}><a>#{tag}</a>&nbsp;</span>);
-                                                })}</p>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-
-                                <div className={styles.PostEntry}
-                                     style={{border: "2px solid #8080F0", padding: "10px", margin: "10px"}}>
-                                    <button id={"load-more-posts-btn"} className={"cont-btn"} onClick={loadMorePosts}>Load More Posts</button>
-                                </div>
-                            </ul>
-                        </div>
+                        <button onClick={loadPosts}>Refresh</button>
+                        <EntryList elements={postArr} component={PostEntry} extra={(<div
+                            className={postStyles.PostEntryDiv}>
+                            <button id={"load-more-posts-btn"} className={"cont-btn"} onClick={loadMorePosts}>Load
+                                More Posts
+                            </button>
+                        </div>)}></EntryList>
                     </div>
 
                     <div className={styles.NewsDiv}>
                         <h2>Goofy Media News</h2>
 
                         Cool News below: &nbsp;
-                        <button onClick={() => {
-                            loadNews()
-                        }}>Refresh</button>
-
-                        <div>
-                            <ul style={{listStyle: "none"}}>
-                                {newsArr.map((post, index) => {
-                                    return (
-                                        <li key={index}>
-
-                                            <div style={{border: "2px solid #8080D0", padding: "10px", margin: "10px"}}>
-                                                <h3 style={{
-                                                    textAlign: "left",
-                                                    marginBottom: "15px",
-                                                    display: "block"
-                                                }}>{post.title}
-                                                </h3>
-                                                <p style={{
-                                                    marginBottom: "15px",
-                                                    whiteSpace: "pre-line"
-                                                }}>{post.text}</p>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
+                        <button onClick={loadNews}>Refresh</button>
+                        <EntryList elements={newsArr} component={NewsEntry}></EntryList>
                     </div>
                 </div>
             </main>

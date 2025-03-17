@@ -1,0 +1,26 @@
+.PostEntryDiv {
+    overflow: auto;
+    max-height: 400px;
+    border: 2px solid #8080F0;
+    padding: 10px;
+    margin: 10px;
+}
+
+.PostEntryHeader {
+    text-align: left;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.PostBody {
+    text-align: left;
+    margin-bottom: 15px;
+    white-space: pre-line;
+    display: block;
+}
+
+.PostUserHeader {
+    text-align: left;
+    margin-bottom: 5px;
+    display: block;
+}

@@ -36,11 +36,6 @@
     min-height: 100%;
 }
 
-.PostEntry {
-    overflow: auto;
-
-    max-height: 400px;
-}
 
 .NewsDiv {
     background-color: #101020;
