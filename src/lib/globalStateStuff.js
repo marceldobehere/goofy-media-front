@@ -24,7 +24,7 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
     pathName = pathName.split("#")[0];
     console.info("> Starting Global State Init: ", pathName);
     if (lastPath == pathName)
-        return;
+        return console.info("> Already initialized for this path");
     lastPath = pathName;
     await SpinActivity(async () => {
         console.info("> Starting Global State Init");
