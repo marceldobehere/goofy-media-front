@@ -14,6 +14,7 @@ import NewsEntry from "@/app/user/home/entries/newsEntry";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {sleep} from "@/lib/utils";
 import {transformPostObjArr} from "@/app/user/home/postTools";
+import Image from "next/image";
 
 export default function Home() {
     const pathName = usePathname();
@@ -162,6 +163,19 @@ export default function Home() {
         <div>
             <main className={styles.main}>
 
+                <Image style={{
+                    position: "fixed",
+                    bottom: "80px",
+                    right: "60px",
+                    width: "50px",
+                    height: "50px",
+                    backgroundColor: "rgba(0,0,0,0.7)",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                    display: "block",
+                }} src={"/goofy-media-front/write_icon.png"} alt={"Write Icon"} width={"100"} height={"100"}
+                onClick={() => {goPath("/user/post_composer")}}></Image>
+
                 <nav id={"goofy-nav"} className={showBurgerMenu ? styles.NavBar2 : styles.NavBar}>
                     <div className={styles.NavBarHamburg}>
                         <button onClick={() => {
@@ -174,6 +188,7 @@ export default function Home() {
                         <p>
                             <Link href={"/user/home"}>Home</Link><br/>
                             <Link href={"/"}>Index</Link><br/>
+                            <Link href={"/user/account_settings"}>Account Settings</Link><br/>
                             <Link href={"/guest/login"}>Login</Link><br/>
                             <a onClick={async () => {
                                 await logout();
