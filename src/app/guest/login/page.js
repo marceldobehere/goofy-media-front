@@ -17,6 +17,7 @@ import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
+import {fixServerUrl} from "@/lib/utils";
 
 
 export default function Login() {
@@ -62,6 +63,9 @@ export default function Login() {
             alert("Password cannot be empty");
             return;
         }
+
+        server = fixServerUrl(server);
+        setServer(server);
 
         if (await checkPubKeyValid(username) && await checkPrivKeyValid(password)) {
             GlobalStuff.publicKey = username;

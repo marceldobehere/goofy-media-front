@@ -50,7 +50,7 @@ async function getSignatureAndId(body) {
     return {signature, id, validUntil, publicKey: GlobalStuff.publicKey};
 }
 
-export async function reqWithAuth(path, method, data, headers) {
+export async function reqWithAuth(path, method, data, headers, sendRawResponse) {
     if (headers === undefined)
         headers = {};
 
@@ -74,10 +74,6 @@ export async function reqWithAuth(path, method, data, headers) {
     await SpinActivity(async () => {
         try {
             res = await fetch(GlobalStuff.server + path, options);
-            if (res.status !== 200 && res.status !== 201) {
-                console.info("> Failed request: ", await res.text(), res);
-                res = undefined;
-            }
         } catch (e) {
             console.info("> Failed request: ", e);
             res = undefined;
@@ -87,6 +83,15 @@ export async function reqWithAuth(path, method, data, headers) {
     if (res === undefined)
         return undefined;
 
+    if (sendRawResponse) {
+        return res;
+    }
+
+    if (res.status !== 200 && res.status !== 201) {
+        console.info("> Failed sent request: ", await res.text(), res);
+        return undefined;
+    }
+
     const text = await res.text();
     try {
         return JSON.parse(text);
@@ -95,22 +100,22 @@ export async function reqWithAuth(path, method, data, headers) {
     }
 }
 
-export async function getWithAuth(path, headers) {
-    return await reqWithAuth(path, "GET", undefined, headers);
+export async function getWithAuth(path, headers, sendRawResponse) {
+    return await reqWithAuth(path, "GET", undefined, headers, sendRawResponse);
 }
 
-export async function postWithAuth(path, data, headers) {
-    return await reqWithAuth(path, "POST", data, headers);
+export async function postWithAuth(path, data, headers, sendRawResponse) {
+    return await reqWithAuth(path, "POST", data, headers, sendRawResponse);
 }
 
-export async function putWithAuth(path, data, headers) {
-    return await reqWithAuth(path, "PUT", data, headers);
+export async function putWithAuth(path, data, headers, sendRawResponse) {
+    return await reqWithAuth(path, "PUT", data, headers, sendRawResponse);
 }
 
-export async function deleteWithAuth(path, headers) {
-    return await reqWithAuth(path, "DELETE", undefined, headers);
+export async function deleteWithAuth(path, headers, sendRawResponse) {
+    return await reqWithAuth(path, "DELETE", undefined, headers, sendRawResponse);
 }
 
-export async function getNoAuth(path, headers) {
-    return await reqNoAuth(path, "GET", undefined, headers);
+export async function getNoAuth(path, headers, sendRawResponse) {
+    return await reqNoAuth(path, "GET", undefined, headers, sendRawResponse);
 }

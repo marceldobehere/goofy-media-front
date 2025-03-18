@@ -46,15 +46,20 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         GlobalStuff.loggedIn = GlobalStuff.publicKey !== null;
 
         if (GlobalStuff.loggedIn && needLogin) {
-            let res = await getWithAuth("/user/verify");
-            if (res === undefined) {
+            let res = await getWithAuth("/user/verify", null, true);
+            console.log("> Login test: ", res);
+            if (res === undefined || res.status != 200) {
                 // alert("Login test failed!");
 
-                GlobalStuff.publicKey = null;
-                GlobalStuff.privateKey = null;
-                GlobalStuff.userId = null;
-                GlobalStuff.loggedIn = false;
-                await saveGlobalState();
+                if (res !== undefined && res.status === 401) {
+                    GlobalStuff.publicKey = null;
+                    GlobalStuff.privateKey = null;
+                    GlobalStuff.userId = null;
+                    GlobalStuff.loggedIn = false;
+                    await saveGlobalState();
+                } else {
+                    alert("Network error, please try again later");
+                }
 
                 return;
             }
@@ -62,8 +67,8 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         }
 
         if (GlobalStuff.loggedIn && needAdmin) {
-            let res = await getWithAuth("/admin/verify");
-            if (res === undefined) {
+            let res = await getWithAuth("/admin/verify", null, true);
+            if (res === undefined || res.status != 200) {
                 GlobalStuff.admin = false;
                 // alert("Admin test failed!");
                 goPath("/user/home");

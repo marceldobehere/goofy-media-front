@@ -27,9 +27,13 @@ export default function Home() {
         let tagList2 = [];
         for (let i = 0; i < tagList.length; i++) {
             let tag = tagList[i].trim();
-            if (tag !== "") {
-                tagList2.push(tag);
-            }
+            // remove any # and .
+            tag = tag.replaceAll("#", "");
+            tag = tag.replaceAll(".", "");
+
+            if (tag !== "")
+                if (!tagList2.includes(tag))
+                    tagList2.push(tag);
         }
         return tagList2;
     }

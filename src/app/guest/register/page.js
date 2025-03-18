@@ -11,6 +11,7 @@ import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
+import {fixServerUrl} from "@/lib/utils";
 
 export default function Register() {
     const pathName = usePathname();
@@ -49,6 +50,10 @@ export default function Register() {
             alert("Please generate a keypair first!");
             return updateState("registerButtonText", "Register");
         }
+
+        state.server = fixServerUrl(state.server);
+        updateState("server", state.server);
+
         GlobalStuff.publicKey = state.keys.publicKey;
         GlobalStuff.privateKey = state.keys.privateKey;
         GlobalStuff.userId = uHash;
@@ -93,6 +98,9 @@ export default function Register() {
             alert("Passwords do not match!");
             return updateState("registerButtonText", "Register");
         }
+
+        state.server = fixServerUrl(state.server);
+        updateState("server", state.server);
 
         GlobalStuff.publicKey = state.keys.publicKey;
         GlobalStuff.privateKey = state.keys.privateKey;
