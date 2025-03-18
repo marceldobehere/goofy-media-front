@@ -8,6 +8,7 @@ import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
+import PostEntry from "@/app/user/home/entries/postEntry";
 
 export default function Home() {
     const pathName = usePathname();
@@ -21,6 +22,7 @@ export default function Home() {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [tagStr, setTagStr] = useState("");
+    const [showEdit, setShowEdit] = useState(true);
 
     function parseTags() {
         let tagList = tagStr.split(",");
@@ -107,6 +109,71 @@ export default function Home() {
         goPath("/user/home");
     }
 
+    const toggleEdit = () => {
+        setShowEdit(!showEdit);
+    }
+
+    function getEdit() {
+        return (<>
+            <p className={"cont-inp-header"}>Title</p>
+            <input placeholder={"Cool Title"} value={title} className={"cont-inp"} onChange={(e) => {
+                setTitle(e.target.value);
+            }}></input><br/>
+
+            <textarea placeholder={"Enter Cool Text"} value={text} className={"cont-inp"}
+                      style={{resize: "vertical", minHeight: "80px", maxHeight: "400px"}} onChange={(e) => {
+                setText(e.target.value);
+            }}></textarea>
+
+            <p className={"cont-inp-header"}>Tags</p>
+            <input placeholder={"cool, post, amazing"} value={tagStr} className={"cont-inp"}
+                   onChange={(e) => {
+                       setTagStr(e.target.value);
+                   }} onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                    attemptPost();
+                }
+            }}></input><br/>
+
+            <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
+                <button className={"cont-inp-btn"}
+                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                        onClick={toggleEdit}>Preview
+                </button>
+                <button className={"cont-inp-btn"}
+                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                        onClick={() => {
+                            checkPost()
+                        }}>Check
+                </button>
+                <button className={"cont-inp-btn"}
+                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                        onClick={attemptPost}>Post
+                </button>
+            </div>
+        </>);
+    }
+
+    function getPreview() {
+        return (<>
+            <PostEntry post={{
+                displayName: "Display Name",
+                author: GlobalStuff.userId,
+                createdAt: Date.now(),
+                title: title,
+                text: text,
+                tags: parseTags()
+            }}></PostEntry>
+
+            <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
+                <button className={"cont-inp-btn"}
+                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                        onClick={toggleEdit}>Edit
+                </button>
+            </div>
+        </>);
+    }
+
     return (
         <div className={styles.page}>
             <main className={styles.main}>
@@ -115,36 +182,7 @@ export default function Home() {
                 <div className={"container"}>
                     <h2>Create Post</h2>
 
-                    <p className={"cont-inp-header"}>Title</p>
-                    <input placeholder={"Cool Title"} value={title} className={"cont-inp"} onChange={(e) => {
-                        setTitle(e.target.value);
-                    }}></input><br/>
-
-                    <textarea placeholder={"Enter Cool Text"} value={text} className={"cont-inp"}
-                              style={{resize: "vertical", minHeight: "80px", maxHeight: "400px"}} onChange={(e) => {
-                        setText(e.target.value);
-                    }}></textarea>
-
-                    <p className={"cont-inp-header"}>Tags</p>
-                    <input placeholder={"cool, post, amazing"} value={tagStr} className={"cont-inp"}
-                           onChange={(e) => {
-                               setTagStr(e.target.value);
-                           }} onKeyUp={(e) => {
-                        if (e.key === 'Enter') {
-                            attemptPost();
-                        }
-                    }}></input><br/>
-
-                    <div style={{display: "block", width:"max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
-                        <button className={"cont-inp-btn"}
-                                style={{padding: "5px 10px 5px 10px", margin:"5px 10px 5px 10px"}}
-                                onClick={() => {checkPost()}}>Check
-                        </button>
-                        <button className={"cont-inp-btn"}
-                                style={{padding: "5px 10px 5px 10px", margin:"5px 10px 5px 10px"}}
-                                onClick={attemptPost}>Post
-                        </button>
-                    </div>
+                    {showEdit ? getEdit() : getPreview()}
                 </div>
 
             </main>
