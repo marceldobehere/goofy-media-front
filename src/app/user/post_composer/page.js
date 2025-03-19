@@ -155,6 +155,15 @@ export default function Home() {
     }
 
     function getPreview() {
+        // try {
+        //     const dirty = marked.parse(text);
+        //     const clean = DOMPurify.sanitize(dirty, { ADD_ATTR: ['target'] });
+        //     p.innerHTML = clean;
+        // } catch (e) {
+        //     console.warn("ERROR RENDERING: ", message)
+        //     p.textContent = `ERROR RENDERING MESSAGE: ${e.message}`;
+        // }
+
         return (<>
             <PostEntry post={{
                 displayName: "Display Name",
