@@ -3,24 +3,36 @@ import hljs from "@/lib/highlight/highlight";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
 
-function waitForElm(selector) {
-    return new Promise(resolve => {
-        if (document.querySelector(selector)) {
-            return resolve(document.querySelector(selector));
-        }
+let idSet = new Set();
 
-        const observer = new MutationObserver(mutations => {
+function waitForElm(selector, func) {
+    if (idSet.has(selector))
+        return;
+    idSet.add(selector);
+    // console.log("> Waiting for element: ", selector, idSet);
+
+    const observer = new MutationObserver(mutations => {
+        setTimeout(() => {
             if (document.querySelector(selector)) {
-                observer.disconnect();
-                resolve(document.querySelector(selector));
+                // console.log("> Found element: ", selector);
+                // observer.disconnect();
+                // resolve(document.querySelector(selector));
+                const elem = document.querySelector(selector);
+                elem.id = `done-${elem.id}`;
+                func(elem);
             }
-        });
+        }, 50);
+        // if (document.querySelector(selector)) {
+        //     console.log("> Found element: ", selector);
+        //     observer.disconnect();
+        //     func(document.querySelector(selector));
+        // }
+    });
 
-        // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+    // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
     });
 }
 
@@ -86,8 +98,10 @@ const renderer = {
                 element.target = "_blank";
                 element.textContent = `[Image ${text}]`;
                 element.id = `img-${randomId}`;
+                // console.log("> Loading image: " + randomId);
 
-                waitForElm(`#img-${randomId}`).then(async (element) => {
+                waitForElm(`#img-${randomId}`, async (element) => {
+                    // console.log("> Found image: " + randomId, element);
                     if (await doesImageExist(url))
                     {
                         let imgNode = document.createElement("img");
@@ -154,7 +168,7 @@ const renderer = {
         let lang = token.lang;
         if (lang)
         {
-            console.log("Highlighting code with language: " + lang);
+            // console.log("Highlighting code with language: " + lang);
             try {
                 let code = hljs.highlight(codeRes, {language:lang, ignoreIllegals:true});
                 // console.log("> RES: ", code);

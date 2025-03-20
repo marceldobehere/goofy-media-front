@@ -1,10 +1,10 @@
-export default function EntryList({elements, component, extra}) {
+export default function EntryList({elements, compFn, extra}) {
     return (
         <ul style={{listStyle: "none"}}>
             {elements.map((post, index) => {
                 return (
                     <li key={index}>
-                        {component({post})}
+                        {compFn(post)}
                     </li>
                 );
             })}

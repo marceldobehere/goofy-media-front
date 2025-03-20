@@ -2,10 +2,29 @@
 
 import styles from "@/app/user/home/entries/postEntry.module.css";
 import {goPath} from "@/lib/goPath";
-import {getPostHtml} from "@/app/user/home/entries/postProcess";
+import {useEffect, useState} from "react";
+import {getRandomIntInclusive} from "@/lib/cryptoUtils";
+
+const loadGetPostHtml = async () => {
+    return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
+}
 
 export default function PostEntry({post}) {
-    let innerHTML = getPostHtml(post.text);
+    const [innerHTML, setInnerHTML] = useState();
+    const [lastPostText, setLastPostText] = useState();
+
+    if (lastPostText !== post.text) {
+        setLastPostText(post.text);
+        loadGetPostHtml().then((getPostHtml) => {
+            setInnerHTML(getPostHtml(post.text));
+        });
+    }
+
+    // useEffect(() => {
+    //     loadGetPostHtml().then((getPostHtml) => {
+    //         setInnerHTML(getPostHtml(post.text));
+    //     });
+    // }, []);
 
     return (
         <div className={styles.PostEntryDiv}>

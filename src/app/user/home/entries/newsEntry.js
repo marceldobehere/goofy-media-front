@@ -1,8 +1,18 @@
 import styles from "@/app/user/home/entries/postEntry.module.css";
-import {getPostHtml} from "@/app/user/home/entries/postProcess";
+import {useEffect, useState} from "react";
+// import {getPostHtml} from "@/app/user/home/entries/postProcess";
+
+const loadGetPostHtml = async () => {
+    return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
+}
 
 export default function NewsEntry({post}) {
-    let innerHTML = getPostHtml(post.text);
+    const [innerHTML, setInnerHTML] = useState();
+    useEffect(() => {
+        loadGetPostHtml().then((getPostHtml) => {
+            setInnerHTML(getPostHtml(post.text));
+        });
+    }, []);
 
     return (
         <div className={styles.PostEntryDiv}>

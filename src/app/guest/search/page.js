@@ -112,7 +112,7 @@ export default function Search() {
                 <br/><br/>
 
                 <div className={styles.PostDiv}>
-                    <EntryList elements={postArr} component={PostEntry}></EntryList>
+                    <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>
                 </div>
                 <br/>
                 {buttonMenu}

@@ -206,7 +206,7 @@ export default function Home() {
 
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
-                        <EntryList elements={postArr} component={PostEntry} extra={(<div
+                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} extra={(<div
                             className={postStyles.PostEntryDiv}>
                             <button id={"load-more-posts-btn"} className={"cont-btn"} onClick={loadMorePosts}>Load
                                 More Posts
@@ -219,7 +219,7 @@ export default function Home() {
 
                         Cool News below: &nbsp;
                         <button onClick={loadNews}>Refresh</button>
-                        <EntryList elements={newsArr} component={NewsEntry}></EntryList>
+                        <EntryList elements={newsArr} compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}></EntryList>
                     </div>
                 </div>
             </main>
