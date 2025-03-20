@@ -1,3 +1,6 @@
+import hljs from "@/lib/highlight/highlight.min";
+import {getRandomIntInclusive} from "@/lib/cryptoUtils";
+import {LocalSettings} from "@/lib/localSettings";
 
 function waitForElm(selector) {
     return new Promise(resolve => {
@@ -63,7 +66,7 @@ const fixSizeScroll = (element) => {
         return;// return console.log("NOT SCROLLING: " + element.clientHeight);
 
     // make it scroll down by the element height
-    docChatUlDiv.scrollTop += element.clientHeight;
+    // docChatUlDiv.scrollTop += element.clientHeight;
     // console.log("SCROLLING: " + element.clientHeight);
 }
 
@@ -73,74 +76,8 @@ const renderer = {
         let url = token.href;
         let text = token.text;
 
-        if (url.startsWith(filePathStart))
         {
-            let fileId = url.substring(filePathStart.length);
-            let randomInt = getRandomIntInclusive(100000, 9999999);
-            let imgId = `img-${fileId}-${randomInt}`;
-            waitForElm(`#${imgId}`).then(async (element) => {
-                let file = await internalGetFile(currentUser['mainAccount'], getCurrentChatUserId(), parseInt(fileId));
-                //console.log(file);
-                if (!file)
-                    return element.textContent = `[Error: File not found]`;
-                let fileData = file["data"]; // is a uint8array
-                let filename = file["filename"];
-
-                let blob = new Blob([fileData]);//, {type: "image/png"});
-                let url = URL.createObjectURL(blob);
-
-                if (await doesImageExist(url))
-                {
-                    let imgNode = document.createElement("img");
-                    imgNode.src = url;
-                    imgNode.alt = filename;
-                    imgNode.className = "chat-image";
-                    imgNode.onload = () => fixSizeScroll(imgNode);
-                    element.replaceWith(imgNode);
-
-                    imgNode.onclick = () => {
-                        // open image in new tab
-                        // include the type of image
-                        let newBlob = new Blob([fileData], {type: "image/png"});
-                        let newUrl = URL.createObjectURL(newBlob);
-                        let newTab = window.open(newUrl, "_blank");
-                        newTab.focus();
-                    };
-                }
-                else if (await doesVideoExist(url))
-                {
-                    let videoNode = document.createElement("video");
-                    videoNode.src = url;
-                    videoNode.alt = filename;
-                    videoNode.className = "chat-video";
-                    videoNode.controls = true;
-                    videoNode.onloadeddata = () => fixSizeScroll(videoNode);
-                    element.replaceWith(videoNode);
-                }
-                else if (await doesAudioExist(url))
-                {
-                    let audioNode = document.createElement("audio");
-                    audioNode.src = url;
-                    audioNode.alt = filename;
-                    audioNode.className = "chat-audio";
-                    audioNode.controls = true;
-                    audioNode.onloadeddata = () => fixSizeScroll(audioNode);
-                    element.replaceWith(audioNode);
-                }
-                else
-                {
-                    let aNode = document.createElement("a");
-                    aNode.href = url;
-                    aNode.download = filename;
-                    aNode.textContent = `[${filename}]`;
-                    element.replaceWith(aNode);
-                }
-            });
-            return `<a id="${imgId}">[Loading]</a>`;
-        }
-        else
-        {
-            if (settingsObj["chat"]["allow-external-sources-global"])
+            if (LocalSettings.autoLoadMedia)// (settingsObj["chat"]["allow-external-sources-global"])
             {
                 let randomId = getRandomIntInclusive(100000, 9999999);
                 let element = document.createElement("a");
@@ -216,11 +153,13 @@ const renderer = {
         let lang = token.lang;
         if (lang)
         {
+            console.log("Highlighting code with language: " + lang);
             try {
                 let code = hljs.highlight(codeRes, {language:lang, ignoreIllegals:true});
+                console.log("> RES: ", code);
                 codeRes = code.value;
             } catch (e) {
-                logError(e);
+                console.error(e);
             }
         }
         else
@@ -247,37 +186,37 @@ const renderer = {
         let partRes = [];
         for (let part of parts)
         {
-            if (part.startsWith("@") && part.length > 1)
-            {
-                let ping = part.substring(1);
-                let randomInt = getRandomIntInclusive(100000, 9999999);
-                let pingId = `chat-ping-${randomInt}-user-${ping}`;
-                waitForElm(`#${pingId}`).then(async (element) => {
-                    let userId = parseInt(ping);
-                    if (!userExists(userId) && userId != currentUser['mainAccount']['userId'])
-                    {
-                        element.className = "chat-ping chat-ping-other";
-                        return element.textContent = `@[Unknown User]`;
-                    }
-
-                    let username = userGetInfoDisplayUsernameShort(currentUser['mainAccount'], userId);
-                    element.textContent = `@${username}`;
-                    if (userId == currentUser['mainAccount']['userId'])
-                        element.className = "chat-ping chat-ping-self";
-                    else
-                        element.className = "chat-ping chat-ping-other";
-
-                    element.onclick = () => {
-                        //openChat(userId);
-                    };
-                });
-                partRes.push(`<span id="${pingId}">${part}</span>`);
-            }
-            else
+            // if (part.startsWith("@") && part.length > 1)
+            // {
+            //     let ping = part.substring(1);
+            //     let randomInt = getRandomIntInclusive(100000, 9999999);
+            //     let pingId = `chat-ping-${randomInt}-user-${ping}`;
+            //     waitForElm(`#${pingId}`).then(async (element) => {
+            //         let userId = parseInt(ping);
+            //         if (!userExists(userId) && userId != currentUser['mainAccount']['userId'])
+            //         {
+            //             element.className = "chat-ping chat-ping-other";
+            //             return element.textContent = `@[Unknown User]`;
+            //         }
+            //
+            //         let username = userGetInfoDisplayUsernameShort(currentUser['mainAccount'], userId);
+            //         element.textContent = `@${username}`;
+            //         if (userId == currentUser['mainAccount']['userId'])
+            //             element.className = "chat-ping chat-ping-self";
+            //         else
+            //             element.className = "chat-ping chat-ping-other";
+            //
+            //         element.onclick = () => {
+            //             //openChat(userId);
+            //         };
+            //     });
+            //     partRes.push(`<span id="${pingId}">${part}</span>`);
+            // }
+            // else
                 partRes.push(part);
         }
         return partRes.join(" ");
     }
 };
 
-marked.use({useNewRenderer: true, renderer, breaks: true });
+export default {useNewRenderer: true, renderer, breaks: true };

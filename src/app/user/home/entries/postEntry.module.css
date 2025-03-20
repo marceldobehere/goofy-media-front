@@ -1,6 +1,7 @@
 .PostEntryDiv {
-    overflow: auto;
-    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /*max-height: 520px;*/
     border: 2px solid #8080F0;
     padding: 10px;
     margin: 10px;
@@ -17,10 +18,24 @@
     margin-bottom: 15px;
     white-space: pre-line;
     display: block;
+    max-height: 340px;
+    overflow-y: auto;
 }
 
 .PostUserHeader {
     text-align: left;
     margin-bottom: 5px;
     display: block;
+}
+
+.PostBody h1, .PostBody h2, .PostBody h3, .PostBody h4, .PostBody h5, .PostBody h6 {
+    text-align: left;
+}
+
+/*Wrap text*/
+.PostTags {
+    text-align: left;
+    margin-bottom: 5px;
+    display: block;
+    white-space: pre-line;
 }

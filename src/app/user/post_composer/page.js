@@ -121,7 +121,7 @@ export default function Home() {
             }}></input><br/>
 
             <textarea placeholder={"Enter Cool Text"} value={text} className={"cont-inp"}
-                      style={{resize: "vertical", minHeight: "80px", maxHeight: "400px"}} onChange={(e) => {
+                      style={{resize: "vertical", height: "200px", minHeight: "80px", maxHeight: "600px"}} onChange={(e) => {
                 setText(e.target.value);
             }}></textarea>
 
@@ -155,15 +155,6 @@ export default function Home() {
     }
 
     function getPreview() {
-        // try {
-        //     const dirty = marked.parse(text);
-        //     const clean = DOMPurify.sanitize(dirty, { ADD_ATTR: ['target'] });
-        //     p.innerHTML = clean;
-        // } catch (e) {
-        //     console.warn("ERROR RENDERING: ", message)
-        //     p.textContent = `ERROR RENDERING MESSAGE: ${e.message}`;
-        // }
-
         return (<>
             <PostEntry post={{
                 displayName: "Display Name",

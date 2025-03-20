@@ -1,0 +1,42 @@
+.code * {
+    font-family: Consolas;
+    background-color: #0e0e42;
+}
+
+.code {
+    font-family: Consolas;
+    background-color: #0e0e42;
+    display: inline;
+    max-width: 100%;
+    overflow: hidden;
+    overflow-x: auto;
+    word-break: break-word;
+    hyphens: auto;
+    white-space: pre;
+}
+
+.code-block {
+    display: block;
+    text-wrap: nowrap;
+}
+
+.code-block * {
+    text-wrap: nowrap;
+}
+
+.code-span {
+    display: inline;
+    text-wrap: wrap;
+}
+
+.chat-image {
+    max-width: 100%;
+}
+
+.chat-video {
+    max-width: 100%;
+}
+
+.chat-audio {
+    max-width: 100%;
+}

@@ -4,6 +4,7 @@ import {userHash} from "@/lib/cryptoUtils";
 import {getWithAuth, postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 import {SpinActivity} from "@/lib/spinner";
+import {initLocalSettings} from "@/lib/localSettings";
 
 export const initReadyCallbackList = [];
 
@@ -26,6 +27,13 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
     if (lastPath == pathName)
         return console.info("> Already initialized for this path");
     lastPath = pathName;
+
+    try {
+        await initLocalSettings();
+    } catch (e) {
+        console.info("> Error in initLocalSettings: ", e);
+    }
+
     await SpinActivity(async () => {
         console.info("> Starting Global State Init");
 

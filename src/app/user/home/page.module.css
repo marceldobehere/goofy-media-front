@@ -45,7 +45,7 @@
 .MainContent {
     /*background-color: yellow;*/
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     grid-template-rows: 1fr;
 
     height: calc(100vh - 60px - (var(--show_hamburg) * 60px));
