@@ -12,21 +12,13 @@ function waitForElm(selector, func) {
     // console.log("> Waiting for element: ", selector, idSet);
 
     const observer = new MutationObserver(mutations => {
-        setTimeout(() => {
-            if (document.querySelector(selector)) {
-                // console.log("> Found element: ", selector);
-                // observer.disconnect();
-                // resolve(document.querySelector(selector));
-                const elem = document.querySelector(selector);
-                elem.id = `done-${elem.id}`;
-                func(elem);
-            }
-        }, 50);
-        // if (document.querySelector(selector)) {
-        //     console.log("> Found element: ", selector);
-        //     observer.disconnect();
-        //     func(document.querySelector(selector));
-        // }
+        if (document.querySelector(selector)) {
+            // console.log("> Found element: ", selector);
+            // observer.disconnect();
+            const elem = document.querySelector(selector);
+            elem.id = `done-${elem.id}`;
+            func(elem);
+        }
     });
 
     // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
