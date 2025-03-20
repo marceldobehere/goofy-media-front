@@ -1,3 +1,5 @@
+'use client';
+
 import config from "@/../next.config.mjs"
 
 export function goPath(path) {

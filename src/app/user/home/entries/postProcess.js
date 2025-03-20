@@ -3,12 +3,18 @@
 import marked from "@/lib/marked"
 import MarkedExtension from "@/lib/markedExtension";
 import DOMPurify from "@/lib/purify";
-marked.use(MarkedExtension);
 import "@/lib/highlight/styles/github-dark.min.css";
 import "@/app/user/home/entries/postCss.css";
 
+let markedUsed = false;
+
 export function getPostHtml(text)
 {
+    if (!markedUsed) {
+        marked.use(MarkedExtension);
+        markedUsed = true;
+    }
+
     try {
         const dirty = marked.parse(text);
         // console.log(dirty);
