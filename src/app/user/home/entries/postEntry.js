@@ -1,3 +1,5 @@
+'use client';
+
 import styles from "@/app/user/home/entries/postEntry.module.css";
 import {goPath} from "@/lib/goPath";
 import {getPostHtml} from "@/app/user/home/entries/postProcess";

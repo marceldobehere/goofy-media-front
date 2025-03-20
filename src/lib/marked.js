@@ -1,3 +1,4 @@
+'use client';
 /**
  * marked v13.0.2 - a markdown parser
  * Copyright (c) 2011-2024, Christopher Jeffrey. (MIT Licensed)

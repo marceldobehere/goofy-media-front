@@ -1,4 +1,5 @@
-import hljs from "@/lib/highlight/highlight.min";
+'use client';
+import hljs from "@/lib/highlight/highlight";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
 
@@ -156,7 +157,7 @@ const renderer = {
             console.log("Highlighting code with language: " + lang);
             try {
                 let code = hljs.highlight(codeRes, {language:lang, ignoreIllegals:true});
-                console.log("> RES: ", code);
+                // console.log("> RES: ", code);
                 codeRes = code.value;
             } catch (e) {
                 console.error(e);

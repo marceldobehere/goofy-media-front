@@ -1,6 +1,8 @@
+'use client';
+
 import marked from "@/lib/marked"
 import MarkedExtension from "@/lib/markedExtension";
-import DOMPurify from "@/lib/purify.min";
+import DOMPurify from "@/lib/purify";
 marked.use(MarkedExtension);
 import "@/lib/highlight/styles/github-dark.min.css";
 import "@/app/user/home/entries/postCss.css";
