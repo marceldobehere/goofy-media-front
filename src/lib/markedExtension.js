@@ -182,10 +182,40 @@ const renderer = {
 
     html(token) {
         let text = token.text;
-        text = text.replaceAll("<", "&lt;");
-        text = text.replaceAll(">", "&gt;");
-        text = text.replaceAll("\n", "<br>");
-        return text;
+        // console.log("> RAW HTML: ", JSON.stringify(text))
+
+        let text2 = text.replaceAll("<", "&lt;");
+        text2 = text2.replaceAll(">", "&gt;");
+        text2 = text2.replaceAll("\n", "<br>");
+
+        /*
+        <style='border:1px solid red; '>
+            asdf jklö
+            asdf
+        </style>
+        */
+        if (text.startsWith("<style \"") && text.replaceAll("\n", "").endsWith("</style>")) {
+            // extract the style info in the ''
+            const first = text.indexOf('"');
+            const last = text.lastIndexOf('">');
+            // console.log("> FIRST: ", first, last);
+            if (first === -1 || last === -1)
+                return text;
+            const style = text.substring(first + 1, last);
+            // console.log("> STYLE: ", style);
+
+            const styleEnd = text.lastIndexOf("</style>");
+            const inbetween = text.substring(last + 2, styleEnd);
+            // console.log("> INBETWEEN: ", inbetween);
+            const inbetween2 = inbetween.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
+
+            const unEscaped = style.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
+            const filtered = unEscaped.replaceAll("position", "").replaceAll("https://", "").replaceAll("http://", "");
+            const output = `<div style="${filtered}">${inbetween2}</div>`;
+            // console.log("> OUTPUT: ", output);
+            return output;
+        }
+        return text2;
     },
 
     text(token) {
