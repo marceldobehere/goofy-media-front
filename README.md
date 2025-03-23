@@ -6,6 +6,8 @@ Statically hosted [here](https://marceldobehere.github.io/goofy-media-front/).
 
 If you want to register an account, just send me a message on discord or reach out.
 
+![home](./imgs/home.png)
+
 
 Backend: https://github.com/marceldobehere/goofy-media-back
 
