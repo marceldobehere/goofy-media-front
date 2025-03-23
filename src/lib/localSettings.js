@@ -1,13 +1,41 @@
 'use client';
 
+import {convertCssString} from "@/lib/customCssConverter";
+
 export let LocalSettings = {
-    autoLoadMedia: false
+    autoLoadMedia: false,
+    enabledCustomPostCss: true,
+    customCss: ""
 };
+
+async function customCssReady() {
+    const elem = document.getElementById("custom-post-css");
+    return elem !== null;
+}
+
+async function initCustomCss() {
+    if (await customCssReady())
+        return;
+
+    const elem = document.createElement("style");
+    elem.id = "custom-post-css";
+    elem.innerHTML = convertCssString(LocalSettings.customCss);
+    // add to head
+    document.head.appendChild(elem);
+}
+
+async function updateCustomCss() {
+    if (! await customCssReady())
+        await initCustomCss();
+
+    document.getElementById("custom-post-css").innerHTML = convertCssString(LocalSettings.customCss);
+}
 
 export async function initLocalSettings(callback) {
     console.info("> Starting Local Settings Init");
     await loadLocalSettings();
 
+    await initCustomCss();
     console.info("> Local Settings Init Done");
 
     try {
@@ -53,12 +81,18 @@ export async function saveKeyObj(key, key2, value) {
 export async function loadLocalSettings() {
     LocalSettings = {};
     LocalSettings.autoLoadMedia = await loadKeyOrDefault("autoLoadMedia", false);
+    LocalSettings.enabledCustomPostCss = await loadKeyOrDefault("enabledCustomPostCss", true);
+    LocalSettings.customCss = await loadKeyOrDefault("customCss", "");
 
     console.info("> Loaded Local Settings");
 }
 
 export async function saveLocalSettings() {
     await saveKey("autoLoadMedia", LocalSettings.autoLoadMedia);
+    await saveKey("enabledCustomPostCss", LocalSettings.enabledCustomPostCss);
+    await saveKey("customCss", LocalSettings.customCss);
+
+    await updateCustomCss();
 
     console.info("> Saved Local Settings: ", LocalSettings);
 }

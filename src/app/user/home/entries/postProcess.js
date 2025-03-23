@@ -4,7 +4,7 @@ import marked from "@/lib/marked"
 import MarkedExtension from "@/lib/markedExtension";
 import DOMPurify from "@/lib/purify";
 import "@/lib/highlight/styles/github-dark.min.css";
-import "@/app/user/home/entries/postCss.css";
+import "@/app/user/home/entries/postCss.module.css";
 
 let markedUsed = false;
 

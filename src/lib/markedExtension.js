@@ -2,7 +2,7 @@
 import hljs from "@/lib/highlight/highlight";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
-
+import postStyles from "@/app/user/home/entries/postCss.module.css";
 let idSet = new Set();
 
 function waitForElm(selector, func) {
@@ -99,7 +99,7 @@ const renderer = {
                         let imgNode = document.createElement("img");
                         imgNode.src = url;
                         imgNode.alt = text;
-                        imgNode.className = "chat-image";
+                        imgNode.className = postStyles.chatImage;
                         imgNode.onload = () => fixSizeScroll(imgNode);
                         element.replaceWith(imgNode);
 
@@ -114,7 +114,7 @@ const renderer = {
                         let videoNode = document.createElement("video");
                         videoNode.src = url;
                         videoNode.alt = text;
-                        videoNode.className = "chat-video";
+                        videoNode.className = postStyles.chatVideo;
                         videoNode.controls = true;
                         videoNode.onloadeddata = () => fixSizeScroll(videoNode);
                         element.replaceWith(videoNode);
@@ -124,7 +124,7 @@ const renderer = {
                         let audioNode = document.createElement("audio");
                         audioNode.src = url;
                         audioNode.alt = text;
-                        audioNode.className = "chat-audio";
+                        audioNode.className = postStyles.chatAudio;
                         audioNode.controls = true;
                         audioNode.onloadeddata = () => fixSizeScroll(audioNode);
                         element.replaceWith(audioNode);
@@ -172,12 +172,12 @@ const renderer = {
         else
             codeRes = codeRes.replaceAll("\n", "<br>");
 
-        return `<code class="code code-block">${codeRes}</code>`;
+        return `<code class="code codeBlock">${codeRes}</code>`;
     },
 
     codespan(token) {
         let text = token.text;
-        return `<code class="code code-span">${text}</code>`;
+        return `<code class="code codeSpan">${text}</code>`;
     },
 
     html(token) {
@@ -211,9 +211,10 @@ const renderer = {
 
             const unEscaped = style.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
             const filtered = unEscaped.replaceAll("position", "").replaceAll("https://", "").replaceAll("http://", "");
-            const output = `<div style="${filtered}">${inbetween2}</div>`;
-            // console.log("> OUTPUT: ", output);
-            return output;
+
+            if (LocalSettings.enabledCustomPostCss)
+                return `<div style="${filtered}">${inbetween2}</div>`;
+            return `<div style="">${inbetween2}</div>`;
         }
         return text2;
     },

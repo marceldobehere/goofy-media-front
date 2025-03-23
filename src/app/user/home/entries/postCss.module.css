@@ -15,28 +15,28 @@
     white-space: pre;
 }
 
-.code-block {
+.codeBlock {
     display: block;
     text-wrap: nowrap;
 }
 
-.code-block * {
+.codeBlock * {
     text-wrap: nowrap;
 }
 
-.code-span {
+.codeSpan {
     display: inline;
     text-wrap: wrap;
 }
 
-.chat-image {
+.chatImage {
     max-width: 100%;
 }
 
-.chat-video {
+.chatVideo {
     max-width: 100%;
 }
 
-.chat-audio {
+.chatAudio {
     max-width: 100%;
 }
