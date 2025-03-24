@@ -74,16 +74,17 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
             console.info("> Login test successful");
         }
 
-        if (GlobalStuff.loggedIn && needAdmin) {
+        if (GlobalStuff.loggedIn) {
             let res = await getWithAuth("/admin/verify", null, true);
             if (res === undefined || res.status != 200) {
                 GlobalStuff.admin = false;
                 // alert("Admin test failed!");
-                goPath("/user/home");
-                return;
+                if (needAdmin)
+                    goPath("/user/home");
+            } else {
+                // console.info("> Admin test successful");
+                GlobalStuff.admin = true;
             }
-            console.info("> Admin test successful");
-            GlobalStuff.admin = true;
         }
     });
 
@@ -143,6 +144,7 @@ export async function loadGlobalState() {
     GlobalStuff.privateKey = await loadKey("privateKey");
     GlobalStuff.userId = await loadKey("userId");
     GlobalStuff.lastCheck = await loadKey("lastCheck");
+    // GlobalStuff.admin = await loadKeyOrDefault("admin", false);
 
     console.info("> Loaded Global State");
 }
@@ -153,6 +155,7 @@ export async function saveGlobalState() {
     await saveKey("privateKey", GlobalStuff.privateKey);
     await saveKey("userId", GlobalStuff.userId);
     await saveKey("lastCheck", GlobalStuff.lastCheck);
+    // await saveKey("admin", GlobalStuff.admin);
 
     console.info("> Saved Global State");
 }

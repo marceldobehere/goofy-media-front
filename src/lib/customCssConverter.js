@@ -14,6 +14,9 @@ const supportedComponents = {
         "PostBodyImage": postBodyStyles.chatImage,
         "PostBodyAudio": postBodyStyles.chatAudio,
         "PostBodyVideo": postBodyStyles.chatVideo,
+        "PostCode": postBodyStyles.code,
+        "PostCodeBlock": postBodyStyles.codeBlock,
+        "PostCodeSpan": postBodyStyles.codeSpan,
     },
     "Home": {
         "HomeNavBar": homeStyles.NavBarDiv,

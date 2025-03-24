@@ -22,6 +22,7 @@ export default function Home() {
     let [postArr, setPostArr] = useState([]);
     let [newsArr, setNewsArr] = useState([]);
     let [username, setUsername] = useState("...");
+    let [admin, setAdmin] = useState(false);
 
     async function loadPosts() {
         console.log("> Loading posts");
@@ -137,6 +138,7 @@ export default function Home() {
                 goPath("/guest/login");
 
             setUsername(GlobalStuff.userId);
+            setAdmin(GlobalStuff.admin);
 
             const nav = document.getElementById("goofy-nav");
             const posts = document.getElementById("goofy-posts");
@@ -188,13 +190,13 @@ export default function Home() {
                         <p>
                             <Link href={"/user/home"}>Home</Link><br/>
                             <Link href={"/"}>Index</Link><br/>
-                            <Link href={"/user/account_settings"}>Account Settings</Link><br/>
+                            {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/></>) : (<></>)}
                             <Link href={"/guest/login"}>Login</Link><br/>
                             <a onClick={async () => {
                                 await logout();
                                 goPath("/guest/login")
                             }}>Logout</a><br/>
-                            <Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/>
+                            <Link href={"/user/account_settings"}>Account Settings</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
                     </div>

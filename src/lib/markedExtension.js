@@ -82,7 +82,7 @@ const renderer = {
         let text = token.text;
 
         {
-            if (LocalSettings.autoLoadMedia)// (settingsObj["chat"]["allow-external-sources-global"])
+            if (LocalSettings.autoLoadMedia || window.location.href.includes("post_composer"))// (settingsObj["chat"]["allow-external-sources-global"])
             {
                 let randomId = getRandomIntInclusive(100000, 9999999);
                 let element = document.createElement("a");
@@ -172,12 +172,12 @@ const renderer = {
         else
             codeRes = codeRes.replaceAll("\n", "<br>");
 
-        return `<code class="code codeBlock">${codeRes}</code>`;
+        return `<code class="${postStyles.code} ${postStyles.codeBlock}">${codeRes}</code>`;
     },
 
     codespan(token) {
         let text = token.text;
-        return `<code class="code codeSpan">${text}</code>`;
+        return `<code class="${postStyles.code} ${postStyles.codeSpan}">${text}</code>`;
     },
 
     html(token) {
@@ -212,7 +212,7 @@ const renderer = {
             const unEscaped = style.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
             const filtered = unEscaped.replaceAll("position", "").replaceAll("https://", "").replaceAll("http://", "");
 
-            if (LocalSettings.enabledCustomPostCss)
+            if (LocalSettings.enabledCustomPostCss || window.location.href.includes("post_composer"))
                 return `<div style="${filtered}">${inbetween2}</div>`;
             return `<div style="">${inbetween2}</div>`;
         }
