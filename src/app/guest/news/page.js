@@ -92,7 +92,7 @@ export default function Search() {
     return (
         <div>
             <main className={styles.main}>
-                <h1>Search</h1>
+                <h1>News</h1>
 
                 <h3>Showing news {query.page == 0 ? (<></>) : (<span> (Page {query.page})</span>)}</h3>
                 <br/>
