@@ -1,9 +1,10 @@
 'use client';
 
 import styles from "@/app/user/home/entries/postEntry.module.css";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
+import Link from "next/link";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -38,9 +39,9 @@ export default function PostEntry({post}) {
                 <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                 <p className={styles.PostBody}>{post.text}</p>}
 
-            <p className={styles.PostTags}>Tags: {post.tags.map((tag, idx) => (<span key={idx}><a onClick={() => {
-                goPath(`/guest/search?tag=${encodeURIComponent(tag)}`)
-            }}>#{tag}</a>&#32;</span>))}</p>
+            <p className={styles.PostTags}>Tags: {post.tags.map((tag, idx) => (
+                <span key={idx}><a
+                    href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>&#32;</span>))}</p>
         </div>
     );
 }

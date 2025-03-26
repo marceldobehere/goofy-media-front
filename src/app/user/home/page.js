@@ -196,6 +196,8 @@ export default function Home() {
                                 await logout();
                                 goPath("/guest/login")
                             }}>Logout</a><br/>
+                            <Link href={"/guest/news"}>News</Link><br/>
+                            <Link href={"/guest/search"}>Search</Link><br/>
                             <Link href={"/user/account_settings"}>Account Settings</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
@@ -219,7 +221,7 @@ export default function Home() {
                     <div className={styles.NewsDiv}>
                         <h2>Goofy Media News</h2>
 
-                        Cool News below: &nbsp;
+                        Cool <Link href={"/guest/news"}>News</Link> below: &nbsp;
                         <button onClick={loadNews}>Refresh</button>
                         <EntryList elements={newsArr} compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}></EntryList>
                     </div>
