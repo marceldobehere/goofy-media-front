@@ -19,15 +19,22 @@ let onceLoaded = undefined;
 export default function Search() {
     const pathName = usePathname();
     const pageLimit = 5;
-    const [query, setQuery] = useState({tag: "", page: 0});
+    const [query, _setQuery] = useState({tag: "", page: 0});
     const [postData, setPostData] = useState({posts: undefined, isOnLastPage: false, isOnFirstPage: true});
+    const setQuery = (q) => {
+        _setQuery(q);
+        loadPosts(q);
+    }
 
-    async function loadPosts() {
-        const tag = query.tag;
+    async function loadPosts(nQuery) {
+        if (nQuery == undefined)
+            nQuery = query;
+
+        const tag = nQuery.tag;
         if (tag == undefined || tag === "")
             return;
 
-        const res = await loadSearchPosts(tag, pageLimit, query.page);
+        const res = await loadSearchPosts(tag, pageLimit, nQuery.page);
         if (res === undefined)
             return alert("Failed to get posts");
         setPostData(res);
@@ -75,12 +82,7 @@ export default function Search() {
         });
     }, []);
 
-    useEffect(() => {
-        loadPosts();
-    }, [query]);
-
     const buttonMenu = searchButtonMenu(goToPage, query.page, postData.isOnFirstPage, postData.isOnLastPage);
-
     const mainContent = (query.tag != undefined) ? (
         <>
             <h1>Search</h1>

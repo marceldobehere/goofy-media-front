@@ -30,7 +30,7 @@ export default function PostEntry({post}) {
     return (
         <div className={styles.PostEntryDiv}>
             <div className={styles.PostUserHeader}>
-                <b>{post.displayName}</b> @{post.author} - {new Date(post.createdAt).toLocaleString()}
+                <b>{post.displayName}</b> <a style={{textDecoration: "none"}} href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
 
             <h3 className={styles.PostEntryHeader}>{post.title}</h3>

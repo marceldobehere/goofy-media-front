@@ -64,6 +64,13 @@ export async function loadSearchPosts(tag, pageLimit, page) {
     return loadPostsWithPageData(`/user/post/tag/${tag}`, pageLimit, page);
 }
 
+export async function loadUserPosts(userId, pageLimit, page) {
+    const res = await loadPostsWithPageData(`/user/post/user/${userId}`, pageLimit, page);
+    if (res === undefined)
+        return;
+    return res;
+}
+
 export async function loadHomePosts() {
     const res = await loadPostsWithPageData("/user/post", 10, 0);
     if (res === undefined)

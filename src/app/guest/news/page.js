@@ -14,12 +14,17 @@ let onceLoaded = undefined;
 export default function News() {
     const pathName = usePathname();
     const pageLimit = 5;
-    const [query, setQuery] = useState({page: 0});
+    const [query, _setQuery] = useState({page: 0});
     const [postData, setPostData] = useState({posts: [], isOnLastPage: false, isOnFirstPage: true});
+    const setQuery = (q) => {
+        _setQuery(q);
+        loadPosts(q);
+    }
 
-
-    async function loadPosts() {
-        const res = await loadNewsPosts(pageLimit, query.page);
+    async function loadPosts(nQuery) {
+        if (nQuery == undefined)
+            nQuery = query;
+        const res = await loadNewsPosts(pageLimit, nQuery.page);
         if (res === undefined)
             return alert("Failed to get posts");
         setPostData(res);
@@ -61,10 +66,6 @@ export default function News() {
             setQuery({page});
         });
     }, []);
-
-    useEffect(() => {
-        loadPosts();
-    }, [query]);
 
     const buttonMenu = searchButtonMenu(goToPage, query.page, postData.isOnFirstPage, postData.isOnLastPage);
     return (
