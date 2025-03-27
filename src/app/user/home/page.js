@@ -5,7 +5,6 @@ import postStyles from "@/app/user/home/entries/postEntry.module.css";
 import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
-import {getWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
@@ -13,8 +12,12 @@ import PostEntry from "@/app/user/home/entries/postEntry";
 import NewsEntry from "@/app/user/home/entries/newsEntry";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {sleep} from "@/lib/utils";
-import {transformPostObjArr} from "@/app/user/home/postTools";
 import Image from "next/image";
+import {
+    loadHomeNewsPosts,
+    loadHomePosts,
+    loadMorePostsPartially
+} from "@/lib/post/postUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -25,11 +28,10 @@ export default function Home() {
     let [admin, setAdmin] = useState(false);
 
     async function loadPosts() {
-        console.log("> Loading posts");
-        let res = await getWithAuth("/user/post", {"query-limit": 10});
+        const res = await loadHomePosts();
         if (res === undefined)
             return alert("Failed to get posts");
-        setPostArr(await transformPostObjArr(res));
+        setPostArr(res);
     }
 
     let morePostBusy = false;
@@ -40,72 +42,26 @@ export default function Home() {
             return;
         morePostBusy = true;
 
-        try {
-            const start = postArr.length;
-            const limit = 10;
-
-            const tRes1 = getWithAuth("/user/post", {"query-start": start, "query-limit": limit});
-            const tRes2 = getWithAuth("/user/post", {"query-start": 0, "query-limit": 1});
-            let res1 = await tRes1;
-            let res2 = await tRes2;
-            if (res1 === undefined || res2 === undefined) {
-                alert("Failed to get more posts");
-                await sleep(200);
-                morePostBusy = false;
-                return;
-            }
-            const transformed1 = await transformPostObjArr(res1);
-            const transformed2 = await transformPostObjArr(res2);
-            const newArr = postArr.concat(transformed1);
-
-            if (newArr.length !== start + transformed1.length || transformed2.length == 0) { // if multiple requests are made at the same time
-                await sleep(50);
-                morePostBusy = false;
-                return;
-            }
-
-            // means that more posts were made
-            if (JSON.stringify(newArr[0]) !== JSON.stringify(transformed2[0])) {
-                console.info("> NEW POSTS WERE MADE")
-
-                const totalCount = newArr.length;
-                let postRes = [];
-                const step = 30;
-                for (let i = 0; i < totalCount; i += step) {
-                    // console.log("> Getting more posts: ", i, step);
-                    let res = await getWithAuth("/user/post", {"query-start": i, "query-limit": step});
-                    if (res === undefined) {
-                        alert("Failed to get more posts");
-                        await sleep(200);
-                        morePostBusy = false;
-                        return;
-                    }
-                    postRes = postRes.concat(res);
-                }
-                postRes = await transformPostObjArr(postRes);
-                setPostArr(postRes);
-                morePostBusy = false;
-                return;
-            }
-
-            let changed = newArr.length !== postArr.length;
-            // console.log("> New Posts:", newArr.length, postArr.length, changed);
-            if (changed)
-                setPostArr(newArr);
-        } catch (e) {
-            console.error(e);
+        const res = await loadMorePostsPartially(postArr, "/user/post", 10);
+        if (res === undefined) {
+            await sleep(200);
+            morePostBusy = false;
+            return;
         }
+
+        const changed = res.length !== postArr.length;
+        if (changed)
+            setPostArr(res);
 
         await sleep(200);
         morePostBusy = false;
     }
 
     async function loadNews() {
-        console.log("> Loading news");
-        let res = await getWithAuth("/user/post/news", {"query-limit": 10});
+        const res = await loadHomeNewsPosts(10);
         if (res === undefined)
-            return alert("Failed to get news");
-        setNewsArr(await transformPostObjArr(res));
+            return alert("Failed to get posts");
+        setNewsArr(res);
     }
 
     let prevPos = undefined;
@@ -116,7 +72,6 @@ export default function Home() {
             return console.info("NO LONGER EXISTS");
 
         const pos = btn.getBoundingClientRect().top;
-
         // Ignore if scrolling up
         if (prevPos == undefined)
             prevPos = pos;
@@ -176,7 +131,9 @@ export default function Home() {
                     cursor: "pointer",
                     display: "block",
                 }} src={"/goofy-media-front/write_icon.png"} alt={"Write Icon"} width={"100"} height={"100"}
-                onClick={() => {goPath("/user/post_composer")}}></Image>
+                       onClick={() => {
+                           goPath("/user/post_composer")
+                       }}></Image>
 
                 <nav id={"goofy-nav"} className={showBurgerMenu ? styles.NavBar2 : styles.NavBar}>
                     <div className={styles.NavBarHamburg}>
@@ -210,12 +167,14 @@ export default function Home() {
 
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
-                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} extra={(<div
-                            className={postStyles.PostEntryDiv}>
-                            <button id={"load-more-posts-btn"} className={"cont-btn"} onClick={loadMorePosts}>Load
-                                More Posts
-                            </button>
-                        </div>)}></EntryList>
+                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)}
+                                   extra={(<div
+                                       className={postStyles.PostEntryDiv}>
+                                       <button id={"load-more-posts-btn"} className={"cont-btn"}
+                                               onClick={loadMorePosts}>Load
+                                           More Posts
+                                       </button>
+                                   </div>)}></EntryList>
                     </div>
 
                     <div className={styles.NewsDiv}>
@@ -223,7 +182,8 @@ export default function Home() {
 
                         Cool <Link href={"/guest/news"}>News</Link> below: &nbsp;
                         <button onClick={loadNews}>Refresh</button>
-                        <EntryList elements={newsArr} compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}></EntryList>
+                        <EntryList elements={newsArr}
+                                   compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}></EntryList>
                     </div>
                 </div>
             </main>

@@ -1,58 +1,40 @@
 'use client';
 
 import styles from "./page.module.css";
-import Link from "next/link";
 import {useEffect, useState} from "react";
 import {initGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
 import MainFooter from "@/comp/mainFooter";
-import NewsEntry from "@/app/user/home/entries/newsEntry";
 import EntryList from "@/app/user/home/entries/EntryList";
-import {getWithAuth} from "@/lib/req";
-import {transformPostObjArr} from "@/app/user/home/postTools";
 import PostEntry from "@/app/user/home/entries/postEntry";
+import {loadNewsPosts, onWindowGoBack, postListGoToPage, transformPostObjArr} from "@/lib/post/postUtils";
+import {searchButtonMenu} from "@/comp/buttonMenu";
 
-export default function Search() {
+let onceLoaded = undefined;
+export default function News() {
     const pathName = usePathname();
-    const [postArr, setPostArr] = useState([]);
-    const [query, setQuery] = useState({page: 0});
-    const [lastPage, setLastPage] = useState(false);
-    const [firstPage, setFirstPage] = useState(true);
     const pageLimit = 5;
+    const [query, setQuery] = useState({page: 0});
+    const [postData, setPostData] = useState({posts: [], isOnLastPage: false, isOnFirstPage: true});
+
 
     async function loadPosts() {
-        // if (postArr.length !== 0)
-        //     return console.log("> Posts already loaded: ", postArr);
-
-        console.log("> Loading posts");
-        let res = await getWithAuth("/user/post/news", {"query-limit": pageLimit + 1, "query-start": query.page * pageLimit});
+        const res = await loadNewsPosts(pageLimit, query.page);
         if (res === undefined)
             return alert("Failed to get posts");
-
-        const postArr = await transformPostObjArr(res);
-        setLastPage(postArr.length < pageLimit + 1);
-        setFirstPage(query.page === 0);
-        if (postArr.length > pageLimit)
-            postArr.pop();
-
-        setPostArr(postArr);
+        setPostData(res);
+        if (onceLoaded !== undefined)
+            setTimeout(onceLoaded, 150)
     }
 
     function goToPage(page) {
         if (page < 0)
             page = 0;
-        const newQuery = {...query, page: page};
-        console.log("> New query: ", newQuery);
 
-        // set query params in url
-        const searchParams = new URLSearchParams();
-        searchParams.set("tag", newQuery.tag);
-        searchParams.set("page", newQuery.page);
-        window.history.pushState({}, "", `${window.location.pathname}?${searchParams}`);
-        setQuery(newQuery);
+        const top = (page > query.page);
 
-        // scroll up
-        window.scrollTo(0, 0);
+        onceLoaded = postListGoToPage({page}, top);
+        setQuery({page});
     }
 
     useEffect(() => {
@@ -67,28 +49,24 @@ export default function Search() {
         else
             page = parseInt(page);
         setQuery({page: page});
+
+        onWindowGoBack((query) => {
+            let page = query.get("page");
+            if (page === null)
+                page = 0;
+            else
+                page = parseInt(page);
+
+            onceLoaded = undefined;
+            setQuery({page});
+        });
     }, []);
 
     useEffect(() => {
         loadPosts();
     }, [query]);
 
-    const buttonMenu = (
-        <div style={{margin: "auto", textAlign: "center"}}>
-            <button onClick={() => {
-                goToPage(query.page - 1)
-            }} disabled={firstPage}>&lt;- Back
-            </button>
-            &nbsp;&nbsp;
-            <Link href={"/user/home"}>Home</Link>
-            &nbsp;&nbsp;
-            <button onClick={() => {
-                goToPage(query.page + 1)
-            }} disabled={lastPage}>Next -&gt;
-            </button>
-        </div>
-    );
-
+    const buttonMenu = searchButtonMenu(goToPage, query.page, postData.isOnFirstPage, postData.isOnLastPage);
     return (
         <div>
             <main className={styles.main}>
@@ -101,7 +79,8 @@ export default function Search() {
                 <br/><br/>
 
                 <div className={styles.PostDiv}>
-                    <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>
+                    <EntryList elements={postData.posts}
+                               compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>
                 </div>
                 <br/>
                 {buttonMenu}
