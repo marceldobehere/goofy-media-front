@@ -1,7 +1,6 @@
 'use client';
 
 import {getWithAuth} from "@/lib/req";
-import {sleep} from "@/lib/utils";
 
 export async function transformPostObjArr(postObjArr) {
     let posts = [];
@@ -87,10 +86,7 @@ export function postListGoToPage(query, top) {
     for (let key in query)
         searchParams.set(key, query[key]);
 
-    // searchParams.set("tag", newQuery.tag);
-    // searchParams.set("page", newQuery.page);
     window.history.pushState({}, "", `${window.location.pathname}?${searchParams}`);
-    // setQuery(newQuery);
 
     // scroll up / down
     return () => {
@@ -152,34 +148,3 @@ export async function loadMorePostsPartially(oldPosts, url, limit) {
         console.error(e);
     }
 }
-
-
-// useEffect(() => {
-//     initGlobalState(pathName, false, false, async () => {
-//
-//     });
-//
-//     window.onpopstate = (event) => {
-//         console.log("> Pop state event: ", event);
-//         const query = new URLSearchParams(window.location.search);
-//         const tag = query.get("tag");
-//         let page = query.get("page");
-//         if (page === null)
-//             page = 0;
-//         else
-//             page = parseInt(page);
-//         setQuery({tag: tag, page: page});
-//     }
-//
-//     const query = new URLSearchParams(window.location.search);
-//     console.log("> Search: ", window.location.search)
-//     console.log("> Query: ", query)
-//     const tag = query.get("tag");
-//     console.log("> Tag: ", tag);
-//     let page = query.get("page");
-//     if (page === null)
-//         page = 0;
-//     else
-//         page = parseInt(page);
-//     setQuery({tag: tag, page: page});
-// }, []);
