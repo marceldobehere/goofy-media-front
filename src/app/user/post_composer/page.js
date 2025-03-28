@@ -32,12 +32,13 @@ export default function Home() {
             // remove any # and .
             tag = tag.replaceAll("#", "");
             tag = tag.replaceAll(".", "");
+            tag = tag.toLowerCase();
 
             if (tag !== "")
                 if (!tagList2.includes(tag))
                     tagList2.push(tag);
         }
-        return tagList2;
+        return tagList2.sort();
     }
 
     async function getPostObj() {

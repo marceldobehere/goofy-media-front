@@ -1,6 +1,108 @@
 'use client';
 
 import {getWithAuth} from "@/lib/req";
+import {verifyObj} from "@/lib/rsa";
+import {getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
+import {GlobalStuff} from "@/lib/globalStateStuff";
+import {sleep} from "@/lib/utils";
+
+async function getPublicKeyFromUserId(userId) {
+    // TODO: Add Code to get public key from user id
+    return GlobalStuff.publicKey;
+}
+
+async function verifyPost(postObj) {
+    if (postObj === undefined) {
+        return "POST OBJ UNDEFINED";
+    }
+
+    // Verify Basic Post Structure
+    const _post = postObj.post;
+    const post = {
+        title: _post.title,
+        text: _post.text,
+        tags: _post.tags,
+        createdAt: _post.createdAt
+    }
+    if (post === undefined) {
+        return "POST UNDEFINED";
+    }
+
+    if (post.title === undefined || post.text === undefined || post.tags === undefined || post.createdAt === undefined) {
+        return "POST MISSING FIELD";
+    }
+
+    if (typeof post.title !== 'string' || typeof post.text !== 'string' || !Array.isArray(post.tags) || typeof post.createdAt !== 'number') {
+        return "POST FIELD TYPE INCORRECT";
+    }
+
+    if (post.title.length > 200 || post.text.length > 5000 || post.tags.length > 50) {
+        return "POST FIELD LENGTH INCORRECT";
+    }
+
+    // check if post createdAt is a valid date
+    if (new Date(post.createdAt).toString() === 'Invalid Date') {
+        return "INVALID DATE";
+    }
+
+    // check if post is not in the future
+    if (post.createdAt > Date.now() + 10000) {
+        return "FUTURE DATE";
+    }
+
+    post.tags = [...post.tags].sort();
+    for (let tag of post.tags) {
+        if (typeof tag !== 'string') {
+            return "TAG NOT STRING";
+        }
+        if (tag.length > 100) {
+            return "TAG TOO LONG";
+        }
+    }
+
+    // Verify Signature
+    const signature = postObj.signature;
+    if (signature === undefined || typeof signature !== 'string') {
+        return "SIGNATURE MISSING";
+    }
+
+    // // Verify Public Key
+    // const publicKey = postObj.publicKey;
+    // if (publicKey === undefined || typeof publicKey !== 'string') {
+    //     return "PUBLIC KEY MISSING";
+    // }
+
+    // Verify User ID
+    const userId = postObj.userId;
+    if (userId === undefined || typeof userId !== 'string') {
+        return "USER ID MISSING";
+    }
+
+    // Get Public Key
+    const publicKey = await getPublicKeyFromUserId(userId);
+    if (publicKey === undefined) {
+        return "USER NOT FOUND";
+    }
+
+    // Validate User ID
+    const actualUserId = await userHash(publicKey);
+    if (userId !== actualUserId) {
+        return "USER ID MISMATCH: " + userId + " != " + actualUserId;
+    }
+
+    // Validate Signature
+    const verified = await verifyObj(post, signature, publicKey);
+    if (!verified) {
+        return "SIGNATURE INVALID";
+    }
+
+    return "OK";
+}
+
+export async function validatePostSignature(postEntry) {
+    const res = await verifyPost(postEntry);
+    return {ok: res === "OK", error: res};
+}
 
 export async function transformPostObjArr(postObjArr) {
     let posts = [];
@@ -12,6 +114,10 @@ export async function transformPostObjArr(postObjArr) {
             displayName: "Display Name",
             createdAt: postObj.post.createdAt,
             tags: postObj.post.tags,
+            valid: async () => {
+                await sleep(getRandomIntInclusive(100, 500));
+                return await validatePostSignature(postObj);
+            }
         };
 
         // TODO: verify each post with signature
