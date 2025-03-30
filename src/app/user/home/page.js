@@ -122,14 +122,15 @@ export default function Home() {
 
                 <Image style={{
                     position: "fixed",
-                    bottom: "80px",
-                    right: "60px",
-                    width: "50px",
-                    height: "50px",
+                    bottom: "5rem",
+                    right: "3rem",
+                    width: "3rem",
+                    height: "3rem",
                     backgroundColor: "rgba(0,0,0,0.7)",
                     borderRadius: "50%",
                     cursor: "pointer",
                     display: "block",
+                    zIndex: 100
                 }} src={"/goofy-media-front/write_icon.png"} alt={"Write Icon"} width={"100"} height={"100"}
                        onClick={() => {
                            goPath("/user/post_composer")

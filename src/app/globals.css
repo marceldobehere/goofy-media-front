@@ -15,11 +15,21 @@
   --foreground: #ededed;
 }
 
+html {
+  font-size: 16px;
+}
+
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
   min-height: 100vh;
+  font-size: 1rem;
+}
+
+input, button {
+    font-size: 1rem;
+
 }
 
 body {
@@ -64,14 +74,15 @@ h2 {
 
 .container {
   background-color: #08356e;
-  margin: auto 60vh auto 60vh;
+  margin: auto;
+  width: 40%;
   padding: 14px;
   border: 2px solid #4fb897;
   color: #ffffff;
 }
 
 .cont-inp-header {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -86,7 +97,7 @@ h2 {
   display: block;
   margin: 10px auto 0px auto;
   padding: 5px 10px 5px 10px;
-  font-size: 20px;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -110,7 +121,7 @@ a:hover {
 
 main {
   width: 100%;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 4rem);
 }
 
 
@@ -137,16 +148,40 @@ main {
   --show_hamburg: 0;
 }
 
+@media (max-width: 6000px) {
+  .container {
+    width: 30%;
+  }
+}
+
+@media (max-width: 4000px) {
+  .container {
+    width: 40%;
+  }
+}
+
+@media (max-width: 3000px) {
+  .container {
+    width: 35%;
+  }
+}
+
+@media (max-width: 2000px) {
+  .container {
+    width: 40%;
+  }
+}
+
 @media (max-width: 1500px) {
   .container {
-    margin: auto 35vh auto 35vh;
+      width: 50%;
   }
 }
 
 
 @media (max-width: 1100px) {
   .container {
-    margin: auto 30vh auto 30vh;
+    width: 60%;
   }
 }
 
@@ -156,12 +191,64 @@ main {
   }
 
   .container {
-    margin: auto 10vh auto 10vh;
+    width: 70%;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 400px) {
   .container {
-    margin: auto 3vh auto 3vh;
+    width: 85%;
+  }
+
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  html {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 250px) {
+  html {
+    font-size: 6px;
+  }
+}
+
+@media (min-width: 6000px) {
+  .container {
+    width: 12%;
+  }
+}
+
+@media (min-width: 1600px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1800px) {
+  html {
+    font-size: 25px;
+  }
+}
+
+@media (min-width: 2000px) {
+  html {
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 3000px) {
+  html {
+    font-size: 40px;
   }
 }

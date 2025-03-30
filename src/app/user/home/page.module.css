@@ -48,7 +48,7 @@
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     grid-template-rows: 1fr;
 
-    height: calc(100vh - 60px - (var(--show_hamburg) * 60px));
+    height: calc(100vh - 4rem - (var(--show_hamburg) * 60px));
     overflow-y: auto;
 }
 
@@ -57,9 +57,9 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr;
-    padding: 20px;
+    padding: 10px;
     overflow: clip;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 4rem);
 }
 
 /*Media Query if too small
