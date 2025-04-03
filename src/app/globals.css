@@ -27,9 +27,8 @@ body {
   font-size: 1rem;
 }
 
-input, button {
-    font-size: 1rem;
-
+input, button, textarea {
+    font-size: 0.8rem;
 }
 
 body {
@@ -193,11 +192,15 @@ main {
   .container {
     width: 70%;
   }
+
+  input, button, textarea {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 600px) {
   html {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 
@@ -207,25 +210,23 @@ main {
   }
 
   html {
-    font-size: 12px;
+    font-size: 16px;
   }
 }
 
 @media (max-width: 320px) {
   html {
-    font-size: 8px;
+    font-size: 14px;
+  }
+
+  input, button, textarea {
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 250px) {
   html {
-    font-size: 6px;
-  }
-}
-
-@media (min-width: 6000px) {
-  .container {
-    width: 12%;
+    font-size: 10px;
   }
 }
 
@@ -235,20 +236,26 @@ main {
   }
 }
 
-@media (min-width: 1800px) {
+@media (min-width: 2000px) {
   html {
-    font-size: 25px;
+    font-size: 23px;
   }
 }
 
-@media (min-width: 2000px) {
+@media (min-width: 2500px) {
   html {
-    font-size: 30px;
+    font-size: 26px;
   }
 }
 
 @media (min-width: 3000px) {
   html {
-    font-size: 40px;
+    font-size: 30px;
+  }
+}
+
+@media (min-width: 6000px) {
+  .container {
+    width: 12%;
   }
 }
