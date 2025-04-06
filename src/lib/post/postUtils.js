@@ -2,13 +2,40 @@
 
 import {getWithAuth} from "@/lib/req";
 import {verifyObj} from "@/lib/rsa";
-import {getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
+import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import {sleep} from "@/lib/utils";
+import {CoolCache} from "@/lib/coolCache";
+
+const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
+
+const validPostSigCache = new CoolCache({localStorageKey: "POST_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
 
 async function getPublicKeyFromUserId(userId) {
-    // TODO: Add Code to get public key from user id
-    return GlobalStuff.publicKey;
+    if (userId === undefined || typeof userId !== 'string') {
+        console.error("> User ID MISSING");
+        return undefined;
+    }
+
+    const publicKey = publicKeyCache.get(userId, async () => {
+        console.log("> Getting public key for userId: ", userId);
+        const res = await getWithAuth(`/user/user-data/${userId}/public-key`);
+        if (res === undefined || res.publicKey === undefined) {
+            console.error("> Failed to request public key for userId: ", userId);
+            throw new Error("Failed to request public key");
+        }
+
+        console.log("> Got public key for userId: ", userId, " -> ", res.publicKey);
+
+        return res.publicKey;
+    });
+
+    if (publicKey == undefined) {
+        console.error("> Failed to get public key for userId: ", userId);
+        return undefined;
+    }
+
+    return publicKey;
 }
 
 async function verifyPost(postObj) {
@@ -115,12 +142,12 @@ export async function transformPostObjArr(postObjArr) {
             createdAt: postObj.post.createdAt,
             tags: postObj.post.tags,
             valid: async () => {
-                await sleep(getRandomIntInclusive(100, 500));
-                return await validatePostSignature(postObj);
+                await sleep(getRandomIntInclusive(150, 1000));
+                return await validPostSigCache.get(await getHashFromObj(postObj), async () => {
+                    return await validatePostSignature(postObj);
+                })
             }
         };
-
-        // TODO: verify each post with signature
 
         posts.push(post);
     }

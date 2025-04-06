@@ -3,6 +3,7 @@ import hljs from "@/lib/highlight/highlight";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
 import postStyles from "@/app/user/home/entries/postCss.module.css";
+import {CoolCache} from "@/lib/coolCache";
 let idSet = new Set();
 
 function waitForElm(selector, func) {
@@ -28,32 +29,42 @@ function waitForElm(selector, func) {
     });
 }
 
-const doesImageExist = (url) =>
-    new Promise((resolve) => {
-        const img = new Image();
+const UrlElementCache = new CoolCache();
 
-        img.src = url;
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-    });
+const doesExistCache = new CoolCache();
+const doesImageExist = async (url) => {
+    return await doesExistCache.get(`IMG_${url}`, async () => {
+        return await new Promise(async (resolve) => {
+            const img = new Image();
 
-const doesVideoExist = (url) =>
-    new Promise((resolve) => {
-        const video = document.createElement("video");
+            img.src = url;
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+        });
+    })
+}
+const doesVideoExist = async (url) => {
+    return await doesExistCache.get(`VID_${url}`, async () => {
+        return await new Promise(async (resolve) => {
+            const video = document.createElement("video");
 
-        video.src = url;
-        video.onloadedmetadata = () => resolve(video.videoHeight > 0 && video.videoWidth > 0);
-        video.onerror = () => resolve(false);
-    });
+            video.src = url;
+            video.onloadedmetadata = () => resolve(video.videoHeight > 0 && video.videoWidth > 0);
+            video.onerror = () => resolve(false);
+        });
+    })
+}
+const doesAudioExist = async (url) => {
+    return await doesExistCache.get(`AUD_${url}`, async () => {
+        return await new Promise(async (resolve) => {
+            const audio = document.createElement("audio");
 
-const doesAudioExist = (url) =>
-    new Promise((resolve) => {
-        const audio = document.createElement("audio");
-
-        audio.src = url;
-        audio.onloadedmetadata = () => resolve(audio.duration > 0);
-        audio.onerror = () => resolve(false);
-    });
+            audio.src = url;
+            audio.onloadedmetadata = () => resolve(audio.duration > 0);
+            audio.onerror = () => resolve(false);
+        });
+    })
+}
 
 function isInAndAboveViewport(element) {
     let rect = element.getBoundingClientRect();
@@ -96,38 +107,58 @@ const renderer = {
                     // console.log("> Found image: " + randomId, element);
                     if (await doesImageExist(url))
                     {
-                        let imgNode = document.createElement("img");
-                        imgNode.src = url;
-                        imgNode.alt = text;
-                        imgNode.className = postStyles.chatImage;
-                        imgNode.onload = () => fixSizeScroll(imgNode);
-                        element.replaceWith(imgNode);
-
-                        imgNode.onclick = () => {
-                            // open image in new tab
-                            let newTab = window.open(url, "_blank");
-                            newTab.focus();
-                        };
+                        let node = await UrlElementCache.get(url, async () => {
+                            let imgNode = document.createElement("img");
+                            imgNode.src = url;
+                            imgNode.alt = text;
+                            imgNode.className = postStyles.chatImage;
+                            imgNode.onload = () => fixSizeScroll(imgNode);
+                            imgNode.onclick = () => {
+                                // open image in new tab
+                                let newTab = window.open(url, "_blank");
+                                newTab.focus();
+                            };
+                            return imgNode;
+                        });
+                        // console.log("> REPLACING IMG WITH: ", node, element)
+                        if (node.isConnected)
+                            element.replaceWith(node.cloneNode(false));
+                        else
+                            element.replaceWith(node);
                     }
                     else if (await doesVideoExist(url))
                     {
-                        let videoNode = document.createElement("video");
-                        videoNode.src = url;
-                        videoNode.alt = text;
-                        videoNode.className = postStyles.chatVideo;
-                        videoNode.controls = true;
-                        videoNode.onloadeddata = () => fixSizeScroll(videoNode);
-                        element.replaceWith(videoNode);
+                        let node = await UrlElementCache.get(url, async () => {
+                            let videoNode= document.createElement("video");
+                            videoNode.src = url;
+                            videoNode.alt = text;
+                            videoNode.className = postStyles.chatVideo;
+                            videoNode.controls = true;
+                            videoNode.onloadeddata = () => fixSizeScroll(videoNode);
+                            return videoNode;
+                        });
+                        // console.log("> REPLACING VID WITH: ", node, element)
+                        if (node.isConnected)
+                            element.replaceWith(node.cloneNode(false));
+                        else
+                            element.replaceWith(node);
                     }
                     else if (await doesAudioExist(url))
                     {
-                        let audioNode = document.createElement("audio");
-                        audioNode.src = url;
-                        audioNode.alt = text;
-                        audioNode.className = postStyles.chatAudio;
-                        audioNode.controls = true;
-                        audioNode.onloadeddata = () => fixSizeScroll(audioNode);
-                        element.replaceWith(audioNode);
+                        let node = await UrlElementCache.get(url, async () => {
+                            let audioNode= document.createElement("audio");
+                            audioNode.src = url;
+                            audioNode.alt = text;
+                            audioNode.className = postStyles.chatAudio;
+                            audioNode.controls = true;
+                            audioNode.onloadeddata = () => fixSizeScroll(audioNode);
+                            return audioNode;
+                        });
+                        // console.log("> REPLACING AUDIO WITH: ", node, element)
+                        if (node.isConnected)
+                            element.replaceWith(node.cloneNode(false));
+                        else
+                            element.replaceWith(node);
                     }
                     else
                     {

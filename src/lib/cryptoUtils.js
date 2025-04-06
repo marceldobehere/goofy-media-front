@@ -34,6 +34,11 @@ async function newPbkdf2(str, salt, keySize, iterations) {
     let enc = new TextEncoder();
     if (typeof window === 'undefined')
         return;
+
+    if (window.crypto == undefined || window.crypto.subtle == undefined) {
+        return await oldPbkdf2(str, salt, keySize, iterations);
+    }
+
     let keyMaterial = await window.crypto.subtle.importKey(
         "raw",
         enc.encode(str),
