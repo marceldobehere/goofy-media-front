@@ -25,6 +25,8 @@ async function getPublicKeyFromUserId(userId) {
             throw new Error("Failed to request public key");
         }
 
+        // verify userid -> key mapping
+
         console.log("> Got public key for userId: ", userId, " -> ", res.publicKey);
 
         return res.publicKey;
