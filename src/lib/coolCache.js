@@ -224,7 +224,11 @@ export class CoolCache {
             } else {
                 entry.lastAccess = now;
                 if (entry.promise) {
-                    return await entry.promise;
+                    try {
+                        return await entry.promise;
+                    } catch (e) {
+                        return null;
+                    }
                 } else {
                     return entry.value;
                 }
@@ -234,8 +238,10 @@ export class CoolCache {
         // Try to load the value if it doesn't exist
         if (loadFunc) {
             let promiseRes = undefined;
-            const valuePromise = new Promise((resolve) => {
+            let promiseRej = undefined;
+            const valuePromise = new Promise((resolve, reject) => {
                 promiseRes = resolve;
+                promiseRej = reject;
             });
 
             this.cache.set(key, {
@@ -260,7 +266,8 @@ export class CoolCache {
 
                 return value;
             } catch (e) {
-                console.error(`Error loading value for key ${key}:`, e);
+                console.info(`Error loading value for key ${key}:`, e);
+                promiseRej(e);
             }
         }
 

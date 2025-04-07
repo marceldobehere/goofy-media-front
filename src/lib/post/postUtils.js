@@ -11,6 +11,9 @@ const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
 
 const validPostSigCache = new CoolCache({localStorageKey: "POST_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
 
+// publicKeyCache.clear();
+// validPostSigCache.clear();
+
 async function getPublicKeyFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
         console.error("> User ID MISSING");
@@ -26,6 +29,11 @@ async function getPublicKeyFromUserId(userId) {
         }
 
         // verify userid -> key mapping
+        const actualUserId = await userHash(res.publicKey);
+        if (userId !== actualUserId) {
+            console.error("> User ID MISMATCH: ", userId, " != ", actualUserId);
+            throw new Error("User ID mismatch");
+        }
 
         console.log("> Got public key for userId: ", userId, " -> ", res.publicKey);
 
@@ -109,7 +117,7 @@ async function verifyPost(postObj) {
 
     // Get Public Key
     const publicKey = await getPublicKeyFromUserId(userId);
-    if (publicKey === undefined) {
+    if (publicKey == undefined) {
         return "USER NOT FOUND";
     }
 
@@ -145,9 +153,14 @@ export async function transformPostObjArr(postObjArr) {
             tags: postObj.post.tags,
             valid: async () => {
                 await sleep(getRandomIntInclusive(150, 1000));
-                return await validPostSigCache.get(await getHashFromObj(postObj), async () => {
+                const postHash = await getHashFromObj(postObj);
+                const res = await validPostSigCache.get(postHash, async () => {
                     return await validatePostSignature(postObj);
                 })
+                // For now we dont store the invalid post signatures
+                if (!res.ok)
+                    await validPostSigCache.delete(postHash);
+                return res;
             }
         };
 
