@@ -1,5 +1,6 @@
 import styles from "@/app/user/home/entries/postEntry.module.css";
 import {useEffect, useState} from "react";
+import {basePath} from "@/lib/goPath";
 // import {getPostHtml} from "@/app/user/home/entries/postProcess";
 
 const loadGetPostHtml = async () => {
@@ -16,7 +17,9 @@ export default function NewsEntry({post}) {
 
     return (
         <div className={styles.PostEntryDiv}>
-            <h3 className={styles.PostEntryHeader}>{post.title}</h3>
+            <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
+                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}`}>{post.title}</a>
+            </h3>
             {innerHTML !== undefined ?
                 <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                 <p className={styles.PostBody}>{post.text}</p>}

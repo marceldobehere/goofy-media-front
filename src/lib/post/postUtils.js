@@ -151,6 +151,7 @@ export async function transformPostObjArr(postObjArr) {
             displayName: "Display Name",
             createdAt: postObj.post.createdAt,
             tags: postObj.post.tags,
+            uuid: postObj.uuid,
             valid: async () => {
                 await sleep(getRandomIntInclusive(150, 1000));
                 const postHash = await getHashFromObj(postObj);
