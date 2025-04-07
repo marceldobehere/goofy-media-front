@@ -7,8 +7,9 @@ import {usePathname} from "next/navigation";
 import MainFooter from "@/comp/mainFooter";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {
+    getSimilarTags,
     loadSearchPosts,
     onWindowGoBack,
     postListGoToPage
@@ -19,6 +20,7 @@ let onceLoaded = undefined;
 export default function Search() {
     const pathName = usePathname();
     const pageLimit = 5;
+    const [searchText, setSearchText] = useState({search: "", res: []});
     const [query, _setQuery] = useState({tag: "", page: 0});
     const [postData, setPostData] = useState({posts: undefined, isOnLastPage: false, isOnFirstPage: true});
     const setQuery = (q) => {
@@ -113,19 +115,44 @@ export default function Search() {
             <div className={styles.PostDiv}>
                 <div style={{width: "250px", margin: "auto"}}>
                     <label>Enter Search Tag:</label><br/>
-                    <input id={"tag-input"} type={"text"}
-                           onKeyUp={(e) => {
+                    <input id={"tag-input"} type={"text"} value={searchText.search}
+                           onChange={async (e) => {
+                               const tagVal = e.target.value;
+                               setSearchText({search: tagVal, res: searchText.res});
+
+                               const tags = await getSimilarTags(tagVal);
+                               // console.log(tags)
+                               setSearchText((prevState) => {
+                                   if (prevState == undefined || prevState.search == tagVal) {
+                                       return {search: tagVal, res: tags};
+                                   }
+                                   return prevState;
+                               })
+                           }}
+                           onKeyUp={async (e) => {
                                if (e.key === 'Enter') {
-                                   const tagVal = document.getElementById("tag-input").value;
-                                   goPath(`/guest/search?tag=${tagVal}`);
+                                   goPath(`/guest/search?tag=${encodeURIComponent(searchText.search)}`);
+                                   return;
                                }
                            }}></input>&nbsp;&nbsp;
                     <button onClick={() => {
-                        const tagVal = document.getElementById("tag-input").value;
-                        goPath(`/guest/search?tag=${tagVal}`);
+                        goPath(`/guest/search?tag=${encodeURIComponent(searchText.search)}`);
                     }}>Search
                     </button>
                     <br/>
+                    <br/><br/>
+                    <h3>Tags:</h3>
+                    <div style={{maxHeight: "300px", overflowY: "auto"}}>
+                        <ul>
+                            {searchText.res.map((tag, idx) => (
+                                <li key={idx}>
+                                    <div key={idx} className={styles.TagDiv}>
+                                        <a href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </>

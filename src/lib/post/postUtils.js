@@ -180,6 +180,29 @@ async function loadPosts(url, headers) {
     return transformPostObjArr(res);
 }
 
+export async function loadPost(uuid) {
+    let res = await getWithAuth(`/user/post/uuid/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return alert("Failed to get post");
+
+    const post = await transformPostObjArr([res]);
+    if (post === undefined)
+        return alert("Failed to transform post");
+
+    return post[0];
+}
+
+export async function getSimilarTags(tag) {
+    if (tag == "")
+        return [];
+
+    let res = await getWithAuth(`/user/post/tags/like/${tag}`);
+    if (res === undefined)
+        return alert("Failed to get similar tags");
+
+    return res;
+}
+
 export const DEFAULT_POST_LIMIT = 5;
 function getPageLimitAndPage(pageLimit, page) {
     if (pageLimit === undefined)

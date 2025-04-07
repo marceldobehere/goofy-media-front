@@ -18,7 +18,7 @@ export default function NewsEntry({post}) {
     return (
         <div className={styles.PostEntryDiv}>
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
-                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}`}>{post.title}</a>
+                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}`} target={"_blank"}>{post.title}</a>
             </h3>
             {innerHTML !== undefined ?
                 <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
