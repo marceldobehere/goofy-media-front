@@ -195,6 +195,7 @@ export async function loadPost(uuid) {
 export async function getSimilarTags(tag) {
     if (tag == "")
         return [];
+    tag = tag.toLowerCase();
 
     let res = await getWithAuth(`/user/post/tags/like/${tag}`);
     if (res === undefined)
@@ -233,6 +234,7 @@ export async function loadNewsPosts(pageLimit, page) {
 }
 
 export async function loadSearchPosts(tag, pageLimit, page) {
+    tag = tag.toLowerCase();
     return loadPostsWithPageData(`/user/post/tag/${tag}`, pageLimit, page);
 }
 
