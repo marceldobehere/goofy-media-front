@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import {useEffect, useState} from "react";
-import {initGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
 import MainFooter from "@/comp/mainFooter";
 import EntryList from "@/app/user/home/entries/EntryList";
@@ -85,8 +85,19 @@ export default function Profile() {
 
     const profilePageData = <div>
         <div className={styles.PostDiv} style={{minHeight: "200px"}}>
-            <h3>Viewing Profile Info for: @{query.userId}</h3><br/>
+            <h3>Viewing Profile Info for: @{query.userId}</h3>
+            <button id={"copy-post-link"} style={{float: "right"}} onClick={() => {
+                const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
+                navigator.clipboard.writeText(URL);
+                const button = document.getElementById("copy-post-link");
+                button.innerText = "Copied!";
+                setTimeout(() => {
+                    button.innerText = "Copy Smol Link";
+                }, 2000);
+            }}>Copy Smol Link
+            </button>
 
+            <br/>
             <p>
                 This is some amazing profile info for this user.<br/>
                 They are a very interesting person.<br/>
@@ -107,7 +118,7 @@ export default function Profile() {
                 {postData.isOnFirstPage ?
                     <>
                         {profilePageData}
-                            <br/><br/>
+                        <br/><br/>
                         <h3>Showing posts from the user</h3>
                     </> :
                     <>

@@ -46,7 +46,7 @@ export default function PostEntry({post}) {
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
                 <b>{post.displayName}</b> <a style={{textDecoration: "none"}}
-                                             href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
+                                             href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
 
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}} href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"}>{post.title}</a></h3>
