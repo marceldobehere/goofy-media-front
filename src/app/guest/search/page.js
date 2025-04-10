@@ -147,7 +147,7 @@ export default function Search() {
                             {searchText.res.map((tag, idx) => (
                                 <li key={idx}>
                                     <div key={idx} className={styles.TagDiv}>
-                                        <a href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>
+                                        <a href={`${basePath}/guest/search?tag=${encodeURIComponent(tag.tag)}`}>#{tag.tag}</a> ({tag.count})
                                     </div>
                                 </li>
                             ))}
