@@ -77,7 +77,7 @@ export default function Register() {
         }
 
 
-        await saveGlobalState();
+        await saveGlobalState(true);
         updateState("registerButtonText", "Register");
 
         // go to /user/home
@@ -164,7 +164,7 @@ export default function Register() {
         }
 
 
-        await saveGlobalState();
+        await saveGlobalState(true);
         updateState("registerButtonText", "Register");
 
         // go to /user/home

@@ -34,10 +34,24 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         console.info("> Error in initLocalSettings: ", e);
     }
 
+    {
+        const queryParams = new URLSearchParams(window.location.search);
+        const serverId = queryParams.get("serverId");
+        if (serverId !== null) {
+            sessionStorage.setItem("tempServerIdOverride", serverId);
+        }
+    }
+
     await SpinActivity(async () => {
         console.info("> Starting Global State Init");
 
         await loadGlobalState();
+        const tempServerIdOverride = sessionStorage.getItem("tempServerIdOverride");
+        if (tempServerIdOverride !== null) {
+            GlobalStuff.server = tempServerIdOverride;
+            console.info("> Server override: ", GlobalStuff.server);
+        }
+
         const userIdNull = GlobalStuff.userId === null || GlobalStuff.userId === "";
         const fiveDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 5;
         const needsCheck = GlobalStuff.lastCheck === null ||
@@ -149,8 +163,9 @@ export async function loadGlobalState() {
     console.info("> Loaded Global State");
 }
 
-export async function saveGlobalState() {
-    await saveKey("server", GlobalStuff.server);
+export async function saveGlobalState(forceSaveServer) {
+    if (true || forceSaveServer)
+        await saveKey("server", GlobalStuff.server);
     await saveKey("publicKey", GlobalStuff.publicKey);
     await saveKey("privateKey", GlobalStuff.privateKey);
     await saveKey("userId", GlobalStuff.userId);

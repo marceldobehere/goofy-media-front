@@ -5,6 +5,7 @@ import {basePath, goPath} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import Link from "next/link";
+import {GlobalStuff} from "@/lib/globalStateStuff";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -48,7 +49,7 @@ export default function PostEntry({post}) {
                                              href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
 
-            <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}} href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}`} target={"_blank"}>{post.title}</a></h3>
+            <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}} href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"}>{post.title}</a></h3>
 
             {innerHTML !== undefined ?
                 <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
