@@ -23,7 +23,7 @@ export default function RootLayout({children}) {
             <link rel={"icon"} href={"/goofy-media-front/icon.ico"} sizes={"any"}></link>
         </head>
         <body>
-        <div id={"main-loading-div"} style={{position:"absolute", bottom:"20px", right:"20px", width:"40px", height:"40px", overflow:"hidden",display:"none"}}>
+        <div id={"main-loading-div"} style={{display:"none"}}>
 
         </div>
         {children}
