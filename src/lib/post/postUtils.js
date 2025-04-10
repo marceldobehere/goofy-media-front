@@ -159,7 +159,7 @@ export async function transformPostObjArr(postObjArr) {
                     return await validatePostSignature(postObj);
                 })
                 // For now we dont store the invalid post signatures
-                if (!res.ok)
+                if (res == undefined || !res.ok)
                     await validPostSigCache.delete(postHash);
                 return res;
             }
