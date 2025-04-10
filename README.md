@@ -50,3 +50,15 @@ Custom css can also be added for blocks by using the following `<style "...">...
 </style>
 ```
 Most properties will work just fine. Notable exclusions are `position` and any URLs.
+
+
+### Libraries
+* Express
+* JSEncrypt
+* Marked.js
+* QRCodeGenerator
+* Highlight.js
+* LZString
+* Purify
+* CryptoJS
+* JSQR

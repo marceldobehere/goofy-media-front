@@ -18,6 +18,7 @@ import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import {fixServerUrl} from "@/lib/utils";
+import jsqr from "@/lib/jsqr/jsqr"
 
 
 export default function Login() {
@@ -35,6 +36,68 @@ export default function Login() {
             }
         });
     })
+
+    async function attemptLoginViaQrCode() {
+        // somehow take/get a picture
+        alert("Taking a picture is not implemented yet, for now you can upload a picture");
+
+        let files = await uploadData();
+        if (files === undefined || files.length < 1)
+            return;
+
+        // check if file is an image
+        let file = files[0];
+        if (!file.type.startsWith("image/")) {
+            alert("File is not an image");
+            return;
+        }
+
+        let img = new Image();
+        img.src = URL.createObjectURL(file);
+        console.log("Image src: ", img.src);
+
+        img.onload = async () => {
+            // create image
+            let canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            // extract data
+            let imageData = ctx.getImageData(0, 0, img.width, img.height);
+
+            // scan qr code
+            let code = jsqr(imageData.data, imageData.width, imageData.height);
+
+            if (code === null) {
+                alert("No QR code found");
+                return;
+            }
+
+            // extract data
+            let data = code.data;
+            // console.log("QR Code data: ", data);
+
+            // parse data and check validity
+            let parts = data.split("*");
+            if (parts.length !== 3) {
+                alert("Invalid QR code data");
+                return;
+            }
+
+            // save data
+            let server = parts[0];
+            let publicKey = parts[1];
+            let privateKey = parts[2];
+
+            setServer(server);
+            setUsername(publicKey);
+            setPassword(privateKey);
+
+            doLoginPrep(server, publicKey, privateKey);
+        }
+    }
 
     async function doLoginViaKeys(server) {
         let res = await postWithAuth("/guest/register/login-test", {});
@@ -165,6 +228,8 @@ export default function Login() {
                             alert("Error uploading keypair: " + e.message);
                         }
                     }}>Login via File</a><br/>
+
+                    <a onClick={attemptLoginViaQrCode}>Login via QR Code</a><br/>
 
                     <Link href={"/guest/register"}>Register</Link>
                 </div>

@@ -13,10 +13,12 @@ export function downloadTextFile(str, fileName)
     downloadBase64File("data:text/plain;charset=utf-8," + encodeURIComponent(str), fileName);
 }
 
-export async function uploadData() {
+export async function uploadData(type) {
+    if (type == undefined)
+        type = "file";
     return await new Promise((res, rej) => {
         let fileInput = document.createElement("input");
-        fileInput.type = "file";
+        fileInput.type = type;
         fileInput.multiple = true;
         fileInput.onchange = async () => {
             let files = fileInput.files;
