@@ -95,6 +95,12 @@ async function verifyPost(postObj) {
         if (tag.length > 100) {
             return "TAG TOO LONG";
         }
+        if (tag !== tag.toLowerCase()) {
+            return "TAG CONTAINS UPPERCASE";
+        }
+        if (tag.includes("#")) {
+            return "TAG CONTAINS #";
+        }
     }
 
     // Verify Signature
