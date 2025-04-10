@@ -5,6 +5,7 @@ import {getWithAuth, postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 import {SpinActivity} from "@/lib/spinner";
 import {initLocalSettings} from "@/lib/localSettings";
+import {overrideFetch} from "@/lib/customFetch";
 
 export const initReadyCallbackList = [];
 
@@ -20,6 +21,8 @@ export let GlobalStuff = {
 
 
 let lastPath = undefined;
+overrideFetch();
+
 
 export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
     pathName = pathName.split("#")[0];
