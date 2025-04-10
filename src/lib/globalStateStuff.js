@@ -167,8 +167,10 @@ export async function loadGlobalState() {
 }
 
 export async function saveGlobalState(forceSaveServer) {
-    if (true || forceSaveServer)
+    if (forceSaveServer) {
+        sessionStorage.removeItem("tempServerIdOverride");
         await saveKey("server", GlobalStuff.server);
+    }
     await saveKey("publicKey", GlobalStuff.publicKey);
     await saveKey("privateKey", GlobalStuff.privateKey);
     await saveKey("userId", GlobalStuff.userId);
