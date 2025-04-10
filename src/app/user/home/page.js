@@ -141,7 +141,7 @@ export default function Home() {
                         <button onClick={() => {
                             setBurger(!showBurgerMenu);
                         }}>{showBurgerMenu ? "^" : "v"}</button>
-                        <h2>Goofy Media</h2>
+                        <h2><a href={"#top"} style={{textDecoration: "none"}}>Goofy Media</a></h2>
                     </div>
                     <div className={showBurgerMenu ? styles.None : styles.NavBarDiv}>
                         {showBurgerMenu ? <></> : <h2>Navigation</h2>}
@@ -164,7 +164,7 @@ export default function Home() {
 
                 <div id={"goofy-posts"} className={styles.MainContent} onScroll={onPostScroll}>
                     <div className={styles.PostDiv}>
-                        <h2>Hi, @{username}</h2>
+                        <h2 id={"top"}>Hi, @{username}</h2>
 
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
