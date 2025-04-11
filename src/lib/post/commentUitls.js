@@ -138,7 +138,7 @@ export async function transformCommentObjArr(commentObjArr) {
 export async function loadCommentsForPost(uuid) {
     let res = await getWithAuth(`/user/comment/post/${encodeURIComponent(uuid)}`);
     if (res === undefined)
-        return alert("Failed to get post");
+        return alert("Failed to get comments");
 
     const comments = await transformCommentObjArr(res);
     if (comments === undefined)
@@ -150,7 +150,7 @@ export async function loadCommentsForPost(uuid) {
 export async function loadRepliesForComment(uuid) {
     let res = await getWithAuth(`/user/comment/replies/${encodeURIComponent(uuid)}`);
     if (res === undefined)
-        return alert("Failed to get post");
+        return alert("Failed to get comments");
 
     const comments = await transformCommentObjArr(res);
     if (comments === undefined)
