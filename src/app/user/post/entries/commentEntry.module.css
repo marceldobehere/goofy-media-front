@@ -1,0 +1,25 @@
+.CommentDiv {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 800px;
+    border: 2px solid #8080F0;
+    padding: 5px;
+    margin: 10px;
+}
+
+.CommentUserHeader {
+    text-align: left;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.CommentEntryHeader {
+    text-align: left;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.CommentDiv ul {
+    max-height: 500px;
+    overflow: auto;
+}

@@ -7,14 +7,14 @@ import {GlobalStuff} from "@/lib/globalStateStuff";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
 
-const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
+export const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
 
 const validPostSigCache = new CoolCache({localStorageKey: "POST_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
 
 // publicKeyCache.clear();
 // validPostSigCache.clear();
 
-async function getPublicKeyFromUserId(userId) {
+export async function getPublicKeyFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
         console.error("> User ID MISSING");
         return undefined;

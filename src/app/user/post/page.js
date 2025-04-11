@@ -8,10 +8,28 @@ import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
 import {loadPost} from "@/lib/post/postUtils";
 import PostEntry from "@/app/user/home/entries/postEntry";
+import {loadCommentsForPost} from "@/lib/post/commentUitls";
+import {signObj} from "@/lib/rsa";
+import {postWithAuth} from "@/lib/req";
+import CommentEntry from "@/app/user/post/entries/commentEntry";
+import EntryList from "@/app/user/home/entries/EntryList";
 
 export default function Home() {
     const pathName = usePathname();
     const [postData, setPost] = useState();
+    const [comments, setComments] = useState([]);
+
+    async function refreshComments(uuid) {
+        if (uuid == undefined)
+            uuid = postData.uuid;
+        const commentArr = await loadCommentsForPost(uuid);
+        // console.log(commentArr);
+        setComments([]);
+        setTimeout(() => {
+            setComments(commentArr);
+        }, 50)
+    }
+
     useEffect(() => {
         initGlobalState(pathName, false, false, async () => {
             if (postData !== undefined)
@@ -31,6 +49,8 @@ export default function Home() {
 
             console.log(post);
             setPost(post);
+
+            refreshComments(uuid);
         });
     });
 
@@ -58,10 +78,50 @@ export default function Home() {
 
                     <br/><br/>
 
+                    <h3>Comments:
+                        &#32;&nbsp;&#32;
+                        <button onClick={() => {
+                            refreshComments()
+                        }}>Refresh</button>
+                        &#32;&nbsp;&#32;
+                        <button onClick={async () => {
+                            const text = prompt("Enter text to comment:");
+                            if (text == undefined || text == "")
+                                return;
 
-                    <h3>Comments:</h3>
+                            const comment = {
+                                text: text,
+                                postUuid: postData.uuid,
+                                createdAt: Date.now(),
+                                replyCommentUuid: undefined
+                            };
 
-                    <p>No comments implemented yet.</p>
+                            const signature = await signObj(comment);
+
+                            const mainBody = {
+                                comment: comment,
+                                signature: signature,
+                                publicKey: GlobalStuff.publicKey,
+                                userId: GlobalStuff.userId
+                            };
+                            console.log(mainBody);
+
+                            const res = await postWithAuth("/user/comment/", {comment: mainBody});
+                            if (res === undefined) {
+                                alert("Failed to comment");
+                                return;
+                            }
+
+                            refreshComments();
+                        }}>Add Comment
+                        </button>
+                    </h3>
+
+
+                    <EntryList elements={comments}
+                               compFn={(comment) => (<CommentEntry comment={comment}></CommentEntry>)}></EntryList>
+
+                    <br/>
                 </div>
             </main>
             <MainFooter></MainFooter>
