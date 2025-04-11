@@ -25,6 +25,9 @@ export default function Home() {
         const commentArr = await loadCommentsForPost(uuid);
         // console.log(commentArr);
         setComments([]);
+        if (commentArr == undefined)
+            return alert("Failed to get comments");
+
         setTimeout(() => {
             setComments(commentArr);
         }, 50)
