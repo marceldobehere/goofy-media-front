@@ -328,7 +328,7 @@ export async function loadMorePostsPartially(oldPosts, url, limit) {
             const res = await loadPosts(url, {"query-start": i, "query-limit": POST_UPDATE_STEP});
             if (res === undefined)
                 return alert("Failed to get more posts");
-            posts.push(res);
+            posts.push(...res);
         }
 
         return posts;
