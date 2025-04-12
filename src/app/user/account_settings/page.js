@@ -37,6 +37,7 @@ export default function Home() {
     const [autoLoadMedia, setAutoLoadMedia] = useState(false);
     const [enabledCustomPostCss, setEnabledCustomPostCss] = useState(true);
     const [openPostNewTab, setOpenPostNewTab] = useState(true);
+    const [extendPostHitbox, setExtendPostHitbox] = useState(false);
     const [customCss, setCustomCss] = useState("");
     const [qrSvg, setQrSvg] = useState({html: "", size: "0px"});
 
@@ -68,6 +69,7 @@ export default function Home() {
             setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
             setCustomCss(LocalSettings.customCss);
             setOpenPostNewTab(LocalSettings.openPostInNewTab);
+            setExtendPostHitbox(LocalSettings.extendPostClickHitbox);
         });
     })
 
@@ -100,6 +102,13 @@ export default function Home() {
                         const yes = e.target.checked;
                         await saveLocalSettingsKey("openPostInNewTab", yes);
                         setOpenPostNewTab(yes);
+                    }}/><br/>
+
+                    Click anywhere on post to open it: &nbsp;
+                    <input type="checkbox" checked={extendPostHitbox} onChange={async (e) => {
+                        const yes = e.target.checked;
+                        await saveLocalSettingsKey("extendPostClickHitbox", yes);
+                        setExtendPostHitbox(yes);
                     }}/><br/>
 
                     <br/>

@@ -18,8 +18,7 @@ export default function PostPage() {
     const pathName = usePathname();
     const [postData, setPost] = useState();
     const [comments, setComments] = useState([]);
-
-    async function refreshComments(uuid) {
+    async function refreshComments(uuid, scroll) {
         if (uuid == undefined)
             uuid = postData.uuid;
 
@@ -32,6 +31,13 @@ export default function PostPage() {
 
         setTimeout(() => {
             setComments(commentArr);
+            if (scroll)
+                setTimeout(() => {
+                    const commentsDiv = document.getElementById("comments");
+                    if (commentsDiv == null)
+                        return;
+                    commentsDiv.scrollIntoView({behavior: "smooth"});
+                }, 100);
         }, 50);
     }
 
@@ -59,8 +65,8 @@ export default function PostPage() {
             console.log("> Query: ", query)
             const uuid = query.get("uuid");
             console.log("> UUID: ", uuid);
-
-            await refreshComments(uuid);
+            const scrollToComments = query.get("scrollToComments");
+            await refreshComments(uuid, (scrollToComments == "true"));
         });
     });
 
@@ -88,7 +94,7 @@ export default function PostPage() {
 
                     <br/><br/>
 
-                    <h3>Comments:
+                    <h3 id={"comments"}>Comments:
                         &#32;&nbsp;&#32;
                         <button onClick={() => {
                             refreshComments()
@@ -129,7 +135,7 @@ export default function PostPage() {
 
 
                     <EntryList elements={comments}
-                               compFn={(comment) => (<CommentEntry comment={{...comment, updateFunc: loadThePost}}></CommentEntry>)}></EntryList>
+                               compFn={(comment) => (<CommentEntry comment={{...comment, updateFunc: loadThePost, overrideClick: true}}></CommentEntry>)}></EntryList>
 
                     <br/>
                 </div>

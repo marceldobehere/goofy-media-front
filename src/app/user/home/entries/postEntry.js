@@ -56,9 +56,21 @@ export default function PostEntry({post}) {
                                                       href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
                                                       target={openInNewTab ? "_blank" : ""}>{post.title}</a></h3>
 
-            {innerHTML !== undefined ?
-                <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
-                <p className={styles.PostBody}>{post.text}</p>}
+            <div className={"post-click-div-thing"} onClick={(event) => {
+                if (event.target == undefined || event.target.tagName == undefined || !LocalSettings.extendPostClickHitbox)
+                    return;
+                const tagName = event.target.tagName.toLowerCase();
+                if (["a", "img", "video", "audio", "input"].includes(tagName))
+                    return console.info("> Ignoring Click on: " + tagName);
+
+                goPath(`/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`, openInNewTab);
+                event.preventDefault();
+            }}>
+                {innerHTML !== undefined ?
+                    <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                    <p className={styles.PostBody}>{post.text}</p>}
+            </div>
+
 
             <hr style={{marginBottom: "10px"}}/>
             <div style={{display: "inline", position: "absolute", bottom: "5px", right: "5px"}}
@@ -67,7 +79,10 @@ export default function PostEntry({post}) {
                 <span key={idx}><a
                     href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>&#32;</span>))}</p>
 
-            <span>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}&nbsp; - &nbsp;</span>
+            <a style={{textDecoration: "none"}}
+               href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
+               target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
+            <span>&nbsp; - &nbsp;</span>
             <button disabled={true} onClick={() => {
                 alert("Not implemented yet")
             }}>Like

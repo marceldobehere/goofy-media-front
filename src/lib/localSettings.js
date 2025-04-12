@@ -6,7 +6,8 @@ export let LocalSettings = {
     autoLoadMedia: false,
     enabledCustomPostCss: true,
     customCss: "",
-    openPostInNewTab: true
+    openPostInNewTab: true,
+    extendPostClickHitbox: false
 };
 
 async function customCssReady() {
@@ -85,6 +86,7 @@ export async function loadLocalSettings() {
     LocalSettings.enabledCustomPostCss = await loadKeyOrDefault("enabledCustomPostCss", true);
     LocalSettings.customCss = await loadKeyOrDefault("customCss", "");
     LocalSettings.openPostInNewTab = await loadKeyOrDefault("openPostInNewTab", true);
+    LocalSettings.extendPostClickHitbox = await loadKeyOrDefault("extendPostClickHitbox", false);
 
     console.info("> Loaded Local Settings");
 }
@@ -94,6 +96,7 @@ export async function saveLocalSettings() {
     await saveKey("enabledCustomPostCss", LocalSettings.enabledCustomPostCss);
     await saveKey("customCss", LocalSettings.customCss);
     await saveKey("openPostInNewTab", LocalSettings.openPostInNewTab);
+    await saveKey("extendPostClickHitbox", LocalSettings.extendPostClickHitbox);
 
     await updateCustomCss();
 
