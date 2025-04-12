@@ -169,7 +169,9 @@ export default function Home() {
                 createdAt: Date.now(),
                 title: title,
                 text: text,
-                tags: parseTags()
+                tags: parseTags(),
+                commentCount: 0,
+                valid: async () => ({ok: "true"})
             }}></PostEntry>
 
             <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
