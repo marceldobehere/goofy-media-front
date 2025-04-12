@@ -116,6 +116,7 @@ export async function transformCommentObjArr(commentObjArr) {
             replyCommentUuid: commentObj.comment.replyCommentUuid,
             text: commentObj.comment.text,
             createdAt: commentObj.comment.createdAt,
+            replyCount: commentObj.replyCount,
             valid: async () => {
                 await sleep(getRandomIntInclusive(150, 1000));
                 const commentHash = await getHashFromObj(commentObj);
@@ -157,4 +158,16 @@ export async function loadRepliesForComment(uuid) {
         return alert("Failed to transform comments");
 
     return comments;
+}
+
+export async function loadReplyCountForComment(uuid) {
+    let res = await getWithAuth(`/user/comment/reply-count/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return alert("Failed to get reply count");
+
+    const count = res.count;
+    if (count === undefined)
+        return alert("Failed to get reply count");
+
+    return count
 }

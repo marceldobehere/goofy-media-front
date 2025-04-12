@@ -59,7 +59,7 @@ export default function Register() {
         GlobalStuff.userId = uHash;
         GlobalStuff.server = state.server;
 
-        const code = prompt("Enter the registration code:");
+        const code = prompt("Enter the registration code.\nIf you don't have one and want to register, send me a message!");
         if (code === null || code === "") {
             return updateState("registerButtonText", "Register");
         }
@@ -120,7 +120,7 @@ export default function Register() {
         // Check if already registered
         let res = await postWithAuth("/guest/register/login-test", {});
         if (res === undefined) {
-            const code = prompt("Enter the registration code:");
+            const code = prompt("Enter the registration code.\nIf you don't have one and want to register, send me a message!");
             if (code === null || code === "") {
                 return updateState("registerButtonText", "Register");
             }
@@ -323,6 +323,21 @@ export default function Register() {
                            className={"cont-btn"}
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
                     <Link href={"/guest/login"}>Login</Link>
+                    <button style={{float:"right", padding: "3px"}} onClick={async () => {
+                        const msg = prompt("Enter a message to send to me, please include a way to contact you lol.");
+                        if (msg === null || msg === "")
+                            return;
+
+                        GlobalStuff.server = fixServerUrl(state.server);
+                        GlobalStuff.publicKey = state.keys.publicKey;
+                        GlobalStuff.privateKey = state.keys.privateKey;
+
+                        const res = await postWithAuth('/guest/register/register-msg', {msg: msg}, undefined, true);
+                        if (res.status == 200)
+                            alert("Message sent!");
+                        else
+                            alert("Failed to send message: " + await res.text());
+                    }}>Request Register Code</button>
                 </div>
             </main>
             <MainFooter></MainFooter>

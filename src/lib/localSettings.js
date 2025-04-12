@@ -5,7 +5,8 @@ import {convertCssString} from "@/lib/customCssConverter";
 export let LocalSettings = {
     autoLoadMedia: false,
     enabledCustomPostCss: true,
-    customCss: ""
+    customCss: "",
+    openPostInNewTab: true
 };
 
 async function customCssReady() {
@@ -83,6 +84,7 @@ export async function loadLocalSettings() {
     LocalSettings.autoLoadMedia = await loadKeyOrDefault("autoLoadMedia", false);
     LocalSettings.enabledCustomPostCss = await loadKeyOrDefault("enabledCustomPostCss", true);
     LocalSettings.customCss = await loadKeyOrDefault("customCss", "");
+    LocalSettings.openPostInNewTab = await loadKeyOrDefault("openPostInNewTab", true);
 
     console.info("> Loaded Local Settings");
 }
@@ -91,6 +93,7 @@ export async function saveLocalSettings() {
     await saveKey("autoLoadMedia", LocalSettings.autoLoadMedia);
     await saveKey("enabledCustomPostCss", LocalSettings.enabledCustomPostCss);
     await saveKey("customCss", LocalSettings.customCss);
+    await saveKey("openPostInNewTab", LocalSettings.openPostInNewTab);
 
     await updateCustomCss();
 

@@ -35,6 +35,7 @@ export default function Home() {
     const [userId, setUsername] = useState("...");
     const [autoLoadMedia, setAutoLoadMedia] = useState(false);
     const [enabledCustomPostCss, setEnabledCustomPostCss] = useState(true);
+    const [openPostNewTab, setOpenPostNewTab] = useState(true);
     const [customCss, setCustomCss] = useState("");
     const [qrSvg, setQrSvg] = useState({html: "", size: "0px"});
 
@@ -65,6 +66,7 @@ export default function Home() {
             setAutoLoadMedia(LocalSettings.autoLoadMedia);
             setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
             setCustomCss(LocalSettings.customCss);
+            setOpenPostNewTab(LocalSettings.openPostInNewTab);
         });
     })
 
@@ -91,8 +93,15 @@ export default function Home() {
                         await saveLocalSettingsKey("enabledCustomPostCss", yes);
                         setEnabledCustomPostCss(yes);
                     }}/><br/>
-                    <br/>
 
+                    Open Post in new Tab: &nbsp;
+                    <input type="checkbox" checked={openPostNewTab} onChange={async (e) => {
+                        const yes = e.target.checked;
+                        await saveLocalSettingsKey("openPostInNewTab", yes);
+                        setOpenPostNewTab(yes);
+                    }}/><br/>
+
+                    <br/>
                     <h3>Custom CSS</h3>
                     <textarea className={styles.CssTextArea} value={customCss}
                               onChange={async (e) => {
@@ -164,8 +173,7 @@ export default function Home() {
                                 if (confirm("Are you sure? Do not let anyone else see the QR code"))
                                     if (confirm("Make sure you are in a private area and no one else can see the QR code! "))
                                         generateQRCode();
-                            }
-                            else
+                            } else
                                 setQrSvg({html: "", size: "0px"});
                         }}>{(qrSvg.html == "" ? "Generate QR Code for login" : "Hide QR Code")}</button>
                         <br/><br/>

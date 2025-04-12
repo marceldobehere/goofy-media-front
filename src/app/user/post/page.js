@@ -14,7 +14,7 @@ import {postWithAuth} from "@/lib/req";
 import CommentEntry from "@/app/user/post/entries/commentEntry";
 import EntryList from "@/app/user/home/entries/EntryList";
 
-export default function Home() {
+export default function PostPage() {
     const pathName = usePathname();
     const [postData, setPost] = useState();
     const [comments, setComments] = useState([]);
@@ -22,6 +22,8 @@ export default function Home() {
     async function refreshComments(uuid) {
         if (uuid == undefined)
             uuid = postData.uuid;
+
+        await loadThePost(uuid);
         const commentArr = await loadCommentsForPost(uuid);
         // console.log(commentArr);
         setComments([]);
@@ -30,7 +32,21 @@ export default function Home() {
 
         setTimeout(() => {
             setComments(commentArr);
-        }, 50)
+        }, 50);
+    }
+
+    async function loadThePost(uuid) {
+        if (uuid == undefined)
+            uuid = postData.uuid;
+
+        const post = await loadPost(uuid);
+        if (post == undefined) {
+            alert("Failed to get post");
+            return;
+        }
+
+        console.log(post);
+        setPost(post);
     }
 
     useEffect(() => {
@@ -44,16 +60,7 @@ export default function Home() {
             const uuid = query.get("uuid");
             console.log("> UUID: ", uuid);
 
-            const post = await loadPost(uuid);
-            if (post == undefined) {
-                alert("Failed to get post");
-                return;
-            }
-
-            console.log(post);
-            setPost(post);
-
-            refreshComments(uuid);
+            await refreshComments(uuid);
         });
     });
 
@@ -122,7 +129,7 @@ export default function Home() {
 
 
                     <EntryList elements={comments}
-                               compFn={(comment) => (<CommentEntry comment={comment}></CommentEntry>)}></EntryList>
+                               compFn={(comment) => (<CommentEntry comment={{...comment, updateFunc: loadThePost}}></CommentEntry>)}></EntryList>
 
                     <br/>
                 </div>

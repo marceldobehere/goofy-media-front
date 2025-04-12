@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import Link from "next/link";
 import {GlobalStuff} from "@/lib/globalStateStuff";
+import {LocalSettings} from "@/lib/localSettings";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -15,6 +16,8 @@ export default function PostEntry({post}) {
     const [innerHTML, setInnerHTML] = useState();
     const [lastPostText, setLastPostText] = useState();
     const [isValid, setIsValid] = useState();
+
+    const openInNewTab = LocalSettings.openPostInNewTab;
 
     if (lastPostText !== post.text) {
         setLastPostText(post.text);
@@ -49,17 +52,26 @@ export default function PostEntry({post}) {
                                              href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
 
-            <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}} href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"}>{post.title}</a></h3>
+            <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
+                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+                                                      target={openInNewTab ? "_blank" : ""}>{post.title}</a></h3>
 
             {innerHTML !== undefined ?
                 <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                 <p className={styles.PostBody}>{post.text}</p>}
 
-            <div style={{display: "inline", position:"absolute", bottom:"5px", right:"5px"}} title={validChoice.title}>{validChoice.emoji}</div>
-
+            <hr style={{marginBottom: "10px"}}/>
+            <div style={{display: "inline", position: "absolute", bottom: "5px", right: "5px"}}
+                 title={validChoice.title}>{validChoice.emoji}</div>
             <p className={styles.PostTags}>Tags: {post.tags.map((tag, idx) => (
                 <span key={idx}><a
                     href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>&#32;</span>))}</p>
+
+            <span>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}&nbsp; - &nbsp;</span>
+            <button disabled={true} onClick={() => {
+                alert("Not implemented yet")
+            }}>Like
+            </button>
         </div>
     );
 }

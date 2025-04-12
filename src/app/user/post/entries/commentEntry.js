@@ -4,7 +4,7 @@ import styles from "@/app/user/post/entries/commentEntry.module.css";
 import {useState} from "react";
 import {basePath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
-import {loadRepliesForComment} from "@/lib/post/commentUitls";
+import {loadRepliesForComment, loadReplyCountForComment} from "@/lib/post/commentUitls";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
@@ -12,6 +12,7 @@ import {postWithAuth} from "@/lib/req";
 export default function CommentEntry({comment}) {
     const [isValid, setIsValid] = useState();
     const [replies, setReplies] = useState(undefined);
+    const [replyCount, setReplyCount] = useState(comment.replyCount);
     // console.log(comment)
 
     // setIsValid(undefined);
@@ -30,9 +31,22 @@ export default function CommentEntry({comment}) {
 
     async function loadReplies() {
         const replies = await loadRepliesForComment(comment.uuid);
+        const replyCount = await loadReplyCountForComment(comment.uuid);
+        console.log(replyCount)
+
         if (replies == undefined)
             return alert("Failed to get replies");
-        setReplies(replies);
+        else
+            setReplies(replies);
+
+        if (replyCount == undefined)
+            return alert("Failed to get reply count");
+        else
+            setReplyCount(replyCount);
+
+        if (comment.updateFunc) {
+            await comment.updateFunc();
+        }
     }
 
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
@@ -48,11 +62,13 @@ export default function CommentEntry({comment}) {
         <>
             <button onClick={async () => {
                 loadReplies()
-            }}>Show replies</button>
+            }}>Show {replyCount} repl{(replyCount == 1) ? "y" : "ies"}</button>
         </> :
             <>
+                <hr style={{marginBottom:"10px"}}/>
+                <h4>Replies:</h4>
                 <EntryList elements={replies}
-                           compFn={(comment) => (<CommentEntry comment={comment}></CommentEntry>)}></EntryList>
+                           compFn={(_comment) => (<CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)}></EntryList>
 
                 <button onClick={async () => {
                     const text = prompt("Enter text to reply:");
@@ -84,6 +100,14 @@ export default function CommentEntry({comment}) {
                     loadReplies()
                 }}>Add Reply
                 </button>
+                &nbsp;&#32;&nbsp;
+                <button onClick={() => {
+                    loadReplies()
+                }}>Refresh</button>
+                &nbsp;&#32;&nbsp;
+                <button onClick={() => {
+                    setReplies(undefined)
+                }}>Hide replies</button>
                 <br/>
             </>}
 
