@@ -40,3 +40,19 @@
 .chatAudio {
     max-width: 100%;
 }
+
+.pingSelf {
+    text-decoration: none;
+    color: yellow;
+}
+
+.pingOther {
+    text-decoration: none;
+    color: red;
+}
+
+.pingUnknown {
+    text-decoration: none;
+    cursor: not-allowed;
+    color: red;
+}

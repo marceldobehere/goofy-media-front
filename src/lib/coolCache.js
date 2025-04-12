@@ -78,21 +78,29 @@ export class AsyncLock {
 
 async function attemptToRunFunctionWithTimeout(func, timeout) {
     if (timeout == undefined) {
-        return await func();
+        try {
+            return await func();
+        } catch (e) {
+            // console.info("> Error running func without timeout: ", func, e);
+            throw e;
+        }
     }
 
     return await new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
+            console.info("> Function timed out: ", func);
             reject(new Error("Function timed out"));
         }, timeout);
 
-        func().then((result) => {
+        try {
+            const result = func();
             clearTimeout(timer);
             resolve(result);
-        }).catch((error) => {
+        } catch (error) {
+            // console.info("> Error running func with timeout: ", func, error);
             clearTimeout(timer);
             reject(error);
-        });
+        }
     });
 }
 
@@ -227,6 +235,7 @@ export class CoolCache {
                     try {
                         return await entry.promise;
                     } catch (e) {
+                        console.info("> Error loading value promise for key " + key + ": ", e);
                         return null;
                     }
                 } else {
@@ -251,7 +260,9 @@ export class CoolCache {
             });
 
             try {
-                const value = await attemptToRunFunctionWithTimeout(loadFunc, this.loadTimeout);
+                let value = await attemptToRunFunctionWithTimeout(loadFunc, this.loadTimeout);
+                if (value === null)
+                    value = undefined;
                 promiseRes(value);
 
                 // Update the cache with the new value
@@ -267,7 +278,12 @@ export class CoolCache {
                 return value;
             } catch (e) {
                 console.info(`Error loading value for key ${key}:`, e);
-                promiseRej(e);
+                promiseRes(null); // bc goofy exceptions that are caught but also arent
+                // try {
+                //     promiseRej(new Error(`Error loading value for key ${key}: ` + e.message));
+                // } catch (e) {
+                //     console.error("Error rejecting promise: ", e);
+                // }
             }
         }
 

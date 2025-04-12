@@ -24,14 +24,14 @@ export async function getPublicKeyFromUserId(userId) {
         console.log("> Getting public key for userId: ", userId);
         const res = await getWithAuth(`/user/user-data/${userId}/public-key`);
         if (res === undefined || res.publicKey === undefined) {
-            console.error("> Failed to request public key for userId: ", userId);
+            console.info("> Failed to request public key for userId: ", userId);
             throw new Error("Failed to request public key");
         }
 
         // verify userid -> key mapping
         const actualUserId = await userHash(res.publicKey);
         if (userId !== actualUserId) {
-            console.error("> User ID MISMATCH: ", userId, " != ", actualUserId);
+            console.info("> User ID MISMATCH: ", userId, " != ", actualUserId);
             throw new Error("User ID mismatch");
         }
 

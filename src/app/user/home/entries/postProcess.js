@@ -22,6 +22,6 @@ export function getPostHtml(text)
         // console.log(clean);
         return clean;
     } catch (e) {
-        console.warn("ERROR RENDERING: ", message)
+        console.warn("ERROR RENDERING: ", e)
     }
 }

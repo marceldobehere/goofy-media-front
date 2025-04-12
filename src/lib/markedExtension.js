@@ -4,6 +4,9 @@ import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
 import postStyles from "@/app/user/home/entries/postCss.module.css";
 import {CoolCache} from "@/lib/coolCache";
+import {getPublicKeyFromUserId} from "@/lib/post/postUtils";
+import {basePath, goPath} from "@/lib/goPath";
+import {GlobalStuff} from "@/lib/globalStateStuff";
 let idSet = new Set();
 
 function waitForElm(selector, func) {
@@ -255,33 +258,29 @@ const renderer = {
         let partRes = [];
         for (let part of parts)
         {
-            // if (part.startsWith("@") && part.length > 1)
-            // {
-            //     let ping = part.substring(1);
-            //     let randomInt = getRandomIntInclusive(100000, 9999999);
-            //     let pingId = `chat-ping-${randomInt}-user-${ping}`;
-            //     waitForElm(`#${pingId}`).then(async (element) => {
-            //         let userId = parseInt(ping);
-            //         if (!userExists(userId) && userId != currentUser['mainAccount']['userId'])
-            //         {
-            //             element.className = "chat-ping chat-ping-other";
-            //             return element.textContent = `@[Unknown User]`;
-            //         }
-            //
-            //         let username = userGetInfoDisplayUsernameShort(currentUser['mainAccount'], userId);
-            //         element.textContent = `@${username}`;
-            //         if (userId == currentUser['mainAccount']['userId'])
-            //             element.className = "chat-ping chat-ping-self";
-            //         else
-            //             element.className = "chat-ping chat-ping-other";
-            //
-            //         element.onclick = () => {
-            //             //openChat(userId);
-            //         };
-            //     });
-            //     partRes.push(`<span id="${pingId}">${part}</span>`);
-            // }
-            // else
+            if (part.startsWith("@") && part.length > 1)
+            {
+                let ping = part.substring(1);
+                let randomInt = getRandomIntInclusive(100000, 9999999);
+                let pingId = `chat-ping-${randomInt}-user-${ping}`;
+                waitForElm(`#${pingId}`, async (element) => {
+                    const publicKey = await getPublicKeyFromUserId(ping);
+                    if (publicKey == undefined) {
+                        element.textContent = `@Unknown User`;
+                        element.className = postStyles.pingUnknown;
+                        return;
+                    }
+
+                    const linkElement = document.createElement("a");
+                    linkElement.textContent = `@${ping}`;
+                    linkElement.className = (ping == GlobalStuff.userId) ? postStyles.pingSelf : postStyles.pingOther;
+                    linkElement.href = `${basePath}/user/profile?userId=${encodeURIComponent(ping)}&serverId=${encodeURIComponent(GlobalStuff.server)}`;
+                    linkElement.target = "_blank";
+                    element.replaceWith(linkElement);
+                });
+                partRes.push(`<span id="${pingId}">${part}</span>`);
+            }
+            else
                 partRes.push(part);
         }
         return partRes.join(" ");
