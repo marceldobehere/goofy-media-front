@@ -1,7 +1,8 @@
 import styles from "@/app/user/home/entries/postEntry.module.css";
 import {useEffect, useState} from "react";
-import {basePath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
+import {LocalSettings} from "@/lib/localSettings";
 // import {getPostHtml} from "@/app/user/home/entries/postProcess";
 
 const loadGetPostHtml = async () => {
@@ -16,14 +17,28 @@ export default function NewsEntry({post}) {
         });
     }, []);
 
+    const openInNewTab = LocalSettings.openPostInNewTab;
+
     return (
         <div className={styles.PostEntryDiv}>
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
-                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"}>{post.title}</a>
+                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={openInNewTab ? "_blank" : ""}>{post.title}</a>
             </h3>
-            {innerHTML !== undefined ?
-                <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
-                <p className={styles.PostBody}>{post.text}</p>}
+
+            <div className={"post-click-div-thing"} onClick={(event) => {
+                if (event.target == undefined || event.target.tagName == undefined || !LocalSettings.extendPostClickHitbox)
+                    return;
+                const tagName = event.target.tagName.toLowerCase();
+                if (["a", "img", "video", "audio", "input"].includes(tagName))
+                    return console.info("> Ignoring Click on: " + tagName);
+
+                goPath(`/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`, openInNewTab);
+                event.preventDefault();
+            }}>
+                {innerHTML !== undefined ?
+                    <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                    <p className={styles.PostBody}>{post.text}</p>}
+            </div>
         </div>
     );
 }
