@@ -32,6 +32,11 @@
     text-align: left;
 }
 
+.PostBody ul, .PostBody ol {
+    padding-inline-start: 25px;
+    white-space: normal;
+}
+
 /*Wrap text*/
 .PostTags {
     text-align: left;

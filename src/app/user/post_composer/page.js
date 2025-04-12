@@ -122,9 +122,10 @@ export default function Home() {
             }}></input><br/>
 
             <textarea placeholder={"Enter Cool Text"} value={text} className={"cont-inp"}
-                      style={{resize: "vertical", height: "200px", minHeight: "80px", maxHeight: "600px"}} onChange={(e) => {
-                setText(e.target.value);
-            }}></textarea>
+                      style={{resize: "vertical", height: "200px", minHeight: "80px", maxHeight: "600px"}}
+                      onChange={(e) => {
+                          setText(e.target.value);
+                      }}></textarea>
 
             <p className={"cont-inp-header"}>Tags</p>
             <input placeholder={"cool, post, amazing"} value={tagStr} className={"cont-inp"}
@@ -136,21 +137,26 @@ export default function Home() {
                 }
             }}></input><br/>
 
-            <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
-                <button className={"cont-inp-btn"}
-                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                        onClick={toggleEdit}>Preview
-                </button>
-                <button className={"cont-inp-btn"}
-                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                        onClick={() => {
-                            checkPost()
-                        }}>Check
-                </button>
-                <button className={"cont-inp-btn"}
-                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                        onClick={attemptPost}>Post
-                </button>
+            <div>
+                <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
+                    <button className={"cont-inp-btn"}
+                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                            onClick={toggleEdit}>Preview
+                    </button>
+                    <button className={"cont-inp-btn"}
+                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                            onClick={() => {
+                                checkPost()
+                            }}>Check
+                    </button>
+                    <button className={"cont-inp-btn"}
+                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                            onClick={attemptPost}>Post
+                    </button>
+                </div>
+                <a style={{textAlign: "center", display: "block", margin: "auto", padding: "5px 10px 5px 10px"}}
+                   href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#styling-info"}
+                   target={"_blank"}>Post Styling</a>
             </div>
         </>);
     }
