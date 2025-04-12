@@ -30,8 +30,11 @@ export default function CommentEntry({comment}) {
     const validChoice = validStuff[isValid ? (isValid.ok ? 1 : 0) : 2];
 
     async function loadReplies() {
-        const replies = await loadRepliesForComment(comment.uuid);
-        const replyCount = await loadReplyCountForComment(comment.uuid);
+        const _replies = loadRepliesForComment(comment.uuid);
+        const _replyCount = loadReplyCountForComment(comment.uuid);
+
+        const replies = await _replies;
+        const replyCount = await _replyCount;
         console.log(replyCount)
 
         if (replies == undefined)

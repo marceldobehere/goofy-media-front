@@ -146,10 +146,8 @@ export default function Home() {
                     <div className={showBurgerMenu ? styles.None : styles.NavBarDiv}>
                         {showBurgerMenu ? <></> : <h2>Navigation</h2>}
                         <p>
-                            <Link href={"/user/home"}>Home</Link><br/>
-                            <Link href={"/"}>Index</Link><br/>
                             {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/></>) : (<></>)}
-                            <Link href={"/guest/login"}>Login</Link><br/>
+                            <Link href={"/user/home"}>Home</Link><br/>
                             <a onClick={async () => {
                                 await logout();
                                 goPath("/guest/login")

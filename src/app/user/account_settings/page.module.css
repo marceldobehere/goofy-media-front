@@ -11,3 +11,15 @@
     font-family: 'Consolas', 'Courier New', monospace;
     tab-size: 4;
 }
+
+.FeedbackTextArea {
+    display: block;
+    margin: 0px auto;
+    border: 1px solid orange;
+    width: 60%;
+    height: 150px;
+    resize: vertical;
+    min-height: 100px;
+    max-height: 500px;
+    padding: 10px;
+}

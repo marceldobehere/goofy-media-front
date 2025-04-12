@@ -10,6 +10,7 @@ import {initLocalSettings, LocalSettings, saveLocalSettings, saveLocalSettingsKe
 import {getAllAvailableClassNames} from "@/lib/customCssConverter";
 
 import QRCodeGen from "@/lib/qrgen/qrcodegen";
+import {postWithAuth} from "@/lib/req";
 const QrCode = QRCodeGen.QrCode;
 
 function toSvgString(qr, border, lightColor, darkColor) {
@@ -164,6 +165,30 @@ export default function Home() {
                     <br/>
                     <br/>
 
+                    <h3>Feedback</h3>
+                    <br/>
+                    <div style={{margin: "auto", textAlign: "center"}}>
+                        <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
+                        <br/><br/>
+                        <button onClick={async () => {
+                            const feedback = document.getElementById("feedback-textarea");
+                            const msg = feedback.value;
+                            if (msg == "") {
+                                alert("Feedback cannot be empty");
+                                return;
+                            }
+
+                            const res = await postWithAuth('/user/verify/feedback-msg', {msg: msg}, undefined, true);
+                            if (res.status == 200) {
+                                feedback.value = "";
+                                alert("Message sent!");
+                            } else
+                                alert("Failed to send message: " + await res.text());
+                        }}>Send Feedback</button>
+                    </div>
+                    <br/>
+                    <br/>
+
                     <h3>QR Code Login</h3>
                     <br/>
 
@@ -180,6 +205,7 @@ export default function Home() {
                         <svg style={{width: qrSvg.size, height: qrSvg.size}}
                              dangerouslySetInnerHTML={{__html: qrSvg.html}}></svg>
                     </div>
+
 
                     <br/>
                     <button onClick={() => {

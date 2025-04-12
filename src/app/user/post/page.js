@@ -23,7 +23,7 @@ export default function PostPage() {
         if (uuid == undefined)
             uuid = postData.uuid;
 
-        await loadThePost(uuid);
+        loadThePost(uuid);
         const commentArr = await loadCommentsForPost(uuid);
         // console.log(commentArr);
         setComments([]);
