@@ -216,41 +216,71 @@ const renderer = {
 
     html(token) {
         let text = token.text;
-        // console.log("> RAW HTML: ", JSON.stringify(text))
-
-        let text2 = text.replaceAll("<", "&lt;");
-        text2 = text2.replaceAll(">", "&gt;");
-        text2 = text2.replaceAll("\n", "<br>");
 
         /*
-        <style='border:1px solid red; '>
+        <style= "border:1px solid red;">
             asdf jklö
             asdf
         </style>
         */
         if (text.startsWith("<style \"") && text.replaceAll("\n", "").endsWith("</style>")) {
-            // extract the style info in the ''
+            // extract the style info in the ""
             const first = text.indexOf('"');
             const last = text.lastIndexOf('">');
-            // console.log("> FIRST: ", first, last);
             if (first === -1 || last === -1)
                 return text;
+
             const style = text.substring(first + 1, last);
-            // console.log("> STYLE: ", style);
-
             const styleEnd = text.lastIndexOf("</style>");
-            const inbetween = text.substring(last + 2, styleEnd);
-            // console.log("> INBETWEEN: ", inbetween);
-            const inbetween2 = inbetween.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
 
-            const unEscaped = style.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll('"', '&quot;').replaceAll("'", "&apos;");
-            const filtered = unEscaped.replaceAll("position", "").replaceAll("https://", "").replaceAll("http://", "");
+            // Get the text inside the style block and escape it
+            const inbetween = text.substring(last + 2, styleEnd)
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", "&apos;");
 
-            if (LocalSettings.enabledCustomPostCss || window.location.href.includes("post_composer"))
-                return `<div style="${filtered}">${inbetween2}</div>`;
-            return `<div style="">${inbetween2}</div>`;
+            // Custom Styles disabled
+            if (!LocalSettings.enabledCustomPostCss && window.location.href.includes("post_composer"))
+                return `<div style="isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
+
+            // Parsing the style data and un-escaping goofy things like using &#47; because css does accept that
+            let resStyle = "";
+            try {
+                const doc = new DOMParser().parseFromString(style, "text/html");
+                resStyle = doc.documentElement.textContent;
+                console.log("> Going from ", style, " to ", resStyle)
+            } catch (e) {
+                console.info("Error parsing style data:", e);
+                return `<div style="isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
+            }
+
+            // Escaping custom styles
+            const escapedStyle = resStyle
+                .toLowerCase()
+                .replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">")
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", "&apos;")
+                .replaceAll("\\", "");
+
+            // Filtering some annoying properties
+            const filteredStyle = escapedStyle
+                .replaceAll("position", "")
+                .replaceAll("url", "")
+                .replaceAll("src", "")
+                .replaceAll("data:", "")
+                .replaceAll("//", "");
+
+            return `<div style="${filteredStyle};isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
+        } else {
+            const text2 = text
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\n", "<br>");
+
+            return text2;
         }
-        return text2;
     },
 
     text(token) {
