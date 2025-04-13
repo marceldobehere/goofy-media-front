@@ -106,16 +106,16 @@ export default function Profile() {
     async function toggleFollow() {
         if (isFollowed == undefined)
             return;
+        await followingUserCache.delete(query.userId);
         if (isFollowed) {
             const res = await unfollowUser(query.userId);
             if (!res)
-                return alert("Failed to unfollowe user");
+                alert("Failed to unfollowe user");
         } else {
             const res = await followUser(query.userId);
             if (!res)
-                return alert("Failed to followUser");
+                alert("Failed to followUser");
         }
-        await followingUserCache.delete(query.userId);
         await checkFollowingStatus();
     }
 

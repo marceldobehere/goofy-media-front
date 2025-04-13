@@ -58,16 +58,17 @@ export default function PostEntry({post}) {
     async function toggleLike() {
         if (isLiked == undefined)
             return;
+
+        await likedPostCache.delete(post.uuid);
         if (isLiked) {
             const res = await unlikePost(post.uuid);
             if (!res)
-                return alert("Failed to unlike post");
+                alert("Failed to unlike post");
         } else {
             const res = await likePost(post.uuid);
             if (!res)
-                return alert("Failed to like post");
+                alert("Failed to like post");
         }
-        await likedPostCache.delete(post.uuid);
         await checkLikedStatus();
     }
 

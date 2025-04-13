@@ -184,7 +184,7 @@ async function loadPosts(url, headers) {
     if (res === undefined)
         return alert("Failed to get posts");
 
-    return transformPostObjArr(res);
+    return await transformPostObjArr(res);
 }
 
 export async function loadPost(uuid) {
