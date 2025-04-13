@@ -44,26 +44,24 @@ export default function News() {
 
     useEffect(() => {
         initGlobalState(pathName, false, false, async () => {
-
-        });
-
-        const query = new URLSearchParams(window.location.search);
-        let page = query.get("page");
-        if (page === null)
-            page = 0;
-        else
-            page = parseInt(page);
-        setQuery({page: page});
-
-        onWindowGoBack((query) => {
+            const query = new URLSearchParams(window.location.search);
             let page = query.get("page");
             if (page === null)
                 page = 0;
             else
                 page = parseInt(page);
+            setQuery({page: page});
 
-            onceLoaded = undefined;
-            setQuery({page});
+            onWindowGoBack((query) => {
+                let page = query.get("page");
+                if (page === null)
+                    page = 0;
+                else
+                    page = parseInt(page);
+
+                onceLoaded = undefined;
+                setQuery({page});
+            });
         });
     }, []);
 
