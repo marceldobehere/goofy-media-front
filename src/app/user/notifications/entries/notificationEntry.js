@@ -39,6 +39,8 @@ export default function NotificationEntry({notification}) {
         resElement = <span>{userIdLink} replied to your {commentLink} on the {postLink}:</span>;
     else if (notification.type == "mention")
         resElement = <span>{userIdLink} mentioned you in their {postLink}</span>;
+    else if (notification.type == "like")
+        resElement = <span>{userIdLink} liked your {postLink}</span>;
 
     useEffect( () => {
         setTimeout(async () => {
@@ -67,6 +69,12 @@ export default function NotificationEntry({notification}) {
                         setCommentText2(`Them> ${comment2.text}`);
                 }
             } else if (notification.type == "mention") {
+                if (postTitle == undefined) {
+                    const post = await loadPost(notification.postUuid);
+                    if (post)
+                        setPostTitle(post.title);
+                }
+            } else if (notification.type == "like") {
                 if (postTitle == undefined) {
                     const post = await loadPost(notification.postUuid);
                     if (post)

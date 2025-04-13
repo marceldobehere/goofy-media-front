@@ -171,7 +171,8 @@ export default function Home() {
                 text: text,
                 tags: parseTags(),
                 commentCount: 0,
-                valid: async () => ({ok: "true"})
+                valid: async () => ({ok: "true"}),
+                likeOverride: true
             }}></PostEntry>
 
             <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>

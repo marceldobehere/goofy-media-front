@@ -13,6 +13,7 @@ import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import CommentEntry from "@/app/user/post/entries/commentEntry";
 import EntryList from "@/app/user/home/entries/EntryList";
+import {goPath} from "@/lib/goPath";
 
 export default function PostPage() {
     const pathName = usePathname();
@@ -86,6 +87,10 @@ export default function PostPage() {
                                 }, 2000);
                             }}>Copy Smol Link
                             </button>
+                            <button id={"copy-post-link"} style={{float: "right", marginRight: "10px"}} onClick={() => {
+                                goPath("/user/home")
+                            }}>Home
+                            </button>
 
                         </> : <></>}
 
@@ -95,7 +100,8 @@ export default function PostPage() {
                         &#32;&nbsp;&#32;
                         <button onClick={() => {
                             refreshComments()
-                        }}>Refresh</button>
+                        }}>Refresh
+                        </button>
                         &#32;&nbsp;&#32;
                         <button onClick={async () => {
                             const text = prompt("Enter text to comment:");

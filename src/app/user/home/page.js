@@ -164,7 +164,8 @@ export default function Home() {
                             }}>Logout</a><br/>
                             <Link href={"/guest/news"}>News</Link><br/>
                             <Link href={"/guest/search"}>Search</Link><br/>
-                            <Link href={"/user/notifications"}>Notifications {(notifCount == undefined ? "" : `(${notifCount})`)}</Link><br/>
+                            <Link href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link><br/>
+                            <Link href={"/user/liked_posts"}>Liked Posts</Link><br/>
                             <Link href={"/user/account_settings"}>Account Settings</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>

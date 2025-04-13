@@ -1,0 +1,12 @@
+.PostDiv {
+    background-color: #101060;
+    padding: 10px;
+    margin: auto;
+    width: 60%;
+}
+
+@media (max-width: 900px) {
+    .PostDiv {
+        width: 100%;
+    }
+}

@@ -7,17 +7,33 @@ import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import Link from "next/link";
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
+import {isPostLiked, likePost, unlikePost} from "@/lib/likes/likeUtils";
+import {CoolCache} from "@/lib/coolCache";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
 }
 
+const likedPostCache = new CoolCache({localStorageKey: "IS_POST_LIKED", maxSize: 2000, saveToLocalStorageFreq: 1, cacheEntryTimeout: 1000*60*30});
+
 export default function PostEntry({post}) {
     const [innerHTML, setInnerHTML] = useState();
     const [lastPostText, setLastPostText] = useState();
     const [isValid, setIsValid] = useState();
+    const [isLiked, setIsLiked] = useState();
 
     const openInNewTab = LocalSettings.openPostInNewTab;
+
+    async function checkLikedStatus() {
+        const res = await likedPostCache.get(post.uuid, async () => {
+            const res = await isPostLiked(post.uuid);
+            return res;
+        });
+        if (res !== undefined) {
+            setIsLiked(res);
+            return;
+        }
+    }
 
     if (lastPostText !== post.text) {
         setLastPostText(post.text);
@@ -30,6 +46,26 @@ export default function PostEntry({post}) {
             post.valid().then((res) => {
                 setIsValid(res);
             })
+
+        if (post.likeOverride == undefined) {
+            checkLikedStatus();
+        }
+    }
+
+    async function toggleLike() {
+        if (isLiked == undefined)
+            return;
+        if (isLiked) {
+            const res = await unlikePost(post.uuid);
+            if (!res)
+                return alert("Failed to unlike post");
+        } else {
+            const res = await likePost(post.uuid);
+            if (!res)
+                return alert("Failed to like post");
+        }
+        await likedPostCache.delete(post.uuid);
+        await checkLikedStatus();
     }
 
     // useEffect(() => {
@@ -83,9 +119,7 @@ export default function PostEntry({post}) {
                href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
                target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
             <span>&nbsp; - &nbsp;</span>
-            <button disabled={true} onClick={() => {
-                alert("Not implemented yet")
-            }}>Like
+            <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
             </button>
         </div>
     );

@@ -230,7 +230,7 @@ export class CoolCache {
                 // Cache entry expired
                 // Continue to load
             } else {
-                entry.lastAccess = now;
+                // entry.lastAccess = now;
                 if (entry.promise) {
                     try {
                         return await entry.promise;
