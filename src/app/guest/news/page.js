@@ -15,7 +15,7 @@ export default function News() {
     const pathName = usePathname();
     const pageLimit = 5;
     const [query, _setQuery] = useState({page: 0});
-    const [postData, setPostData] = useState({posts: [], isOnLastPage: false, isOnFirstPage: true});
+    const [postData, setPostData] = useState({posts: [], isOnLastPage: true, isOnFirstPage: true});
     const setQuery = (q) => {
         _setQuery(q);
         loadPosts(q);
@@ -81,7 +81,7 @@ export default function News() {
 
                 <div className={styles.PostDiv}>
                     <EntryList elements={postData.posts}
-                               compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>
+                               compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
                 </div>
                 <br/>
                 {buttonMenu}

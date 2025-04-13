@@ -136,6 +136,18 @@ export async function transformCommentObjArr(commentObjArr) {
     return comments;
 }
 
+export async function loadCommentByUuid(uuid) {
+    let res = await getWithAuth(`/user/comment/comment/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return alert("Failed to get comment");
+
+    const comment = await transformCommentObjArr([res]);
+    if (comment === undefined)
+        return alert("Failed to transform comment");
+
+    return comment[0];
+}
+
 export async function loadCommentsForPost(uuid) {
     let res = await getWithAuth(`/user/comment/post/${encodeURIComponent(uuid)}`);
     if (res === undefined)

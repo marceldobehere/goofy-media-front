@@ -71,7 +71,7 @@ export default function CommentEntry({comment}) {
                 <hr style={{marginBottom:"10px"}}/>
                 <h4>Replies:</h4>
                 <EntryList elements={replies}
-                           compFn={(_comment) => (<CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)}></EntryList>
+                           compFn={(_comment) => (<CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)} keyFn={(comment) => (comment.uuid)}></EntryList>
 
                 <button onClick={async () => {
                     const text = prompt("Enter text to reply:");

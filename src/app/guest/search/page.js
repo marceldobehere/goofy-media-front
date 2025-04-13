@@ -22,7 +22,7 @@ export default function Search() {
     const pageLimit = 5;
     const [searchText, setSearchText] = useState({search: "", res: []});
     const [query, _setQuery] = useState({tag: "", page: 0});
-    const [postData, setPostData] = useState({posts: undefined, isOnLastPage: false, isOnFirstPage: true});
+    const [postData, setPostData] = useState({posts: undefined, isOnLastPage: true, isOnFirstPage: true});
     const setQuery = (q) => {
         _setQuery(q);
         loadPosts(q);
@@ -102,7 +102,7 @@ export default function Search() {
                         (postData.posts.length === 0) ? (
                             <div style={{height: "200px"}}><h3>No posts found.</h3></div>) : (
                             <EntryList elements={postData.posts}
-                                       compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>)
+                                       compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>)
                     )}
             </div>
             <br/>

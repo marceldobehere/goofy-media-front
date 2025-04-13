@@ -132,7 +132,7 @@ export default function Profile() {
 
                 <div className={styles.PostDiv}>
                     <EntryList elements={postData.posts}
-                               compFn={(post) => (<PostEntry post={post}></PostEntry>)}></EntryList>
+                               compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
                 </div>
                 <br/>
                 {buttonMenu}

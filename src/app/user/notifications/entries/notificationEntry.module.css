@@ -1,0 +1,19 @@
+.NotificationEntryDiv {
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 2px solid #8080F0;
+    padding: 10px;
+    margin: 10px;
+    max-height: 250px;
+    word-wrap: normal;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.Unread {
+    background-color: rgba(250, 120, 0, 0.15);
+}
+
+.Read {
+
+}

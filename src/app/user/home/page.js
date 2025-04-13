@@ -18,6 +18,7 @@ import {
     loadHomePosts,
     loadMorePostsPartially
 } from "@/lib/post/postUtils";
+import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -26,6 +27,7 @@ export default function Home() {
     let [newsArr, setNewsArr] = useState([]);
     let [username, setUsername] = useState("...");
     let [admin, setAdmin] = useState(false);
+    let [notifCount, setNotifCount] = useState();
 
     async function loadPosts() {
         const res = await loadHomePosts();
@@ -55,6 +57,13 @@ export default function Home() {
 
         await sleep(200);
         morePostBusy = false;
+    }
+
+    async function loadNotifs() {
+        const notifCount = await getUnreadNotificationCount();
+        if (notifCount === undefined)
+            return alert("Failed to get notifications");
+        setNotifCount(notifCount);
     }
 
     async function loadNews() {
@@ -107,6 +116,7 @@ export default function Home() {
 
             loadPosts();
             loadNews();
+            loadNotifs();
         });
 
         window.onresize = () => {
@@ -154,6 +164,7 @@ export default function Home() {
                             }}>Logout</a><br/>
                             <Link href={"/guest/news"}>News</Link><br/>
                             <Link href={"/guest/search"}>Search</Link><br/>
+                            <Link href={"/user/notifications"}>Notifications {(notifCount == undefined ? "" : `(${notifCount})`)}</Link><br/>
                             <Link href={"/user/account_settings"}>Account Settings</Link><br/>
                             <Link href={"/user/post_composer"}>Post Composer</Link><br/>
                         </p>
@@ -166,7 +177,7 @@ export default function Home() {
 
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
-                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)}
+                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}
                                    extra={(<div
                                        className={postStyles.PostEntryDiv}>
                                        <button id={"load-more-posts-btn"} className={"cont-btn"}
@@ -182,7 +193,7 @@ export default function Home() {
                         Cool <Link href={"/guest/news"}>News</Link> below: &nbsp;
                         <button onClick={loadNews}>Refresh</button>
                         <EntryList elements={newsArr}
-                                   compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}></EntryList>
+                                   compFn={(post) => (<NewsEntry post={post}></NewsEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
                     </div>
                 </div>
             </main>

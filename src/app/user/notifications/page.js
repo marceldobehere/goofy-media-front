@@ -1,18 +1,112 @@
 'use client';
 
-import styles from "./page.module.css";
-import Link from "next/link";
+import {usePathname} from "next/navigation";
+import {loadNewsPosts, onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
+import {initGlobalState} from "@/lib/globalStateStuff";
+import {searchButtonMenu} from "@/comp/buttonMenu";
+import styles from "@/app/guest/news/page.module.css";
+import EntryList from "@/app/user/home/entries/EntryList";
+import MainFooter from "@/comp/mainFooter";
+import {useEffect, useState} from "react";
+import NotificationEntry from "@/app/user/notifications/entries/notificationEntry";
+import {getNotifications, markAllNotificationsAsRead} from "@/lib/notifications/notificationUtils";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <h1>Notifications</h1>
-      </main>
-        <footer className={styles.footer}>
-            <p>lol</p>
-            <Link href={"/"}>Home</Link>
-        </footer>
-    </div>
-  );
+
+let onceLoaded = undefined;
+export default function Notifications() {
+    const pathName = usePathname();
+    const pageLimit = 15;
+    const [query, _setQuery] = useState({page: 0});
+    const [notifData, setNotifData] = useState({notifications: [], isOnLastPage: true, isOnFirstPage: true});
+    const setQuery = (q) => {
+        _setQuery(q);
+        loadNotifications(q);
+    }
+
+    async function loadNotifications(nQuery) {
+        if (nQuery == undefined)
+            nQuery = query;
+
+        const res = await getNotifications(pageLimit, nQuery.page);
+        console.log(res);
+        if (res === undefined)
+            return alert("Failed to get notifications");
+        setNotifData(res);
+        if (onceLoaded !== undefined)
+            setTimeout(onceLoaded, 150)
+    }
+
+    function goToPage(page) {
+        if (page < 0)
+            page = 0;
+
+        const top = (page > query.page);
+
+        onceLoaded = postListGoToPage({page}, top);
+        setQuery({page});
+    }
+
+    useEffect(() => {
+        initGlobalState(pathName, true, false, async () => {
+            const query = new URLSearchParams(window.location.search);
+            let page = query.get("page");
+            if (page === null)
+                page = 0;
+            else
+                page = parseInt(page);
+            setQuery({page: page});
+        });
+
+        onWindowGoBack((query) => {
+            let page = query.get("page");
+            if (page === null)
+                page = 0;
+            else
+                page = parseInt(page);
+
+            onceLoaded = undefined;
+            setQuery({page});
+        });
+    }, []);
+
+    const buttonMenu = searchButtonMenu(goToPage, query.page, notifData.isOnFirstPage, notifData.isOnLastPage);
+    return (
+        <div>
+            <main className={styles.main}>
+                <h1>Notifications</h1>
+
+                <h3>Showing Notifications {query.page == 0 ? (<></>) : (<span> (Page {query.page})</span>)}</h3>
+                <br/>
+
+                {buttonMenu}
+                <br/>
+                <div style={{width: "max-content", margin: "auto"}}>
+                    <button onClick={async () => {
+                        if (!await markAllNotificationsAsRead())
+                            return alert("Failed to mark notifications as read");
+                        loadNotifications({page: query.page})
+                    }}>Mark all as read
+                    </button>
+                    &nbsp;&#32;&nbsp;
+                    <button onClick={async () => {
+                        loadNotifications({page: query.page})
+                    }}>Refresh
+                    </button>
+                </div>
+                <br/>
+
+                <div className={styles.PostDiv}>
+                    <EntryList elements={notifData.notifications}
+                               compFn={(notification) => (
+                                   <NotificationEntry notification={notification}></NotificationEntry>)}
+                               keyFn={(not) => (not.uuid)}></EntryList>
+                    {notifData.notifications.length == 0 ? <h3>No Notifications</h3> : ""}
+                </div>
+                <br/>
+                {buttonMenu}
+                <br/><br/>
+            </main>
+            <MainFooter></MainFooter>
+        </div>
+    );
 }

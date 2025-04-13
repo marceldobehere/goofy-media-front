@@ -24,21 +24,18 @@ export default function PostPage() {
 
         loadThePost(uuid);
         const commentArr = await loadCommentsForPost(uuid);
-        // console.log(commentArr);
         setComments([]);
         if (commentArr == undefined)
             return alert("Failed to get comments");
 
-        setTimeout(() => {
-            setComments(commentArr);
-            if (scroll)
-                setTimeout(() => {
-                    const commentsDiv = document.getElementById("comments");
-                    if (commentsDiv == null)
-                        return;
-                    commentsDiv.scrollIntoView({behavior: "smooth"});
-                }, 100);
-        }, 50);
+        setComments(commentArr);
+        if (scroll)
+            setTimeout(() => {
+                const commentsDiv = document.getElementById("comments");
+                if (commentsDiv == null)
+                    return;
+                commentsDiv.scrollIntoView({behavior: "smooth"});
+            }, 100);
     }
 
     async function loadThePost(uuid) {
@@ -135,7 +132,7 @@ export default function PostPage() {
 
 
                     <EntryList elements={comments}
-                               compFn={(comment) => (<CommentEntry comment={{...comment, updateFunc: loadThePost, overrideClick: true}}></CommentEntry>)}></EntryList>
+                               compFn={(comment) => (<CommentEntry comment={{...comment, updateFunc: loadThePost, overrideClick: true}}></CommentEntry>)} keyFn={(comment) => (comment.uuid)}></EntryList>
 
                     <br/>
                 </div>
