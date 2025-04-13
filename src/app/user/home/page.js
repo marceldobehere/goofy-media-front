@@ -6,7 +6,7 @@ import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
 import {useEffect, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import NewsEntry from "@/app/user/home/entries/newsEntry";
@@ -200,7 +200,7 @@ export default function Home() {
 
                 <div id={"goofy-posts"} className={styles.MainContent} onScroll={onPostScroll}>
                     <div className={styles.PostDiv}>
-                        <h2 id={"top"}>Hi, @{username}</h2>
+                        <h2 id={"top"}>{(GlobalStuff.loggedIn) ? (<span>Hi, <a href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"} style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>
 
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
