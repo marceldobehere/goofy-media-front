@@ -14,6 +14,7 @@ import EntryList from "@/app/user/home/entries/EntryList";
 import {sleep} from "@/lib/utils";
 import Image from "next/image";
 import {
+    loadGlobalPosts,
     loadHomeNewsPosts,
     loadHomePosts,
     loadMorePostsPartially
@@ -30,10 +31,17 @@ export default function Home() {
     let [notifCount, setNotifCount] = useState();
 
     async function loadPosts() {
-        const res = await loadHomePosts();
-        if (res === undefined)
-            return alert("Failed to get posts");
-        setPostArr(res);
+        if (GlobalStuff.loggedIn) {
+            const res = await loadHomePosts();
+            if (res === undefined)
+                return alert("Failed to get posts");
+            setPostArr(res);
+        } else {
+            const res = await loadGlobalPosts();
+            if (res === undefined)
+                return alert("Failed to get posts");
+            setPostArr(res);
+        }
     }
 
     let morePostBusy = false;
@@ -44,7 +52,7 @@ export default function Home() {
             return;
         morePostBusy = true;
 
-        const res = await loadMorePostsPartially(postArr, "/user/post", 10);
+        const res = (GlobalStuff.loggedIn) ? (await loadMorePostsPartially(postArr, "/user/post/following", 10)) : (await loadMorePostsPartially(postArr, "/user/post", 10));
         if (res === undefined) {
             await sleep(200);
             morePostBusy = false;
@@ -60,6 +68,8 @@ export default function Home() {
     }
 
     async function loadNotifs() {
+        if (!GlobalStuff.loggedIn)
+            return setNotifCount(0);
         const notifCount = await getUnreadNotificationCount();
         if (notifCount === undefined)
             return alert("Failed to get notifications");
@@ -91,18 +101,23 @@ export default function Home() {
         prevPos = pos;
 
         // check if button is visible on screen
-        if (pos < window.innerHeight + 300 && pos > window.innerHeight - 180) {
+        if (pos < window.innerHeight + 450 && pos > window.innerHeight - 180) {
             loadMorePosts();
         }
     }
 
     useEffect(() => {
-        initGlobalState(pathName, true, false, async () => {
-            if (!GlobalStuff.loggedIn)
-                goPath("/guest/login");
+        initGlobalState(pathName, false, false, async () => {
+            // if (!GlobalStuff.loggedIn)
+            //     goPath("/guest/login");
 
-            setUsername(GlobalStuff.userId);
-            setAdmin(GlobalStuff.admin);
+            if (GlobalStuff.loggedIn) {
+                setUsername(GlobalStuff.userId);
+                setAdmin(GlobalStuff.admin);
+            } else {
+                setUsername("Guest");
+                setAdmin(false);
+            }
 
             const nav = document.getElementById("goofy-nav");
             const posts = document.getElementById("goofy-posts");
@@ -158,16 +173,27 @@ export default function Home() {
                         <p>
                             {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/></>) : (<></>)}
                             <Link href={"/user/home"}>Home</Link><br/>
-                            <a onClick={async () => {
-                                await logout();
-                                goPath("/guest/login")
-                            }}>Logout</a><br/>
+                            {(GlobalStuff.loggedIn) ? (<>
+                                <a onClick={async () => {
+                                    await logout();
+                                    goPath("/guest/login")
+                                }}>Logout</a><br/>
+                            </>) : (<>
+                                <a onClick={async () => {
+                                    goPath("/guest/login")
+                                }}>Login</a><br/>
+                            </>)}
                             <Link href={"/guest/news"}>News</Link><br/>
                             <Link href={"/guest/search"}>Search</Link><br/>
-                            <Link href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link><br/>
-                            <Link href={"/user/liked_posts"}>Liked Posts</Link><br/>
+                            <Link href={"/guest/search?tag=global"}>Global Feed</Link><br/>
+                            {(GlobalStuff.loggedIn) ? <>
+                                <Link href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link><br/>
+                            </> : ""}
+                            {(GlobalStuff.loggedIn) ? <><Link href={"/user/following"}>Following</Link><br/></> : ""}
+                            {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link><br/></> : ""}
+                            {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link><br/></> : ""}
                             <Link href={"/user/account_settings"}>Account Settings</Link><br/>
-                            <Link href={"/user/post_composer"}>Post Composer</Link><br/>
+                            {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link><br/></> : ""}
                         </p>
                     </div>
                 </nav>
@@ -179,13 +205,21 @@ export default function Home() {
                         Cool Posts below: &nbsp;
                         <button onClick={loadPosts}>Refresh</button>
                         <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}
-                                   extra={(<div
-                                       className={postStyles.PostEntryDiv}>
-                                       <button id={"load-more-posts-btn"} className={"cont-btn"}
-                                               onClick={loadMorePosts}>Load
-                                           More Posts
-                                       </button>
-                                   </div>)}></EntryList>
+                                   extra={
+                                       <div
+                                           className={postStyles.PostEntryDiv}>
+                                           {(postArr.length > 0) ?
+                                               <button id={"load-more-posts-btn"} className={"cont-btn"}
+                                                       onClick={loadMorePosts}>Load
+                                                   More Posts
+                                               </button> :
+                                               <div>
+                                                   <h3>No Posts :(</h3>
+                                                   <p>Seems like you aren't following anyone or no-one you are following has posted anything :(<br/>
+                                                   Try finding some posts in the search or take a look at the <Link href={"/guest/search?tag=global"}>global feed</Link>.</p>
+                                               </div>}
+                                       </div>
+                                   }></EntryList>
                     </div>
 
                     <div className={styles.NewsDiv}>

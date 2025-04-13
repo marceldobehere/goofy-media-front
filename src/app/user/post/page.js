@@ -132,7 +132,7 @@ export default function PostPage() {
                             }
 
                             refreshComments();
-                        }}>Add Comment
+                        }} disabled={!GlobalStuff.loggedIn}>Add Comment
                         </button>
                     </h3>
 

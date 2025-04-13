@@ -60,11 +60,13 @@ export default function Home() {
     }
 
     useEffect(() => {
-        initGlobalState(pathName, true, false, async () => {
-            if (!GlobalStuff.loggedIn)
-                goPath("/guest/login");
+        initGlobalState(pathName, false, false, async () => {
+            if (GlobalStuff.loggedIn) {
+                setUsername(GlobalStuff.userId);
+            } else {
+                setUsername("Guest");
+            }
 
-            setUsername(GlobalStuff.userId);
             setAutoLoadMedia(LocalSettings.autoLoadMedia);
             setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
             setCustomCss(LocalSettings.customCss);
@@ -174,54 +176,65 @@ export default function Home() {
                     <br/>
                     <br/>
 
-                    <h3>Feedback</h3>
-                    <br/>
-                    <div style={{margin: "auto", textAlign: "center"}}>
-                        <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
-                        <br/><br/>
-                        <button onClick={async () => {
-                            const feedback = document.getElementById("feedback-textarea");
-                            const msg = feedback.value;
-                            if (msg == "") {
-                                alert("Feedback cannot be empty");
-                                return;
-                            }
+                    {(GlobalStuff.loggedIn) ? <>
+                        <h3>Feedback</h3>
+                        <br/>
+                        <div style={{margin: "auto", textAlign: "center"}}>
+                            <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
+                            <br/><br/>
+                            <button onClick={async () => {
+                                const feedback = document.getElementById("feedback-textarea");
+                                const msg = feedback.value;
+                                if (msg == "") {
+                                    alert("Feedback cannot be empty");
+                                    return;
+                                }
 
-                            const res = await postWithAuth('/user/verify/feedback-msg', {msg: msg}, undefined, true);
-                            if (res.status == 200) {
-                                feedback.value = "";
-                                alert("Message sent!");
-                            } else
-                                alert("Failed to send message: " + await res.text());
-                        }}>Send Feedback</button>
-                    </div>
-                    <br/>
-                    <br/>
+                                const res = await postWithAuth('/user/verify/feedback-msg', {msg: msg}, undefined, true);
+                                if (res.status == 200) {
+                                    feedback.value = "";
+                                    alert("Message sent!");
+                                } else
+                                    alert("Failed to send message: " + await res.text());
+                            }}>Send Feedback
+                            </button>
+                        </div>
+                        <br/>
+                        <br/>
+                    </> : ""}
 
-                    <h3>QR Code Login</h3>
-                    <br/>
 
-                    <div id={"qr-btn"} style={{margin: "auto", width: "fit-content", textAlign: "center"}}>
+                    {(GlobalStuff.loggedIn) ? <>
+                        <h3>QR Code Login</h3>
+                        <br/>
+
+                        <div id={"qr-btn"} style={{margin: "auto", width: "fit-content", textAlign: "center"}}>
+                            <button onClick={() => {
+                                if (qrSvg.html == "") {
+                                    if (confirm("Are you sure? Do not let anyone else see the QR code"))
+                                        if (confirm("Make sure you are in a private area and no one else can see the QR code! "))
+                                            generateQRCode();
+                                } else
+                                    setQrSvg({html: "", size: "0px"});
+                            }}>{(qrSvg.html == "" ? "Generate QR Code for login" : "Hide QR Code")}</button>
+                            <br/><br/>
+                            <svg style={{width: qrSvg.size, height: qrSvg.size}}
+                                 dangerouslySetInnerHTML={{__html: qrSvg.html}}></svg>
+                        </div>
+                        <br/>
+                        <br/>
+                    </> : ""}
+
+
+                    <br/>
+                    {(GlobalStuff.loggedIn) ? <>
                         <button onClick={() => {
-                            if (qrSvg.html == "") {
-                                if (confirm("Are you sure? Do not let anyone else see the QR code"))
-                                    if (confirm("Make sure you are in a private area and no one else can see the QR code! "))
-                                        generateQRCode();
-                            } else
-                                setQrSvg({html: "", size: "0px"});
-                        }}>{(qrSvg.html == "" ? "Generate QR Code for login" : "Hide QR Code")}</button>
-                        <br/><br/>
-                        <svg style={{width: qrSvg.size, height: qrSvg.size}}
-                             dangerouslySetInnerHTML={{__html: qrSvg.html}}></svg>
-                    </div>
+                            alert("Not implemented")
+                        }}>Logout
+                        </button>
+                        <br/>
+                    </> : ""}
 
-
-                    <br/>
-                    <button onClick={() => {
-                        alert("Not implemented")
-                    }}>Logout
-                    </button>
-                    <br/>
                     <button onClick={() => {
                         alert("Not implemented")
                     }}>Delete All Data

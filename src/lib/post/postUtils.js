@@ -252,8 +252,20 @@ export async function loadUserPosts(userId, pageLimit, page) {
     return res;
 }
 
-export async function loadHomePosts() {
+export async function loadGlobalPosts() {
     const res = await loadPostsWithPageData("/user/post", 10, 0);
+    if (res === undefined)
+        return;
+    return res.posts;
+}
+
+export async function loadSearchGlobalPosts(pageLimit, page) {
+    return loadPostsWithPageData(`/user/post`, pageLimit, page);
+}
+
+
+export async function loadHomePosts() {
+    const res = await loadPostsWithPageData("/user/post/following", 15, 0);
     if (res === undefined)
         return;
     return res.posts;

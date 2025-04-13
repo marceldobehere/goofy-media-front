@@ -101,7 +101,7 @@ export default function CommentEntry({comment}) {
                         return;
                     }
                     loadReplies()
-                }}>Add Reply
+                }} disabled={!GlobalStuff.loggedIn}>Add Reply
                 </button>
                 &nbsp;&#32;&nbsp;
                 <button onClick={() => {

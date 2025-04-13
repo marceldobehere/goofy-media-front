@@ -136,7 +136,7 @@ export class CoolCache {
             this.readyResolver();
         }
 
-        console.log("> Cache Created: ", this)
+        console.info("> Cache Created: ", this)
     }
 
     async loadFromExternal() {

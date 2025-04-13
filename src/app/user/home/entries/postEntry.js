@@ -37,19 +37,22 @@ export default function PostEntry({post}) {
 
     if (lastPostText !== post.text) {
         setLastPostText(post.text);
-        loadGetPostHtml().then((getPostHtml) => {
-            setInnerHTML(getPostHtml(post.text));
-        });
-
         setIsValid(undefined);
-        if (post.valid)
-            post.valid().then((res) => {
-                setIsValid(res);
-            })
 
-        if (post.likeOverride == undefined) {
-            checkLikedStatus();
-        }
+        setTimeout(() => {
+            loadGetPostHtml().then((getPostHtml) => {
+                setInnerHTML(getPostHtml(post.text));
+            });
+
+            if (post.valid)
+                post.valid().then((res) => {
+                    setIsValid(res);
+                })
+
+            if (post.likeOverride == undefined && GlobalStuff.loggedIn) {
+                checkLikedStatus();
+            }
+        }, getRandomIntInclusive(50, 250))
     }
 
     async function toggleLike() {

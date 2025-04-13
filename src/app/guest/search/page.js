@@ -9,7 +9,7 @@ import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import {basePath, goPath} from "@/lib/goPath";
 import {
-    getSimilarTags,
+    getSimilarTags, loadGlobalPosts, loadSearchGlobalPosts,
     loadSearchPosts,
     onWindowGoBack,
     postListGoToPage
@@ -36,7 +36,7 @@ export default function Search() {
         if (tag == undefined || tag === "")
             return;
 
-        const res = await loadSearchPosts(tag, pageLimit, nQuery.page);
+        const res = (tag == "global") ? (await loadSearchGlobalPosts(pageLimit * 2, nQuery.page)) : (await loadSearchPosts(tag, pageLimit, nQuery.page));
         if (res === undefined)
             return alert("Failed to get posts");
         setPostData(res);
@@ -89,7 +89,7 @@ export default function Search() {
         <>
             <h1>Search</h1>
 
-            <h3>Showing post with tag #{query.tag} {query.page == 0 ? (<></>) : (
+            <h3>{(query.tag == "global") ? "Showing the global feed" : `Showing posts with the tag #${query.tag}`} {query.page == 0 ? (<></>) : (
                 <span> (Page {query.page})</span>)}</h3>
             <br/>
 
