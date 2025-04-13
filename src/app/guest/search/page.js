@@ -56,31 +56,29 @@ export default function Search() {
 
     useEffect(() => {
         initGlobalState(pathName, false, false, async () => {
-
-        });
-
-        const query = new URLSearchParams(window.location.search);
-        console.log("> Search: ", window.location.search)
-        console.log("> Query: ", query)
-        const tag = query.get("tag");
-        console.log("> Tag: ", tag);
-        let page = query.get("page");
-        if (page === null)
-            page = 0;
-        else
-            page = parseInt(page);
-        setQuery({tag: tag, page: page});
-
-        onWindowGoBack((query) => {
+            const query = new URLSearchParams(window.location.search);
+            console.log("> Search: ", window.location.search)
+            console.log("> Query: ", query)
             const tag = query.get("tag");
+            console.log("> Tag: ", tag);
             let page = query.get("page");
             if (page === null)
                 page = 0;
             else
                 page = parseInt(page);
+            setQuery({tag: tag, page: page});
 
-            onceLoaded = undefined;
-            setQuery({tag, page});
+            onWindowGoBack((query) => {
+                const tag = query.get("tag");
+                let page = query.get("page");
+                if (page === null)
+                    page = 0;
+                else
+                    page = parseInt(page);
+
+                onceLoaded = undefined;
+                setQuery({tag, page});
+            });
         });
     }, []);
 
