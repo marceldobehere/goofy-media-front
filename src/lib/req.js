@@ -73,7 +73,11 @@ export async function reqWithAuth(path, method, data, headers, sendRawResponse) 
     let res;
     await SpinActivity(async () => {
         try {
-            res = await fetch(GlobalStuff.server + path, options);
+            if (GlobalStuff.server == undefined) {
+                console.error("Main Server undefined: ", GlobalStuff)
+                alert("Main Server is undefined!\nProbably attempting to fetch data before initialized?");
+            } else
+                res = await fetch(GlobalStuff.server + path, options);
         } catch (e) {
             console.info("> Failed request: ", e);
             res = undefined;
