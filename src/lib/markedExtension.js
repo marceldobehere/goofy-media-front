@@ -249,7 +249,6 @@ const renderer = {
             try {
                 const doc = new DOMParser().parseFromString(style, "text/html");
                 resStyle = doc.documentElement.textContent;
-                console.log("> Going from ", style, " to ", resStyle)
             } catch (e) {
                 console.info("Error parsing style data:", e);
                 return `<div style="isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
