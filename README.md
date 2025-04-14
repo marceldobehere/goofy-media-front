@@ -199,6 +199,7 @@ Here are some of my TODOs:
 * [ ] Direct Messaging System (Planning on having a limited amount of DMs per user for data storage reasons)
 * [ ] Notification filtering
   * [ ] Potentially stopping/muting notifications for certain posts & comments
+* [ ] Polling system (Posts will be able to have simple polls)
 * [ ] Comment Links + Improved Highlighting of replies
 * [ ] Clustering System (Will be a lot of work, especially with queries having to go over distributed resources)
 * [ ] Better Admin Dashboard
