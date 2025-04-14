@@ -187,7 +187,7 @@ Here are some of the implemented features:
 * [X] Responsive Design with support for mobile devices
 * [X] Support for guest users
 * [X] Client-side caching of data
-
+* [X] Live Notification polling
 
 ### TODOs
 Here are some of my TODOs:
@@ -197,7 +197,6 @@ Here are some of my TODOs:
 * [ ] Optional Anonymous Feedback
 * [ ] Bug reporting (Unsure if Registered Only or also Guests)
 * [ ] Seeing who liked your post
-* [ ] Live Notification polling or using WS
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
@@ -269,6 +268,7 @@ Here are some of my TODOs:
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
 * [ ] Potentially support for ActivityPub / RSS for public servers
 * [ ] Potentially adding tag grouping?
+* [ ] Live Notification polling using WS
 * [ ] Scanning QR Codes with the camera to log in
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching

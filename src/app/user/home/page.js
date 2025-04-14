@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import postStyles from "@/app/user/home/entries/postEntry.module.css";
 import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {basePath, goPath} from "@/lib/goPath";
@@ -20,6 +20,27 @@ import {
     loadMorePostsPartially
 } from "@/lib/post/postUtils";
 import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
+
+// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    // Remember the latest callback.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+}
 
 export default function Home() {
     const pathName = usePathname();
@@ -67,14 +88,26 @@ export default function Home() {
         morePostBusy = false;
     }
 
-    async function loadNotifs() {
+    async function loadNotifs(poll) {
         if (!GlobalStuff.loggedIn)
             return setNotifCount(0);
         const notifCount = await getUnreadNotificationCount();
-        if (notifCount === undefined)
-            return alert("Failed to get notifications");
+        if (notifCount === undefined) {
+            if (!poll)
+                alert("Failed to get notifications");
+            return;
+        }
         setNotifCount(notifCount);
     }
+
+    if (notifCount != undefined && notifCount > 0 && typeof document !== "undefined") {
+        document.title = `Goofy Media (${notifCount})`;
+    }
+
+    useInterval(() => {
+        // console.log("> Notif Poll!");
+        loadNotifs(true);
+    }, 20000);
 
     async function loadNews() {
         const res = await loadHomeNewsPosts(10);
