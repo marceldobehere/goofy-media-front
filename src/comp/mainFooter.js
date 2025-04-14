@@ -1,11 +1,14 @@
+'use client';
 import Link from "next/link";
+import {basePath} from "@/lib/goPath";
 
 export default function MainFooter() {
     return (
         <footer style={{textAlign: "center", height: "3rem", padding: "0.5rem 0 0.5rem 0"}}>
-            <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"} style={{textDecoration: "none"}}>Goofy Media</a> - 2025
+            <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"}
+               style={{textDecoration: "none"}}>Goofy Media</a> by <a href={"https://github.com/marceldobehere"} target={"_blank"}>@marceldobehere</a>
             <br/>
-            <Link href={"/"}>Index</Link> - <Link href={"/user/home"}>Home</Link>
+            <a href={`${basePath}/`}>Index</a> - <Link href={"/user/home"}>Home</Link>
         </footer>
     );
 }

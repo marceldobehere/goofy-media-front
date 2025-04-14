@@ -5,20 +5,38 @@ import Link from "next/link";
 export default function Home() {
     return (
         <div className={styles.page}>
-            <main className={styles.main}>
-                <h1>Goofy Media</h1>
+            <main>
 
-                <p>
-                    Work In Progress Goofy Social Media app<br/>
-                    Open source <a href={"https://github.com/marceldobehere/goofy-media-front"}>here</a><br/>
-                    Made by <a href={"https://github.com/marceldobehere"}>@marceldobehere</a>.
-                </p>
-                <br/>
+                <div className={styles.CenterDiv}>
+                    <div className={styles.MainCont}>
+                        <h2 className={styles.Title}>Goofy Media</h2>
 
-                <Link href={"/guest/login"}>Login</Link><br/>
-                <Link href={"/guest/register"}>Register</Link><br/>
-                <Link href={"/user/home"}>Home</Link><br/>
+                        <p className={styles.Introduction}>
+                            The goofiest and most peak<br/>
+                            social media you've seen around.
+                        </p>
 
+                        <p className={styles.Description}>
+                        <span className={styles.Keyword}><a href={"https://github.com/marceldobehere/goofy-media-front"}
+                                                            target={"_blank"}>Open source</a></span> and <span
+                            className={styles.Keyword}>secure</span>, <br/>
+                            with <span className={styles.Keyword}>decentralization</span> in mind.
+                        </p>
+
+                        <p className={styles.ExtraInfo}>
+                            <span className={styles.RoccQuality}>100% Certified <a
+                                href={"https://github.com/marceldobehere"}
+                                target={"_blank"}>Rocc</a> Quality.</span><br/>
+                            <span className={styles.SmolNote}>Also still work in progress lol</span>
+                        </p>
+
+                        <div className={styles.MainButtons}>
+                            <Link href={"/guest/login"}>Login</Link>
+                            <Link href={"/guest/register"}>Register</Link>
+                            <Link href={"/user/home"}>Explore as a Guest</Link>
+                        </div>
+                    </div>
+                </div>
             </main>
 
             <MainFooter></MainFooter>
