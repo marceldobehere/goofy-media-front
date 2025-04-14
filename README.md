@@ -76,6 +76,48 @@ Please do not post any illegal content on Goofy Media or anything that would vio
 Specific server rules will be added but for now the most important thing is no illegal or inappropriate content, using some commonsense.
 
 
+## Issues
+
+### Failed to register!
+If you try to register and get this error it can have several reasons. 
+For example the server is offline, some data is corrupt or your device is causing a very strange bug.
+
+You can check if the very strange bug is happening by looking at your console and looking for something like `> Failed sent request:  Signature verification failed`.
+
+If this is NOT the case, it is probably due to the server being down temporarily or some other thing. 
+I'd recommend refreshing the page and trying it again in a few minutes.
+If that still doesn't work, please contact me!
+
+#### Weird bug
+
+If you do see the line, then your device is causing a very strange bug and I am trying to fix it, though it is very strange.
+I would recommend attempting to register and use the site logged in on another desktop or a mobile device, as that seems to work fine.
+If you are experiencing this bug, I am very sorry for the trouble and if you want you can contact me, so I can collect more information about the issue!
+
+If you are curious about the bug details:
+* Essentially, each request your client sends gets signed using the public/private keypair and sent out to the server
+* The client sends the body, id, validUntil, public-key and signature as extra geaders
+* The server receives the endpoint and if there is no authentication it processes it normally
+* But if the endpoint requires authentication the server parses the headers and verifies them
+* Firstly it checks if all headers exist, otherwise it returns `Unsigned request unauthorized`
+* Then it constructs the object out of the request data and checks the validity using the signature
+* If the signature is invalid it returns `Signature verification failed`
+* If the verification succeeds, it gets the userId based on the public-key and handles the stuff
+
+
+Getting the `Signature verification failed` error means that you provided a signature but it was invalid for some reason.
+This in itself is pretty strange and only has happened to 2 devices before. 
+
+What makes it weirder is that a public/private keypair that is known to work also fails on those devices but not others.
+
+Additionally when running it locally on those devices, things get even stranger:
+
+Running everything locally on those devices does not work regardless of the browser used, unless the server is running locally and the client is opened in a private tab. This for some unknown reason does work for both the client running locally and the statically hosted client.
+
+Even weirder neither the local nor the external client work with the normal server in a private tab.
+
+I am honestly not sure why specifically that happens, but I will try to figure it out and fix it.
+
 
 ### Styling Info
 Posts can be styled using markdown.
@@ -128,7 +170,7 @@ Here are some of the implemented features:
 * [X] Global Feed
 * [X] News Feed
 * [X] Tag System
-* [X] Tag Search
+* [X] Tag Search (With post counts)
 * [X] Post Tag Validation
 * [X] Home Page with infinite scroll and dynamic post loading
 * [X] Profile Page
@@ -154,6 +196,7 @@ Here are some of my TODOs:
 * [ ] Optional Anonymous Feedback
 * [ ] Seeing who liked your post
 * [ ] Live Notification polling or using WS
+* [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
 * [ ] Post deletion
@@ -193,10 +236,12 @@ Here are some of my TODOs:
   * [ ] Profile Banner?
   * [ ] Pinned Post(s)
 * [ ] User search (by handle or display name)
+* [ ] Potentially post search by text (posts that contain ...)
 * [ ] Server Lockdown / Privacy Settings (Decide how public endpoints are)
 * [ ] Direct Messaging System (Planning on having a limited amount of DMs per user for data storage reasons)
 * [ ] Notification filtering
   * [ ] Potentially stopping/muting notifications for certain posts & comments
+* [ ] Polling system (Posts will be able to have simple polls)
 * [ ] Comment Links + Improved Highlighting of replies
 * [ ] Clustering System (Will be a lot of work, especially with queries having to go over distributed resources)
 * [ ] Better Admin Dashboard
@@ -211,10 +256,17 @@ Here are some of my TODOs:
   * [ ] Server Logs?
   * [ ] Server / Database Monitoring?
 * [ ] More User Types / Permissions for Moderators, Admins and Server Owners
+* [ ] Extra Page for Featured / "Advertisement" / Donation Content
+  * Users may pay the server owner / donate / etc. to have a post of them up on the extra page for a specified amount of time (For example 24h)
+  * This page can be accessed from the home page navigation and the posts wont be highlighted anywhere else
+  * This is meant as a way to support the server costs and to advertise your content/offers/services in a non-intrusive way
+  * This page is optional to visit and optional for the server owner to implement/use, potentially might be good to limit the post spots too?
+  * Maybe add grouping to the page based on topics/tags
 * [ ] Docs for writing bots + Example code?
 * [ ] Potentially (optional) Push Notifications
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
 * [ ] Potentially support for ActivityPub / RSS for public servers
+* [ ] Potentially adding tag grouping?
 * [ ] Scanning QR Codes with the camera to log in
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching
@@ -242,7 +294,7 @@ For each new commit the actions will build the project and deploy it to the url 
 
 I used parts from goofy chat 2 and other projects so mostly my black magic code.
 
-Also thanks for [@PossibleExo](https://github.com/PossiblyExo) for some help with the design.
+Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help with the design.
 
 Credits for the backend can be found [here](https://github.com/marceldobehere/goofy-media-back).
 
