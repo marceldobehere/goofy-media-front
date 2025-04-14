@@ -1,3 +1,5 @@
+'use client';
+
 import styles from "./page.module.css";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
@@ -6,7 +8,6 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <main>
-
                 <div className={styles.CenterDiv}>
                     <div className={styles.MainCont}>
                         <h2 className={styles.Title}>Goofy Media</h2>
@@ -40,6 +41,34 @@ export default function Home() {
             </main>
 
             <MainFooter></MainFooter>
+
+            <style jsx global>{`
+                @media (max-width: 370px) {
+                    html {
+                        font-size: 14px;
+                    }
+                }
+                @media (max-width: 340px) {
+                    html {
+                        font-size: 13px;
+                    }
+                }
+                @media (max-width: 320px) {
+                    html {
+                        font-size: 12px;
+                    }
+                }
+                @media (max-width: 250px) {
+                    html {
+                        font-size: 11px;
+                    }
+                }
+                @media (max-width: 220px) {
+                    html {
+                        font-size: 8px;
+                    }
+                }
+            `}</style>
         </div>
     );
 }

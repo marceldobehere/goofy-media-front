@@ -85,16 +85,10 @@
 }
 
 @media (max-width: 370px) {
-    html {
-        font-size: 14px;
-    }
+
 }
 
 @media (max-width: 340px) {
-    html {
-        font-size: 13px;
-    }
-
     .Title {
         font-size: 2rem;
     }
@@ -105,16 +99,10 @@
 }
 
 @media (max-width: 320px) {
-    html {
-        font-size: 12px;
-    }
+
 }
 
 @media (max-width: 250px) {
-    html {
-        font-size: 11px;
-    }
-
     .Introduction {
         font-size: 1.1rem;
     }
@@ -125,7 +113,5 @@
 }
 
 @media (max-width: 220px) {
-    html {
-        font-size: 8px;
-    }
+
 }
