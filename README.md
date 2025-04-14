@@ -191,9 +191,11 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Homepage toggle for users to switch between Personal Feed and Global Feed
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback
+* [ ] Bug reporting (Unsure if Registered Only or also Guests)
 * [ ] Seeing who liked your post
 * [ ] Live Notification polling or using WS
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
