@@ -60,7 +60,7 @@ export async function reqWithAuth(path, method, data, headers, sendRawResponse) 
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            'X-Goofy-Signature': signature,
+            'X-Goofy-Signature': encodeURIComponent(signature),
             'X-Goofy-Id': id,
             'X-Goofy-Valid-Until': validUntil,
             'X-Goofy-Public-Key': encodeURIComponent(publicKey),
