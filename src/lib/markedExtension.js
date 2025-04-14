@@ -7,6 +7,8 @@ import {CoolCache} from "@/lib/coolCache";
 import {getPublicKeyFromUserId} from "@/lib/post/postUtils";
 import {basePath, goPath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
+import marked from "@/lib/marked";
+import DOMPurify from "@/lib/purify";
 let idSet = new Set();
 
 function waitForElm(selector, func) {
@@ -226,12 +228,14 @@ const renderer = {
         if (text.startsWith("<style \"") && text.replaceAll("\n", "").endsWith("</style>")) {
             // extract the style info in the ""
             const first = text.indexOf('"');
-            const last = text.lastIndexOf('">');
+            const last = text.indexOf('">');
             if (first === -1 || last === -1)
                 return text;
 
+            // console.log("Text: ", text, first, last);
             const style = text.substring(first + 1, last);
             const styleEnd = text.lastIndexOf("</style>");
+            // console.log("Style: ", style, styleEnd, text.substring(last + 2, styleEnd));
 
             // Get the text inside the style block and escape it
             const inbetween = text.substring(last + 2, styleEnd)
@@ -239,6 +243,7 @@ const renderer = {
                 .replaceAll(">", "&gt;")
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", "&apos;");
+            // console.log("Inbetween: ", inbetween);
 
             // Custom Styles disabled
             if (!LocalSettings.enabledCustomPostCss && window.location.href.includes("post_composer"))
@@ -253,6 +258,7 @@ const renderer = {
                 console.info("Error parsing style data:", e);
                 return `<div style="isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
             }
+            // console.log("Res Style: ", resStyle);
 
             // Escaping custom styles
             const escapedStyle = resStyle
@@ -262,6 +268,7 @@ const renderer = {
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", "&apos;")
                 .replaceAll("\\", "");
+            // console.log("Escaped Style: ", escapedStyle);
 
             // Filtering some annoying properties
             const filteredStyle = escapedStyle
@@ -270,8 +277,22 @@ const renderer = {
                 .replaceAll("src", "")
                 .replaceAll("data:", "")
                 .replaceAll("//", "");
+            // console.log("Filtered Style: ", filteredStyle);
 
-            return `<div style="${filteredStyle};isolation: isolate !important;position: inherit !important;">${inbetween}</div>`;
+            // Recursive parsing of inside elements
+            let inbetweenHtml = inbetween;
+            try {
+                const dirty = marked.parse(text.substring(last + 2, styleEnd));
+                // console.log(dirty);
+                const clean = DOMPurify.sanitize(dirty, { ADD_ATTR: ['target'] });
+                // console.log(clean);
+                inbetweenHtml = clean;
+            } catch (e) {
+                console.warn("ERROR RENDERING INNER HTML: ", e)
+            }
+            // console.log("Inbetween HTML: ", inbetweenHtml);
+
+            return `<div style="${filteredStyle};isolation: isolate !important;position: inherit !important;">${inbetweenHtml}</div>`;
         } else {
             const text2 = text
                 .replaceAll("<", "&lt;")
