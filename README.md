@@ -242,7 +242,7 @@ For each new commit the actions will build the project and deploy it to the url 
 
 I used parts from goofy chat 2 and other projects so mostly my black magic code.
 
-Also thanks for [@PossibleExo](https://github.com/PossiblyExo) for some help with the design.
+Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help with the design.
 
 Credits for the backend can be found [here](https://github.com/marceldobehere/goofy-media-back).
 
