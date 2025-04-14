@@ -5,8 +5,57 @@ import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 
 export default function Home() {
+
+    const kwOpenSource = <span className={styles.Keyword}><a
+        href={"https://github.com/marceldobehere/goofy-media-front"}
+        target={"_blank"}>Open source</a></span>;
+
+    const kwSecure = <span className={styles.Keyword}><a
+        href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#security"}
+        target={"_blank"}>secure</a></span>;
+
+    const kwDecentralization = <span className={styles.Keyword}><a
+        href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#decentralization"}
+        target={"_blank"}>decentralization</a></span>;
+
+    const kwRocc = <a href={"https://github.com/marceldobehere"} target={"_blank"}>Rocc</a>;
+
+    const kwWip = <span className={styles.SmolNote}><a
+        href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#features"}>Also still work in progress lol</a></span>;
+
     return (
         <div className={styles.page}>
+            <style jsx global>{`
+                @media (max-width: 370px) {
+                    html {
+                        font-size: 14px;
+                    }
+                }
+
+                @media (max-width: 340px) {
+                    html {
+                        font-size: 13px;
+                    }
+                }
+
+                @media (max-width: 320px) {
+                    html {
+                        font-size: 12px;
+                    }
+                }
+
+                @media (max-width: 250px) {
+                    html {
+                        font-size: 11px;
+                    }
+                }
+
+                @media (max-width: 220px) {
+                    html {
+                        font-size: 8px;
+                    }
+                }
+            `}</style>
             <main>
                 <div className={styles.CenterDiv}>
                     <div className={styles.MainCont}>
@@ -18,17 +67,13 @@ export default function Home() {
                         </p>
 
                         <p className={styles.Description}>
-                        <span className={styles.Keyword}><a href={"https://github.com/marceldobehere/goofy-media-front"}
-                                                            target={"_blank"}>Open source</a></span> and <span
-                            className={styles.Keyword}>secure</span>, <br/>
-                            with <span className={styles.Keyword}>decentralization</span> in mind.
+                            {kwOpenSource} and {kwSecure}, <br/>
+                            with {kwDecentralization} in mind.
                         </p>
 
                         <p className={styles.ExtraInfo}>
-                            <span className={styles.RoccQuality}>100% Certified <a
-                                href={"https://github.com/marceldobehere"}
-                                target={"_blank"}>Rocc</a> Quality.</span><br/>
-                            <span className={styles.SmolNote}>Also still work in progress lol</span>
+                            <span className={styles.RoccQuality}>100% Certified {kwRocc} Quality.</span><br/>
+                            {kwWip}
                         </p>
 
                         <div className={styles.MainButtons}>
@@ -41,34 +86,6 @@ export default function Home() {
             </main>
 
             <MainFooter></MainFooter>
-
-            <style jsx global>{`
-                @media (max-width: 370px) {
-                    html {
-                        font-size: 14px;
-                    }
-                }
-                @media (max-width: 340px) {
-                    html {
-                        font-size: 13px;
-                    }
-                }
-                @media (max-width: 320px) {
-                    html {
-                        font-size: 12px;
-                    }
-                }
-                @media (max-width: 250px) {
-                    html {
-                        font-size: 11px;
-                    }
-                }
-                @media (max-width: 220px) {
-                    html {
-                        font-size: 8px;
-                    }
-                }
-            `}</style>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 .page {
-    background-image: linear-gradient(26deg, #020315 0%, #03243d 80%);
+    background-image: linear-gradient(26deg, #020214 0%, #03243d 90%);
 }
 
 .CenterDiv {
@@ -46,6 +46,10 @@
     font-weight: bold;
 }
 
+.Keyword a {
+    font-style: normal;
+}
+
 .ExtraInfo {
     font-size: 1.1rem;
     margin-top: 2rem;
@@ -60,6 +64,10 @@
     padding-top: 0.4rem;
     font-style: italic;
     color: #d2d2d2;
+}
+
+.SmolNote a {
+    font-weight: normal;
 }
 
 .MainButtons {
@@ -78,6 +86,7 @@
     border-radius: 1.2rem;
     font-size: 1.1rem;
     font-weight: bold;
+    font-style: normal;
 }
 
 .MainButtons a:hover {
