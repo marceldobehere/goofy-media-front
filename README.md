@@ -128,7 +128,7 @@ Here are some of the implemented features:
 * [X] Global Feed
 * [X] News Feed
 * [X] Tag System
-* [X] Tag Search
+* [X] Tag Search (With post counts)
 * [X] Post Tag Validation
 * [X] Home Page with infinite scroll and dynamic post loading
 * [X] Profile Page
@@ -154,6 +154,7 @@ Here are some of my TODOs:
 * [ ] Optional Anonymous Feedback
 * [ ] Seeing who liked your post
 * [ ] Live Notification polling or using WS
+* [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
 * [ ] Post deletion
@@ -193,6 +194,7 @@ Here are some of my TODOs:
   * [ ] Profile Banner?
   * [ ] Pinned Post(s)
 * [ ] User search (by handle or display name)
+* [ ] Potentially post search by text (posts that contain ...)
 * [ ] Server Lockdown / Privacy Settings (Decide how public endpoints are)
 * [ ] Direct Messaging System (Planning on having a limited amount of DMs per user for data storage reasons)
 * [ ] Notification filtering
@@ -221,6 +223,7 @@ Here are some of my TODOs:
 * [ ] Potentially (optional) Push Notifications
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
 * [ ] Potentially support for ActivityPub / RSS for public servers
+* [ ] Potentially adding tag grouping?
 * [ ] Scanning QR Codes with the camera to log in
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching
