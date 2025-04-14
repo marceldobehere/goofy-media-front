@@ -211,6 +211,12 @@ Here are some of my TODOs:
   * [ ] Server Logs?
   * [ ] Server / Database Monitoring?
 * [ ] More User Types / Permissions for Moderators, Admins and Server Owners
+* [ ] Extra Page for Featured / "Advertisement" / Donation Content
+  * Users may pay the server owner / donate / etc. to have a post of them up on the extra page for a specified amount of time (For example 24h)
+  * This page can be accessed from the home page navigation and the posts wont be highlighted anywhere else
+  * This is meant as a way to support the server costs and to advertise your content/offers/services in a non-intrusive way
+  * This page is optional to visit and optional for the server owner to implement/use, potentially might be good to limit the post spots too?
+  * Maybe add grouping to the page based on topics/tags
 * [ ] Docs for writing bots + Example code?
 * [ ] Potentially (optional) Push Notifications
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
