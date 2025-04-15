@@ -76,49 +76,6 @@ Please do not post any illegal content on Goofy Media or anything that would vio
 Specific server rules will be added but for now the most important thing is no illegal or inappropriate content, using some commonsense.
 
 
-## Issues
-
-### Failed to register!
-If you try to register and get this error it can have several reasons. 
-For example the server is offline, some data is corrupt or your device is causing a very strange bug.
-
-You can check if the very strange bug is happening by looking at your console and looking for something like `> Failed sent request:  Signature verification failed`.
-
-If this is NOT the case, it is probably due to the server being down temporarily or some other thing. 
-I'd recommend refreshing the page and trying it again in a few minutes.
-If that still doesn't work, please contact me!
-
-#### Weird bug
-
-If you do see the line, then your device is causing a very strange bug and I am trying to fix it, though it is very strange.
-I would recommend attempting to register and use the site logged in on another desktop or a mobile device, as that seems to work fine.
-If you are experiencing this bug, I am very sorry for the trouble and if you want you can contact me, so I can collect more information about the issue!
-
-If you are curious about the bug details:
-* Essentially, each request your client sends gets signed using the public/private keypair and sent out to the server
-* The client sends the body, id, validUntil, public-key and signature as extra geaders
-* The server receives the endpoint and if there is no authentication it processes it normally
-* But if the endpoint requires authentication the server parses the headers and verifies them
-* Firstly it checks if all headers exist, otherwise it returns `Unsigned request unauthorized`
-* Then it constructs the object out of the request data and checks the validity using the signature
-* If the signature is invalid it returns `Signature verification failed`
-* If the verification succeeds, it gets the userId based on the public-key and handles the stuff
-
-
-Getting the `Signature verification failed` error means that you provided a signature but it was invalid for some reason.
-This in itself is pretty strange and only has happened to 2 devices before. 
-
-What makes it weirder is that a public/private keypair that is known to work also fails on those devices but not others.
-
-Additionally when running it locally on those devices, things get even stranger:
-
-Running everything locally on those devices does not work regardless of the browser used, unless the server is running locally and the client is opened in a private tab. This for some unknown reason does work for both the client running locally and the statically hosted client.
-
-Even weirder neither the local nor the external client work with the normal server in a private tab.
-
-I am honestly not sure why specifically that happens, but I will try to figure it out and fix it.
-
-
 ### Styling Info
 Posts can be styled using markdown.
 ```
@@ -139,7 +96,15 @@ Additionally, pictures, videos and audios can be embedded using `![alt text](url
 
 Embedded media can autoload depending on the user settings. Autoloading is off by default for security reasons.
 
-There is also syntax highlighting for code blocks
+There is also syntax highlighting for code blocks:
+```
+Replace all the ' with `
+'''js
+code goes here
+'''
+```
+
+
 
 Custom css can also be added for blocks by using the following `<style "...">...</style>` "element":
 ```html
@@ -149,6 +114,8 @@ Custom css can also be added for blocks by using the following `<style "...">...
 </style>
 ```
 Most properties will work just fine. Notable exclusions are `position` and any URLs.
+
+custom css can be disabled in the account settings as well as animations
 
 ## Features
 Goofy Media is still a WIP and far from done but it has enough features to be usable currently.
