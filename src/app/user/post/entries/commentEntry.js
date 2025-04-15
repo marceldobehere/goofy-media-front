@@ -55,64 +55,72 @@ export default function CommentEntry({comment}) {
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
             <b>{comment.displayName}</b> <a style={{textDecoration: "none"}}
-                                         href={`${basePath}/user/profile?userId=${encodeURIComponent(comment.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+                                            href={`${basePath}/user/profile?userId=${encodeURIComponent(comment.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+        </div>
+        <hr/>
+
+        <div className={styles.CommentBody}>
+            {comment.text}
         </div>
 
-        {comment.text}
+        <hr style={{marginBottom: "10px"}}/>
+        <div className={styles.CommentFooter}>
+            {replies == undefined ?
+                <>
+                    <button onClick={async () => {
+                        loadReplies()
+                    }}>Show {replyCount} repl{(replyCount == 1) ? "y" : "ies"}</button>
+                </> :
+                <>
+                    <h4>Replies:</h4>
+                    <EntryList elements={replies}
+                               compFn={(_comment) => (
+                                   <CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)}
+                               keyFn={(comment) => (comment.uuid)}></EntryList>
 
-        <br/><br/>
-        {replies == undefined ?
-        <>
-            <button onClick={async () => {
-                loadReplies()
-            }}>Show {replyCount} repl{(replyCount == 1) ? "y" : "ies"}</button>
-        </> :
-            <>
-                <hr style={{marginBottom:"10px"}}/>
-                <h4>Replies:</h4>
-                <EntryList elements={replies}
-                           compFn={(_comment) => (<CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)} keyFn={(comment) => (comment.uuid)}></EntryList>
+                    <button onClick={async () => {
+                        const text = prompt("Enter text to reply:");
+                        if (text == undefined || text == "")
+                            return;
 
-                <button onClick={async () => {
-                    const text = prompt("Enter text to reply:");
-                    if (text == undefined || text == "")
-                        return;
+                        const _comment = {
+                            text: text,
+                            postUuid: comment.postUuid,
+                            createdAt: Date.now(),
+                            replyCommentUuid: comment.uuid
+                        };
 
-                    const _comment = {
-                        text: text,
-                        postUuid: comment.postUuid,
-                        createdAt: Date.now(),
-                        replyCommentUuid: comment.uuid
-                    };
+                        const signature = await signObj(_comment);
 
-                    const signature = await signObj(_comment);
+                        const mainBody = {
+                            comment: _comment,
+                            signature: signature,
+                            publicKey: GlobalStuff.publicKey,
+                            userId: GlobalStuff.userId
+                        };
+                        console.log(mainBody);
 
-                    const mainBody = {
-                        comment: _comment,
-                        signature: signature,
-                        publicKey: GlobalStuff.publicKey,
-                        userId: GlobalStuff.userId
-                    };
-                    console.log(mainBody);
-
-                    const res = await postWithAuth("/user/comment/", {comment: mainBody});
-                    if (res === undefined) {
-                        alert("Failed to comment");
-                        return;
-                    }
-                    loadReplies()
-                }} disabled={!GlobalStuff.loggedIn}>Add Reply
-                </button>
-                &nbsp;&#32;&nbsp;
-                <button onClick={() => {
-                    loadReplies()
-                }}>Refresh</button>
-                &nbsp;&#32;&nbsp;
-                <button onClick={() => {
-                    setReplies(undefined)
-                }}>Hide replies</button>
-                <br/>
-            </>}
+                        const res = await postWithAuth("/user/comment/", {comment: mainBody});
+                        if (res === undefined) {
+                            alert("Failed to comment");
+                            return;
+                        }
+                        loadReplies()
+                    }} disabled={!GlobalStuff.loggedIn}>Add Reply
+                    </button>
+                    &nbsp;&#32;&nbsp;
+                    <button onClick={() => {
+                        loadReplies()
+                    }}>Refresh
+                    </button>
+                    &nbsp;&#32;&nbsp;
+                    <button onClick={() => {
+                        setReplies(undefined)
+                    }}>Hide replies
+                    </button>
+                    <br/>
+                </>}
+        </div>
 
         <div style={{display: "inline", position: "absolute", bottom: "5px", right: "5px"}}
              title={validChoice.title}>{validChoice.emoji}</div>
