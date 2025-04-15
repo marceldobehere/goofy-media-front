@@ -134,7 +134,7 @@
         background-color: #404080;
         display: block;
         width: 100%;
-        height: 40px;
+        height: 3rem;
     }
 
     .NavBar2 {
@@ -150,12 +150,32 @@
 
     .NavBarHamburg {
         display:grid;
-        grid-template-columns: 40px 1fr 40px;
+        grid-template-columns: 5em 1fr 5rem;
+    }
+
+    .NavBarHamburg h2 {
+        margin: 0.5rem 0 0 0;
+        padding: 0;
     }
 
     .NavBarHamburg button {
-        width: 40px;
-        margin: 5px;
+        width: max-content;
+        /*padding: 0.5rem 1rem 0.5rem 1rem;*/
+        margin: 0.2rem 0rem 0.2rem 0.5rem;
+    }
+
+    .NavBarHamburg button div{
+        transition: 150ms ease-in-out all;
+    }
+
+    .NavBarHamburg button span {
+        display: inline-block;
+        position: relative;
+        top: 50%;
+        height: 1rem;
+        transform: translateY(-50%);
+        vertical-align: center;
+        margin-right: 0.4rem;
     }
 }
 

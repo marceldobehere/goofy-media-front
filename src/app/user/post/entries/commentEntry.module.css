@@ -5,7 +5,7 @@
     border: 2px solid var(--post-border);
     background-color: var(--post-background);
     border-radius: 0.5rem;
-    margin: 1rem;
+    margin: 1rem var(--comment-spacing) 1rem var(--comment-spacing);
 }
 
 .CommentDiv hr {

@@ -192,6 +192,12 @@ export default function Home() {
         }
     })
 
+    const hamburger = <svg viewBox="0 0 120 90" width="2rem" height="2rem" fill={"white"}>
+        <rect y="10"  x="20" width="80" height="10"></rect>
+        <rect y="40" x="20" width="80" height="10"></rect>
+        <rect y="70" x="20" width="80" height="10"></rect>
+    </svg>;
+
     return (
         <div>
             <main className={styles.main}>
@@ -216,7 +222,12 @@ export default function Home() {
                     <div className={styles.NavBarHamburg}>
                         <button onClick={() => {
                             setBurger(!showBurgerMenu);
-                        }}>{showBurgerMenu ? "^" : "v"}</button>
+                        }}>{
+                            showBurgerMenu ?
+                                <div style={{transform: "rotateZ(90deg)"}}>{hamburger}</div> :
+                                <div style={{transform: "rotateZ(0deg)"}}>{hamburger}{(notifCount > 0 ? <span> ({notifCount})</span>: "")}</div>
+
+                        }</button>
                         <h2><a href={"#top"} style={{textDecoration: "none"}}>Goofy Media</a></h2>
                     </div>
                     <div className={showBurgerMenu ? styles.NavBarDivHamburgerMode : styles.NavBarDiv}>
@@ -224,7 +235,8 @@ export default function Home() {
                         <p>
                             {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
                             {(GlobalStuff.loggedIn) ? <>
-                                <Link href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
+                                <Link
+                                    href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
                             </> : ""}
                             <Link href={"/user/home"}>Home</Link>
                             <Link href={"/guest/search?tag=global"}>Global Feed</Link>
@@ -251,12 +263,18 @@ export default function Home() {
 
                 <div id={"goofy-posts"} className={styles.MainContent} onScroll={onPostScroll}>
                     <div className={styles.PostDiv}>
-                        <h2 id={"top"}>{(GlobalStuff.loggedIn) ? (<span>Hi, <a href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"} style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>
+                        <h2 id={"top"}>{(GlobalStuff.loggedIn) ? (<span>Hi, <a
+                            href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+                            target={"_blank"}
+                            style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>
 
                         Cool Posts below: &nbsp;
-                        <button onClick={loadPosts}>Refresh</button> &nbsp;
-                        {(GlobalStuff.loggedIn) ? <button onClick={overrideGlobalToggle}>{overrideShowGlobalPosts ? "Global Feed" : "Your Feed"}</button> : <></>}
-                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}
+                        <button onClick={loadPosts}>Refresh</button>
+                        &nbsp;
+                        {(GlobalStuff.loggedIn) ? <button
+                            onClick={overrideGlobalToggle}>{overrideShowGlobalPosts ? "Global Feed" : "Your Feed"}</button> : <></>}
+                        <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)}
+                                   keyFn={(post) => (post.uuid)}
                                    extra={
                                        <div
                                            className={postStyles.PostEntryDiv}>
@@ -265,7 +283,7 @@ export default function Home() {
                                                        onClick={loadMorePosts}>Load
                                                    More Posts
                                                </button> :
-                                               <div style={{padding:"1rem"}}>
+                                               <div style={{padding: "1rem"}}>
                                                    <h3>No Posts :(</h3>
                                                    {GlobalStuff.loggedIn ? <>
                                                        <br/>
@@ -286,7 +304,8 @@ export default function Home() {
                         Cool <Link href={"/guest/news"}>News</Link> below: &nbsp;
                         <button onClick={loadNews}>Refresh</button>
                         <EntryList elements={newsArr}
-                                   compFn={(post) => (<NewsEntry post={post}></NewsEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
+                                   compFn={(post) => (<NewsEntry post={post}></NewsEntry>)}
+                                   keyFn={(post) => (post.uuid)}></EntryList>
                     </div>
                 </div>
             </main>

@@ -27,6 +27,8 @@
   --container-border: #5f7bde;
 
   --account-settings-background: #0b1434;
+
+  --comment-spacing: 1rem;
 }
 
 html {
@@ -217,6 +219,7 @@ main {
 @media (max-width: 900px) {
   :root {
     --show_hamburg: 1;
+    --comment-spacing: 0.1rem;
   }
 
   .container {
