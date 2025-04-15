@@ -265,10 +265,16 @@ export default function Home() {
                                                        onClick={loadMorePosts}>Load
                                                    More Posts
                                                </button> :
-                                               <div>
+                                               <div style={{padding:"1rem"}}>
                                                    <h3>No Posts :(</h3>
-                                                   <p>Seems like you aren't following anyone or no-one you are following has posted anything :(<br/>
-                                                   Try finding some posts in the search or take a look at the <Link href={"/guest/search?tag=global"}>global feed</Link>.</p>
+                                                   {GlobalStuff.loggedIn ? <>
+                                                       <br/>
+                                                       <p>Seems like you aren't following anyone or no-one you are
+                                                           following has posted anything :(<br/>
+                                                           Try finding some posts in the search or take a look at
+                                                           the <Link href={"/guest/search?tag=global"}>global
+                                                               feed</Link>.</p>
+                                                   </> : <></>}
                                                </div>}
                                        </div>
                                    }></EntryList>
