@@ -2,30 +2,52 @@
     overflow-y: auto;
     overflow-x: hidden;
     /*max-height: 520px;*/
-    border: 2px solid #8080F0;
-    padding: 10px;
-    margin: 10px;
+    border: 2px solid var(--post-border);
+    background-color: var(--post-background);
+    border-radius: 0.5rem;
+    margin: 1rem;
+}
+
+.PostEntryDiv hr {
+    border-color: var(--text-gray);
 }
 
 .PostEntryHeader {
     text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
     display: block;
+    padding: 0.8rem 1rem 0.5rem 1rem;
 }
 
 .PostBody {
     text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 0rem;
     white-space: pre-line;
     display: block;
     max-height: 340px;
     overflow-y: auto;
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+.PostBody ul {
+    margin-top: 0.3rem;
+}
+
+.PostBody li {
+    margin-bottom: 0.3rem;
 }
 
 .PostUserHeader {
     text-align: left;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     display: block;
+    padding: 0.8rem 1rem 0.3rem 1rem;
+    background: rgba(0,0,0,0.6);
+}
+
+.PostEntryFooter {
+    padding: 0.1rem 1rem 0.8rem 1rem;
+    background: rgba(0,0,0,0.6);
 }
 
 .PostBody h1, .PostBody h2, .PostBody h3, .PostBody h4, .PostBody h5, .PostBody h6 {
@@ -40,7 +62,13 @@
 /*Wrap text*/
 .PostTags {
     text-align: left;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     display: block;
     white-space: pre-line;
+    padding: 0.8rem 1rem 0.5rem 1rem;
+    color: var(--text-gray);
+}
+
+.PostTags span {
+    margin-right: 0.5rem;
 }

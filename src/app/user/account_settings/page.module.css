@@ -1,7 +1,17 @@
+.MainDiv {
+    background: var(--account-settings-background);
+    width: 80%;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
+}
+
 .CssTextArea {
     display: block;
-    margin: 0px auto;
-    border: 1px solid red;
+    margin: 1rem auto;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
     width: 80%;
     height: 150px;
     resize: vertical;
@@ -14,12 +24,19 @@
 
 .FeedbackTextArea {
     display: block;
-    margin: 0px auto;
-    border: 1px solid orange;
+    margin: 1rem auto;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
     width: 60%;
     height: 150px;
     resize: vertical;
     min-height: 100px;
     max-height: 500px;
     padding: 10px;
+}
+
+@media (max-width: 900px) {
+    .MainDiv {
+        width: 100%;
+    }
 }

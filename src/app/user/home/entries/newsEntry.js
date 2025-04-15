@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import {basePath, goPath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
-// import {getPostHtml} from "@/app/user/home/entries/postProcess";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -39,6 +38,7 @@ export default function NewsEntry({post}) {
                     <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                     <p className={styles.PostBody}>{post.text}</p>}
             </div>
+            <br/>
         </div>
     );
 }

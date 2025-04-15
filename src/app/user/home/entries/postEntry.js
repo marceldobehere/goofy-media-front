@@ -91,6 +91,7 @@ export default function PostEntry({post}) {
                 <b>{post.displayName}</b> <a style={{textDecoration: "none"}}
                                              href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
+            <hr/>
 
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
                                                       href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
@@ -112,19 +113,22 @@ export default function PostEntry({post}) {
             </div>
 
 
-            <hr style={{marginBottom: "10px"}}/>
-            <div style={{display: "inline", position: "absolute", bottom: "5px", right: "5px"}}
+            <div style={{display: "inline", position: "absolute", bottom: "0.7rem", right: "0.5rem"}}
                  title={validChoice.title}>{validChoice.emoji}</div>
-            <p className={styles.PostTags}>Tags: {post.tags.map((tag, idx) => (
-                <span key={idx}><a
-                    href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a>&#32;</span>))}</p>
 
-            <a style={{textDecoration: "none"}}
-               href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
-               target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
-            <span>&nbsp; - &nbsp;</span>
-            <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
-            </button>
+            <p className={styles.PostTags}>{(post.tags.length == 0) ? "No tags" : ""}{post.tags.map((tag, idx) => (
+                <span key={idx}><a
+                    href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a></span>))}</p>
+
+            <hr style={{marginBottom: "10px"}}/>
+            <div className={styles.PostEntryFooter}>
+                <a style={{textDecoration: "none"}}
+                   href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
+                   target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
+                <span>&nbsp; - &nbsp;</span>
+                <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
+                </button>
+            </div>
         </div>
     );
 }

@@ -6,19 +6,60 @@
     width: 100%;
 }
 
-.None {
+.NavBarDivHamburgerMode {
+    background: var(--nav-background);
+}
 
+.NavBarDivHamburgerMode p {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    padding: 1rem 0px 1rem 0px;
+}
+
+.NavBarDivHamburgerMode a {
+    text-align: center;
+    display: block;
+    margin: 0.3rem auto 0.5rem auto;
+    width: fit-content;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    background: var(--nav-link-background);
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+
+
+.NavBarDivHamburgerMode a:hover {
+    background: var(--nav-link-hover-background);
 }
 
 /*Should be on the vertical center*/
 .NavBarDiv {
-    background-color: #303080;
-    padding: 10px;
+    background-color: var(--nav-background);
+    padding: 1.6rem;
     display: inline-block;
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+}
+
+.NavBarDiv a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    background: var(--nav-link-background);
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    border-radius: 0.4rem;
+    margin: 0.8rem 0 0rem 0;
+    display: block;
+    width: fit-content;
+}
+
+.NavBarDiv a:hover {
+    background: var(--nav-link-hover-background);
 }
 
 .NavBarHamburg {
@@ -26,14 +67,21 @@
 }
 
 .PostDiv {
-    background-color: #101060;
-    padding: 10px;
+    background-color: var(--central-background);
+    padding: 1rem;
     overflow-x: auto;
 
     height: max-content;
     min-height: 100%;
 }
 
+.PostDiv ul, .NewsDiv ul {
+    margin-top: 1.5rem;
+}
+
+.PostDiv li, .NewsDiv li {
+    margin-bottom: 2rem;
+}
 
 .NewsDiv {
     background-color: #101020;

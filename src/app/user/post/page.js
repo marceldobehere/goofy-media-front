@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
+import usefulStyles from "@/comp/useful.module.css"
 import Link from "next/link";
 import MainFooter from "@/comp/mainFooter";
 import {useEffect, useState} from "react";
@@ -71,7 +72,7 @@ export default function PostPage() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <h1>Post</h1>
 
                     {postData != undefined ?

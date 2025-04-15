@@ -1,6 +1,6 @@
 'use client';
 
-import styles from "@/app/page.module.css";
+import styles from "./page.module.css";
 import {getNoAuth, postWithAuth} from "@/lib/req";
 import {useEffect, useState} from "react";
 import {checkPrivKeyValid, checkPubKeyValid} from "@/lib/rsa";
@@ -207,31 +207,33 @@ export default function Login() {
                         doLoginPrep(server, username, password)
                     }}></input>
 
-                    <a onClick={async () => {
-                        try {
-                            let files = await uploadData();
-                            if (files === undefined || files.length < 1)
-                                return;
-                            let fileStr = await fileToString(files[0]);
-                            let obj = JSON.parse(fileStr);
+                    <div className={styles.OtherList}>
+                        <a onClick={async () => {
+                            try {
+                                let files = await uploadData();
+                                if (files === undefined || files.length < 1)
+                                    return;
+                                let fileStr = await fileToString(files[0]);
+                                let obj = JSON.parse(fileStr);
 
-                            let server = obj.server;
-                            let publicKey = obj.publicKey;
-                            let privateKey = obj.privateKey;
-                            if (server === undefined || publicKey === undefined || privateKey === undefined)
-                                return alert("Invalid keypair file!");
+                                let server = obj.server;
+                                let publicKey = obj.publicKey;
+                                let privateKey = obj.privateKey;
+                                if (server === undefined || publicKey === undefined || privateKey === undefined)
+                                    return alert("Invalid keypair file!");
 
-                            setServer(server);
-                            setUsername(publicKey);
-                            setPassword(privateKey);
-                        } catch (e) {
-                            alert("Error uploading keypair: " + e.message);
-                        }
-                    }}>Login via File</a><br/>
+                                setServer(server);
+                                setUsername(publicKey);
+                                setPassword(privateKey);
+                            } catch (e) {
+                                alert("Error uploading keypair: " + e.message);
+                            }
+                        }}>Login via File</a>
 
-                    <a onClick={attemptLoginViaQrCode}>Login via QR Code</a><br/>
+                        <a onClick={attemptLoginViaQrCode}>Login via QR Code</a>
 
-                    <Link href={"/guest/register"}>Register</Link>
+                        <Link href={"/guest/register"}>Register</Link>
+                    </div>
                 </div>
 
             </main>

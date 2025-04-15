@@ -10,6 +10,7 @@ import MainFooter from "@/comp/mainFooter";
 import {useEffect, useState} from "react";
 import NotificationEntry from "@/app/user/notifications/entries/notificationEntry";
 import {getNotifications, markAllNotificationsAsRead} from "@/lib/notifications/notificationUtils";
+import usefulStyles from "@/comp/useful.module.css";
 
 
 let onceLoaded = undefined;
@@ -95,7 +96,7 @@ export default function Notifications() {
                 </div>
                 <br/>
 
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={notifData.notifications}
                                compFn={(notification) => (
                                    <NotificationEntry notification={notification}></NotificationEntry>)}

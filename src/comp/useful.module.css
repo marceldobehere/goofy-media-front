@@ -1,0 +1,12 @@
+.CenterContentDiv {
+    background-color: var(--central-background);
+    padding: 1rem;
+    margin: auto;
+    width: 60%;
+}
+
+@media (max-width: 900px) {
+    .CenterContentDiv {
+        width: 100%;
+    }
+}

@@ -1,0 +1,15 @@
+.page {
+    background-image: linear-gradient(26deg, #020214 0%, #03243d 90%);
+}
+
+.OtherList {
+    margin-top: 1rem;
+}
+.OtherList a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: block;
+    padding: 0rem;
+    margin: 0rem 0rem 0.9rem 0rem;
+}

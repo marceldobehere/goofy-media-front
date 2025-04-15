@@ -275,69 +275,75 @@ export default function Register() {
                            className={"cont-inp"}></input><br/>
 
                     {(state.showKeys || state.selection === "local") ? (<>
-                        <button className={"cont-inp-btn"}
-                                onClick={genKeys}>Generate Keypair
-                        </button>
-                        &nbsp;
-                        <button className={"cont-inp-btn"}
-                                onClick={async () => {
+                        <div style={{width: "fit-content", margin: "auto"}}>
+                            <button className={"cont-inp-btn"}
+                                    onClick={genKeys}>Generate Keypair
+                            </button>
+                            &nbsp;
+                            <button className={"cont-inp-btn"}
+                                    onClick={async () => {
 
-                                    downloadTextFile(JSON.stringify({
-                                        server: state.server,
-                                        publicKey: state.keys.publicKey,
-                                        privateKey: state.keys.privateKey
-                                    }), "personal-keys.json");
+                                        downloadTextFile(JSON.stringify({
+                                            server: state.server,
+                                            publicKey: state.keys.publicKey,
+                                            privateKey: state.keys.privateKey
+                                        }), "personal-keys.json");
 
-                                }}>Download Keypair
-                        </button>
-                        &nbsp;
-                        <button className={"cont-inp-btn"}
-                                onClick={async () => {
-                                    try {
-                                        let files = await uploadData();
-                                        if (files === undefined || files.length < 1)
-                                            return;
-                                        let fileStr = await fileToString(files[0]);
-                                        let obj = JSON.parse(fileStr);
+                                    }}>Download Keypair
+                            </button>
+                            &nbsp;
+                            <button className={"cont-inp-btn"}
+                                    onClick={async () => {
+                                        try {
+                                            let files = await uploadData();
+                                            if (files === undefined || files.length < 1)
+                                                return;
+                                            let fileStr = await fileToString(files[0]);
+                                            let obj = JSON.parse(fileStr);
 
-                                        let server = obj.server;
-                                        let publicKey = obj.publicKey;
-                                        let privateKey = obj.privateKey;
-                                        if (server === undefined || publicKey === undefined || privateKey === undefined)
-                                            return alert("Invalid keypair file!");
+                                            let server = obj.server;
+                                            let publicKey = obj.publicKey;
+                                            let privateKey = obj.privateKey;
+                                            if (server === undefined || publicKey === undefined || privateKey === undefined)
+                                                return alert("Invalid keypair file!");
 
-                                        updateState("server", server);
-                                        updateState("keys", {publicKey: publicKey, privateKey: privateKey});
+                                            updateState("server", server);
+                                            updateState("keys", {publicKey: publicKey, privateKey: privateKey});
 
-                                        let hash = await userHash(publicKey);
-                                        setUHash(hash);
-                                    } catch (e) {
-                                        alert("Error uploading keypair: " + e.message);
-                                    }
-                                }}>Upload Keypair
-                        </button>
+                                            let hash = await userHash(publicKey);
+                                            setUHash(hash);
+                                        } catch (e) {
+                                            alert("Error uploading keypair: " + e.message);
+                                        }
+                                    }}>Upload Keypair
+                            </button>
+                        </div>
                         <br/>
                     </>) : (<></>)}
 
                     <input disabled={!canRegister()} type="button" value={state.registerButtonText}
                            className={"cont-btn"}
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
-                    <Link href={"/guest/login"}>Login</Link>
-                    <button style={{float:"right", padding: "3px"}} onClick={async () => {
-                        const msg = prompt("Enter a message to send to me, please include a way to contact you lol.");
-                        if (msg === null || msg === "")
-                            return;
+                    <div className={styles.OtherList}>
+                        <Link className={"cont-inp-btn"} href={"/guest/login"}>Login</Link>
+                        <button className={"cont-inp-btn"} onClick={async () => {
+                            const msg = prompt("Enter a message to send to me, please include a way to contact you lol.");
+                            if (msg === null || msg === "")
+                                return;
 
-                        GlobalStuff.server = fixServerUrl(state.server);
-                        GlobalStuff.publicKey = state.keys.publicKey;
-                        GlobalStuff.privateKey = state.keys.privateKey;
+                            GlobalStuff.server = fixServerUrl(state.server);
+                            GlobalStuff.publicKey = state.keys.publicKey;
+                            GlobalStuff.privateKey = state.keys.privateKey;
 
-                        const res = await postWithAuth('/guest/register/register-msg', {msg: msg}, undefined, true);
-                        if (res.status == 200)
-                            alert("Message sent!");
-                        else
-                            alert("Failed to send message: " + await res.text());
-                    }}>Request Register Code</button>
+                            const res = await postWithAuth('/guest/register/register-msg', {msg: msg}, undefined, true);
+                            if (res.status == 200)
+                                alert("Message sent!");
+                            else
+                                alert("Failed to send message: " + await res.text());
+                        }}>Request Register Code
+                        </button>
+                    </div>
+
                 </div>
             </main>
             <MainFooter></MainFooter>

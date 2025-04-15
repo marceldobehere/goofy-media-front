@@ -11,6 +11,7 @@ import {useEffect, useState} from "react";
 import {getFollowing} from "@/lib/follows/followUtils";
 import {basePath} from "@/lib/goPath";
 import Link from "next/link";
+import usefulStyles from "@/comp/useful.module.css";
 
 
 let onceLoaded = undefined;
@@ -90,7 +91,7 @@ export default function Following() {
                 </div>
                 <br/>
 
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={notifData.following}
                                compFn={(followUserId) => (
                                    <div className={styles.UserEntry}>

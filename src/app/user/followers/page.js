@@ -10,6 +10,7 @@ import MainFooter from "@/comp/mainFooter";
 import {useEffect, useState} from "react";
 import {getFollowers, getFollowing} from "@/lib/follows/followUtils";
 import {basePath} from "@/lib/goPath";
+import usefulStyles from "@/comp/useful.module.css";
 
 
 let onceLoaded = undefined;
@@ -88,7 +89,7 @@ export default function Followers() {
                 </div>
                 <br/>
 
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={notifData.followers}
                                compFn={(follower) => (
                                    <div className={styles.UserEntry}>

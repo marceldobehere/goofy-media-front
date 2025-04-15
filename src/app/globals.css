@@ -13,6 +13,20 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
+
+  --text-gray: #c3c3c3;
+
+  --central-background: #161b4a;
+  --nav-background: #181d4f;
+  --nav-link-background: #050c27;
+  --nav-link-hover-background: #364599;
+
+  --post-border: #5372e0;
+  --post-background: rgba(0,0,0,0.2);
+
+  --container-border: #5f7bde;
+
+  --account-settings-background: #0b1434;
 }
 
 html {
@@ -72,11 +86,11 @@ h2 {
 }
 
 .container {
-  background-color: #08356e;
+  background-color: var(--central-background);
   margin: auto;
   width: 40%;
   padding: 14px;
-  border: 2px solid #4fb897;
+  border: 2px solid var(--container-border);
   color: #ffffff;
 }
 
@@ -90,6 +104,9 @@ h2 {
   display: inline-block;
   margin: 2px auto 8px auto;
   padding: 4px 6px 4px 6px;
+
+  border: 2px solid var(--container-border);
+  border-radius: 0.5rem;
 }
 
 .cont-btn {
@@ -98,12 +115,18 @@ h2 {
   padding: 5px 10px 5px 10px;
   font-size: 1.5rem;
   font-weight: bold;
+
+  border: 2px solid var(--container-border);
+  border-radius: 0.5rem;
 }
 
 .cont-inp-btn {
   display: inline-block;
   margin: 2px auto 8px auto;
   padding: 4px 6px 4px 6px;
+
+  border: 2px solid var(--container-border);
+  border-radius: 0.5rem;
 }
 
 input, button {

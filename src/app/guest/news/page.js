@@ -9,6 +9,7 @@ import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import {loadNewsPosts, onWindowGoBack, postListGoToPage, transformPostObjArr} from "@/lib/post/postUtils";
 import {searchButtonMenu} from "@/comp/buttonMenu";
+import usefulStyles from "@/comp/useful.module.css";
 
 let onceLoaded = undefined;
 export default function News() {
@@ -77,7 +78,7 @@ export default function News() {
                 {buttonMenu}
                 <br/><br/>
 
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={postData.posts}
                                compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
                 </div>

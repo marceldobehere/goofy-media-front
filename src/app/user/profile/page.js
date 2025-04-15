@@ -16,6 +16,7 @@ import {searchButtonMenu} from "@/comp/buttonMenu";
 import {goPath} from "@/lib/goPath";
 import {CoolCache} from "@/lib/coolCache";
 import {followUser, isUserFollowed, unfollowUser} from "@/lib/follows/followUtils";
+import usefulStyles from "@/comp/useful.module.css";
 
 const followingUserCache = new CoolCache({localStorageKey: "IS_USER_FOLLOWED", maxSize: 2000, saveToLocalStorageFreq: 1, cacheEntryTimeout: 1000*60*30});
 
@@ -120,7 +121,7 @@ export default function Profile() {
     }
 
     const profilePageData = <div>
-        <div className={styles.PostDiv} style={{minHeight: "200px"}}>
+        <div className={usefulStyles.CenterContentDiv} style={{minHeight: "200px"}}>
             <h3>Viewing Profile Info for: @{query.userId}</h3>
             <button id={"copy-post-link"} style={{float: "right"}} onClick={() => {
                 const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
@@ -174,7 +175,7 @@ export default function Profile() {
 
                 <br/>
 
-                <div className={styles.PostDiv}>
+                <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={postData.posts}
                                compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
                 </div>

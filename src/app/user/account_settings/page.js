@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import MainFooter from "@/comp/mainFooter";
-import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
 import {goPath} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
@@ -81,7 +81,7 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
-                <div style={{width: "80%", margin: "auto", border: "1px solid white", padding: "10px"}}>
+                <div className={styles.MainDiv}>
                     <h1>Account Settings</h1>
 
                     Generated Handle: @<span>{userId}</span><br/>
@@ -123,7 +123,10 @@ export default function Home() {
                         setExtendPostHitbox(yes);
                     }}/><br/>
 
-                    <br/>
+                    <br/><br/>
+                    <hr/>
+                    <br/><br/>
+
                     <h3>Custom CSS</h3>
                     <textarea className={styles.CssTextArea} value={customCss}
                               onChange={async (e) => {
@@ -188,10 +191,8 @@ export default function Home() {
 
                     {(GlobalStuff.loggedIn) ? <>
                         <h3>Feedback</h3>
-                        <br/>
                         <div style={{margin: "auto", textAlign: "center"}}>
                             <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
-                            <br/><br/>
                             <button onClick={async () => {
                                 const feedback = document.getElementById("feedback-textarea");
                                 const msg = feedback.value;
@@ -231,15 +232,16 @@ export default function Home() {
                             <svg style={{width: qrSvg.size, height: qrSvg.size}}
                                  dangerouslySetInnerHTML={{__html: qrSvg.html}}></svg>
                         </div>
-                        <br/>
-                        <br/>
                     </> : ""}
 
+                    <br/><br/>
+                    <hr/>
+                    <br/><br/>
 
-                    <br/>
                     {(GlobalStuff.loggedIn) ? <>
-                        <button onClick={() => {
-                            alert("Not implemented")
+                        <button onClick={async () => {
+                            await logout();
+                            goPath("/guest/login")
                         }}>Logout
                         </button>
                         <br/>

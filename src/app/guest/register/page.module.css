@@ -1,0 +1,35 @@
+.page {
+    background-image: linear-gradient(26deg, #020214 0%, #03243d 90%);
+}
+
+.OtherList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 1rem 0rem 0.9rem 0rem;
+}
+
+.OtherList button {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: var(--background);
+}
+
+.OtherList a {
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: block;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: var(--background);
+    vertical-align: center;
+    height: fit-content;
+    align-self: center;
+}
+
+@media (max-width: 900px) {
+    .OtherList button {
+        font-size: 1rem;
+    }
+}

@@ -15,6 +15,7 @@ import {
     postListGoToPage
 } from "@/lib/post/postUtils";
 import {searchButtonMenu} from "@/comp/buttonMenu";
+import usefulStyles from "@/comp/useful.module.css";
 
 let onceLoaded = undefined;
 export default function Search() {
@@ -94,7 +95,7 @@ export default function Search() {
             {buttonMenu}
             <br/><br/>
 
-            <div className={styles.PostDiv}>
+            <div className={usefulStyles.CenterContentDiv}>
                 {(postData.posts == undefined) ?
                     <div style={{height: "200px"}}></div> : (
                         (postData.posts.length === 0) ? (
@@ -110,7 +111,7 @@ export default function Search() {
         <>
             <h1>Search</h1>
 
-            <div className={styles.PostDiv}>
+            <div className={usefulStyles.CenterContentDiv}>
                 <div style={{width: "250px", margin: "auto"}}>
                     <label>Enter Search Tag:</label><br/>
                     <input id={"tag-input"} type={"text"} value={searchText.search}

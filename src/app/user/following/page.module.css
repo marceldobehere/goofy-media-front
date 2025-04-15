@@ -1,21 +1,8 @@
-.PostDiv {
-    background-color: #101060;
-    padding: 10px;
-    margin: auto;
-    width: 60%;
-}
-
 .UserEntry {
-    background-color: #101060;
+    background-color: var(--post-background);
     overflow-y: auto;
     overflow-x: hidden;
-    border: 2px solid #8080F0;
+    border: 2px solid var(--post-border);
     padding: 10px;
     margin: 10px auto 10px auto;
-}
-
-@media (max-width: 900px) {
-    .PostDiv {
-        width: 100%;
-    }
 }
