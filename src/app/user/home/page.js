@@ -20,6 +20,7 @@ import {
     loadMorePostsPartially
 } from "@/lib/post/postUtils";
 import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
+import {LocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
 
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 function useInterval(callback, delay) {
@@ -50,9 +51,10 @@ export default function Home() {
     let [username, setUsername] = useState("...");
     let [admin, setAdmin] = useState(false);
     let [notifCount, setNotifCount] = useState();
+    let [overrideShowGlobalPosts, setOverrideShowGlobalPosts] = useState(false);
 
     async function loadPosts() {
-        if (GlobalStuff.loggedIn) {
+        if (GlobalStuff.loggedIn && !overrideShowGlobalPosts) {
             const res = await loadHomePosts();
             if (res === undefined)
                 return alert("Failed to get posts");
@@ -73,7 +75,9 @@ export default function Home() {
             return;
         morePostBusy = true;
 
-        const res = (GlobalStuff.loggedIn) ? (await loadMorePostsPartially(postArr, "/user/post/following", 10)) : (await loadMorePostsPartially(postArr, "/user/post", 10));
+        const res = (GlobalStuff.loggedIn && !overrideShowGlobalPosts) ?
+            (await loadMorePostsPartially(postArr, "/user/post/following", 10)) :
+            (await loadMorePostsPartially(postArr, "/user/post", 10));
         if (res === undefined) {
             await sleep(200);
             morePostBusy = false;
@@ -109,6 +113,17 @@ export default function Home() {
         loadNotifs(true);
     }, 20000);
 
+    async function overrideGlobalToggle() {
+        if (!GlobalStuff.loggedIn)
+            return;
+
+        const newVal = !overrideShowGlobalPosts;
+        await saveLocalSettingsKey("overrideShowGlobalFeed", newVal);
+        overrideShowGlobalPosts = newVal;
+        setOverrideShowGlobalPosts(newVal);
+        loadPosts();
+    }
+
     async function loadNews() {
         const res = await loadHomeNewsPosts(10);
         if (res === undefined)
@@ -143,6 +158,9 @@ export default function Home() {
         initGlobalState(pathName, false, false, async () => {
             // if (!GlobalStuff.loggedIn)
             //     goPath("/guest/login");
+
+            setOverrideShowGlobalPosts(LocalSettings.overrideShowGlobalFeed);
+            overrideShowGlobalPosts = LocalSettings.overrideShowGlobalFeed;
 
             if (GlobalStuff.loggedIn) {
                 setUsername(GlobalStuff.userId);
@@ -206,6 +224,7 @@ export default function Home() {
                         <p>
                             {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link><br/></>) : (<></>)}
                             <Link href={"/user/home"}>Home</Link><br/>
+                            <Link href={"/guest/search?tag=global"}>Global Feed</Link><br/>
                             {(GlobalStuff.loggedIn) ? (<>
                                 <a onClick={async () => {
                                     await logout();
@@ -218,7 +237,6 @@ export default function Home() {
                             </>)}
                             <Link href={"/guest/news"}>News</Link><br/>
                             <Link href={"/guest/search"}>Search</Link><br/>
-                            <Link href={"/guest/search?tag=global"}>Global Feed</Link><br/>
                             {(GlobalStuff.loggedIn) ? <>
                                 <Link href={"/user/notifications"}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link><br/>
                             </> : ""}
@@ -236,7 +254,8 @@ export default function Home() {
                         <h2 id={"top"}>{(GlobalStuff.loggedIn) ? (<span>Hi, <a href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={"_blank"} style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>
 
                         Cool Posts below: &nbsp;
-                        <button onClick={loadPosts}>Refresh</button>
+                        <button onClick={loadPosts}>Refresh</button> &nbsp;
+                        {(GlobalStuff.loggedIn) ? <button onClick={overrideGlobalToggle}>{overrideShowGlobalPosts ? "Global Feed" : "Your Feed"}</button> : <></>}
                         <EntryList elements={postArr} compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}
                                    extra={
                                        <div

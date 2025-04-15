@@ -271,13 +271,20 @@ const renderer = {
             // console.log("Escaped Style: ", escapedStyle);
 
             // Filtering some annoying properties
-            const filteredStyle = escapedStyle
+            let filteredStyle = escapedStyle
                 .replaceAll("position", "")
                 .replaceAll("url", "")
                 .replaceAll("src", "")
                 .replaceAll("data:", "")
                 .replaceAll("//", "");
             // console.log("Filtered Style: ", filteredStyle);
+
+            if (!LocalSettings.enabledCustomPostAnimations && !window.location.href.includes("post_composer"))
+                filteredStyle = filteredStyle
+                    .replaceAll("animation", "")
+                    .replaceAll("transition", "")
+                    .replaceAll("transform", "")
+                    .replaceAll("keyframes", "");
 
             // Recursive parsing of inside elements
             let inbetweenHtml = inbetween;

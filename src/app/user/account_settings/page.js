@@ -36,9 +36,11 @@ export default function Home() {
     const [userId, setUsername] = useState("...");
     const [autoLoadMedia, setAutoLoadMedia] = useState(false);
     const [enabledCustomPostCss, setEnabledCustomPostCss] = useState(true);
+    const [enabledCustomPostAnimations, setEnabledCustomPostAnimations] = useState(false);
     const [openPostNewTab, setOpenPostNewTab] = useState(true);
     const [extendPostHitbox, setExtendPostHitbox] = useState(false);
     const [customCss, setCustomCss] = useState("");
+
     const [qrSvg, setQrSvg] = useState({html: "", size: "0px"});
 
     function generateQRCode() {
@@ -72,6 +74,7 @@ export default function Home() {
             setCustomCss(LocalSettings.customCss);
             setOpenPostNewTab(LocalSettings.openPostInNewTab);
             setExtendPostHitbox(LocalSettings.extendPostClickHitbox);
+            setEnabledCustomPostAnimations(LocalSettings.enabledCustomPostAnimations);
         });
     })
 
@@ -97,6 +100,13 @@ export default function Home() {
                         const yes = e.target.checked;
                         await saveLocalSettingsKey("enabledCustomPostCss", yes);
                         setEnabledCustomPostCss(yes);
+                    }}/><br/>
+
+                    Enable Custom Post Animations: &nbsp;
+                    <input type="checkbox" checked={enabledCustomPostAnimations} onChange={async (e) => {
+                        const yes = e.target.checked;
+                        await saveLocalSettingsKey("enabledCustomPostAnimations", yes);
+                        setEnabledCustomPostAnimations(yes);
                     }}/><br/>
 
                     Open Post in new Tab: &nbsp;

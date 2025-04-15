@@ -188,10 +188,11 @@ Here are some of the implemented features:
 * [X] Support for guest users
 * [X] Client-side caching of data
 * [X] Live Notification polling
+* [X] Homepage toggle for users to switch between Personal Feed and Global Feed
+
 
 ### TODOs
 Here are some of my TODOs:
-* [ ] Homepage toggle for users to switch between Personal Feed and Global Feed
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback

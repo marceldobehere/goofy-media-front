@@ -5,9 +5,11 @@ import {convertCssString} from "@/lib/customCssConverter";
 export let LocalSettings = {
     autoLoadMedia: false,
     enabledCustomPostCss: true,
+    enabledCustomPostAnimations: false,
     customCss: "",
     openPostInNewTab: true,
-    extendPostClickHitbox: false
+    extendPostClickHitbox: false,
+    overrideShowGlobalFeed: false,
 };
 
 async function customCssReady() {
@@ -84,9 +86,11 @@ export async function loadLocalSettings() {
     LocalSettings = {};
     LocalSettings.autoLoadMedia = await loadKeyOrDefault("autoLoadMedia", false);
     LocalSettings.enabledCustomPostCss = await loadKeyOrDefault("enabledCustomPostCss", true);
+    LocalSettings.enabledCustomPostAnimations = await loadKeyOrDefault("enabledCustomPostAnimations", false);
     LocalSettings.customCss = await loadKeyOrDefault("customCss", "");
     LocalSettings.openPostInNewTab = await loadKeyOrDefault("openPostInNewTab", true);
     LocalSettings.extendPostClickHitbox = await loadKeyOrDefault("extendPostClickHitbox", false);
+    LocalSettings.overrideShowGlobalFeed = await loadKeyOrDefault("overrideShowGlobalFeed", false);
 
     console.info("> Loaded Local Settings");
 }
@@ -94,9 +98,11 @@ export async function loadLocalSettings() {
 export async function saveLocalSettings() {
     await saveKey("autoLoadMedia", LocalSettings.autoLoadMedia);
     await saveKey("enabledCustomPostCss", LocalSettings.enabledCustomPostCss);
+    await saveKey("enabledCustomPostAnimations", LocalSettings.enabledCustomPostAnimations);
     await saveKey("customCss", LocalSettings.customCss);
     await saveKey("openPostInNewTab", LocalSettings.openPostInNewTab);
     await saveKey("extendPostClickHitbox", LocalSettings.extendPostClickHitbox);
+    await saveKey("overrideShowGlobalFeed", LocalSettings.overrideShowGlobalFeed);
 
     await updateCustomCss();
 
