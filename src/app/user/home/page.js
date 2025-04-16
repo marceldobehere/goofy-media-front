@@ -104,7 +104,8 @@ export default function Home() {
         loadPosts();
     }
 
-    window.onscroll = onPostScroll;
+    if (typeof  window !== "undefined")
+        window.onscroll = onPostScroll;
     useGlobalState(pathName, false, false, async () => {
         setOverrideShowGlobalPosts(LocalSettings.overrideShowGlobalFeed);
         overrideShowGlobalPosts = LocalSettings.overrideShowGlobalFeed;

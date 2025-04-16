@@ -39,8 +39,10 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         }
     }
 
-    window.onLoad = checkSizes;
-    window.onresize = checkSizes;
+    if (typeof window != "undefined") {
+        window.onLoad = checkSizes;
+        window.onresize = checkSizes;
+    }
 
     async function loadNotifs(poll) {
         if (!GlobalStuff.loggedIn)
