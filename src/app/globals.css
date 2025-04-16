@@ -14,9 +14,14 @@
   --background: #0a0a0a;
   --foreground: #ededed;
 
+  --footer-size: 4rem;
+
   --text-gray: #c3c3c3;
 
   --central-background: #161b4a;
+  --nav-mobile-background: #1b1444;
+  --nav-body-mobile-background: #2d216e;
+  --nav-body-mobile-border: #2c58e5;
   --nav-background: #181d4f;
   --nav-link-background: #050c27;
   --nav-link-hover-background: #364599;
@@ -145,7 +150,7 @@ a:hover {
 
 main {
   width: 100%;
-  min-height: calc(100vh - 4rem);
+  min-height: calc(100vh - var(--footer-size));
 }
 
 

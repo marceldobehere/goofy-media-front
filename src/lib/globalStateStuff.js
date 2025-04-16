@@ -6,6 +6,7 @@ import {goPath} from "@/lib/goPath";
 import {SpinActivity} from "@/lib/spinner";
 import {initLocalSettings} from "@/lib/localSettings";
 import {overrideFetch} from "@/lib/customFetch";
+import {useEffect} from "react";
 
 export const initReadyCallbackList = [];
 
@@ -21,14 +22,42 @@ export let GlobalStuff = {
 
 
 let lastPath = undefined;
+let lastPathPromise = undefined;
+let lastPathPromiseResolve = undefined;
 overrideFetch();
+
+async function runMaybeAsyncCallback(fn) {
+    if (fn === undefined)
+        return;
+    try {
+        await fn();
+    } catch (e) {
+        console.info("> Error in callback: ", e);
+    }
+}
+
+export function useGlobalState(pathName, needLogin, needAdmin, doneCallBack, preCallback) {
+    useEffect(() => {
+        runMaybeAsyncCallback(preCallback).then(() => {
+            initGlobalState(pathName, needLogin, needAdmin).then(async () => {
+                runMaybeAsyncCallback(doneCallBack).then();
+            });
+        });
+    }, [pathName])
+}
 
 
 export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
     pathName = pathName.split("#")[0];
     console.info("> Starting Global State Init: ", pathName);
-    if (lastPath == pathName)
-        return console.info("> Already initialized for this path");
+    if (lastPath == pathName) {
+        console.info("> Already initialized for this path");
+        await lastPathPromise;
+        return;
+    }
+    lastPathPromise = new Promise((resolve) => {
+        lastPathPromiseResolve = resolve;
+    });
     lastPath = pathName;
 
     try {
@@ -116,10 +145,13 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         }
 
     try {
-        await callback();
+        if (callback)
+            await callback();
     } catch (e) {
         console.info("> Error in initGlobalState callback: ", e);
     }
+
+    lastPathPromiseResolve();
 }
 
 export async function loadKey(key) {

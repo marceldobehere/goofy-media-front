@@ -1,0 +1,176 @@
+.MainPageMenu {
+    --inner-padding: 0.5rem;
+    --extra-space: 0.5vw;
+    --left-size: 25vw;
+    --center-size: 50vw;
+    --right-size: 25vw;
+    --header-size: 4rem;
+    --min-height: calc(100vh - var(--footer-size));
+    --min-height-body: calc(100vh - var(--footer-size) - var(--header-size));
+
+    overflow: hidden;
+    min-height: var(--min-height);
+    width: 100vw;
+}
+
+.MainDivContainer {
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.LeftNavDiv {
+    position: fixed;
+    height: calc(100vh - var(--footer-size));
+    width: var(--left-size);
+}
+
+.MainDiv {
+    /*background-color: rgba(0, 255, 0, 0.1);*/
+    display: block;
+    width: calc(var(--center-size) - 2 * var(--extra-space));
+    margin-left: calc(var(--left-size) + var(--extra-space));
+    padding: var(--inner-padding);
+    min-height: var(--min-height);
+
+    /*height: 160vh;*/
+}
+
+.RightDiv {
+    /*background-color: rgba(0, 0, 255, 0.1);*/
+    display: block;
+    width: var(--right-size);
+    margin-left: var(--extra-space);
+    padding: var(--inner-padding);
+    min-height: var(--min-height);
+
+    /*height: 140vh;*/
+}
+
+
+.LeftNavDivDesktop {
+    background-color: var(--nav-background);
+    padding: 1.6rem;
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.5rem;
+}
+
+.LeftNavDivDesktop a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    /*background: var(--nav-link-background);*/
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    border-radius: 0.4rem;
+    margin: 0.8rem 0 0rem 0;
+    display: block;
+    /*width: fit-content;*/
+    width: 100%;
+}
+
+.LeftNavDivDesktop a:hover {
+    background: var(--nav-link-hover-background);
+}
+
+.LeftNavDivMobile {
+
+}
+
+.LeftNavDivMobileBody {
+    position: absolute;
+    z-index: 150;
+    background-color: var(--nav-body-mobile-background);
+    width: 100vw;
+    height: max-content;
+    padding: 1rem 0 1rem 0;
+    border-radius: 0px 0px 1rem 1rem;
+    border: 2px solid var(--nav-body-mobile-border);
+}
+
+.LeftNavDivMobileBody p {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.LeftNavDivMobileBody a {
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin: 0.3rem auto 0.5rem auto;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+
+.LeftNavDivMobileBody a:hover {
+    background: var(--nav-link-hover-background);
+}
+
+.LeftNavDivMobileHeader {
+    height: var(--header-size);
+    display: grid;
+    grid-template-columns: 5em 1fr 5rem;
+}
+
+.LeftNavDivMobileHeader button {
+    height: 2.5rem;
+    width: 2.5rem;
+    margin: 0.75rem;
+    background-color: transparent;
+    border: 2px solid var(--text-gray);
+}
+
+.LeftNavDivMobileHeader button div {
+    transition: 150ms ease-in-out all;
+}
+
+.NavMobileHeader {
+    padding: 1rem;
+    min-width: max-content;
+    width: 100%;
+    text-align: center;
+}
+
+.NavMobileHeader a {
+    text-decoration: none;
+}
+
+
+
+@media (max-width: 900px) {
+    .MainDivContainer {
+        width: 100vw;
+    }
+
+    .LeftNavDiv {
+        width: 100vw;
+        display: block;
+        position: initial;
+        height: var(--header-size);
+        position: fixed;
+        background-color: var(--nav-mobile-background);
+    }
+
+    .MainDiv {
+        width: 100vw;
+        margin: var(--header-size) 0 0 0;
+        display: block;
+        position: initial;
+        z-index: -5;
+        min-height: var(--min-height-body);
+    }
+
+    .RightDiv {
+        display: none;
+        margin-left: 0;
+        position: initial;
+        width: 0;
+        height: 0;
+    }
+}
