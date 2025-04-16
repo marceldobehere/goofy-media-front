@@ -188,6 +188,8 @@ Here are some of the implemented features:
 * [X] Unified UI System
 * [X] Live Post Preview (For Desktop Users)
 * [X] Basic image upload using https://files.catbox.moe/
+* [X] Adding some trusted domains for embedded media
+
 
 
 ### TODOs
@@ -196,7 +198,6 @@ Here are some of my TODOs:
 * [ ] Converting :emojis: in Posts and comments
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
 * [ ] Getting the raw post body (Either a button or a setting)
-* [ ] Adding some trusted domains for embedded media
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback
