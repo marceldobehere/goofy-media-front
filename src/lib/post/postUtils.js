@@ -6,47 +6,12 @@ import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
+import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
-export const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
 
 const validPostSigCache = new CoolCache({localStorageKey: "POST_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
 
-// publicKeyCache.clear();
 // validPostSigCache.clear();
-
-export async function getPublicKeyFromUserId(userId) {
-    if (userId === undefined || typeof userId !== 'string') {
-        console.error("> User ID MISSING");
-        return undefined;
-    }
-
-    const publicKey = publicKeyCache.get(userId, async () => {
-        console.log("> Getting public key for userId: ", userId);
-        const res = await getWithAuth(`/user/user-data/${userId}/public-key`);
-        if (res === undefined || res.publicKey === undefined) {
-            console.info("> Failed to request public key for userId: ", userId);
-            throw new Error("Failed to request public key");
-        }
-
-        // verify userid -> key mapping
-        const actualUserId = await userHash(res.publicKey);
-        if (userId !== actualUserId) {
-            console.info("> User ID MISMATCH: ", userId, " != ", actualUserId);
-            throw new Error("User ID mismatch");
-        }
-
-        console.log("> Got public key for userId: ", userId, " -> ", res.publicKey);
-
-        return res.publicKey;
-    });
-
-    if (publicKey == undefined) {
-        console.error("> Failed to get public key for userId: ", userId);
-        return undefined;
-    }
-
-    return publicKey;
-}
 
 async function verifyPost(postObj) {
     if (postObj === undefined) {
@@ -154,7 +119,12 @@ export async function transformPostObjArr(postObjArr) {
             title: postObj.post.title,
             text: postObj.post.text,
             author: postObj.userId,
-            displayName: "Display Name",
+            displayName: async () => {
+                const res = await getDisplayNameFromUserId(postObj.userId);
+                if (res === undefined)
+                    return undefined;
+                return res;
+            },
             createdAt: postObj.post.createdAt,
             tags: postObj.post.tags,
             uuid: postObj.uuid,

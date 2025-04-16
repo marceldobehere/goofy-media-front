@@ -98,7 +98,9 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/following"}>Following</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link></> : ""}
-        <Link href={"/user/account_settings"}>Account Settings</Link>
+        <Link href={"/user/account_settings"}>Local Settings</Link>
+        {(GlobalStuff.loggedIn) ? <><Link href={`/user/profile?userId=${encodeURIComponent(GlobalStuff.userId)}`}>View Profile</Link></> : ""}
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/public_info_settings"}>Public Info Settings</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link></> : ""}
         {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
     </p>;

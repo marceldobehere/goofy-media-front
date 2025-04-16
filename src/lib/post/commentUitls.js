@@ -3,10 +3,9 @@
 import {getWithAuth} from "@/lib/req";
 import {verifyObj} from "@/lib/rsa";
 import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
-import {GlobalStuff} from "@/lib/globalStateStuff";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
-import {getPublicKeyFromUserId, publicKeyCache} from "@/lib/post/postUtils";
+import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
 
 const validCommentSigCache = new CoolCache({localStorageKey: "COMMENT_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
@@ -110,7 +109,12 @@ export async function transformCommentObjArr(commentObjArr) {
     for (let commentObj of commentObjArr) {
         let post = {
             uuid: commentObj.uuid,
-            displayName: "Display Name",
+            displayName: async () => {
+                const res = await getDisplayNameFromUserId(commentObj.userId);
+                if (res === undefined)
+                    return undefined;
+                return res;
+            },
             userId: commentObj.userId,
             postUuid: commentObj.comment.postUuid,
             replyCommentUuid: commentObj.comment.replyCommentUuid,

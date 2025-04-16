@@ -1,5 +1,7 @@
 'use client';
 
+const logLock = false;
+
 export class AsyncLock {
     constructor() {
         this.promiseArr = [];
@@ -226,7 +228,8 @@ export class CoolCache {
         if (this.cache.has(key)) {
             const entry = this.cache.get(key);
             if (this.cacheEntryTimeout && entry.lastAccess + this.cacheEntryTimeout < now) {
-                this.cache.delete(key);
+                await this.delete(key);
+                console.info("> Cache entry expired for key " + key);
                 // Cache entry expired
                 // Continue to load
             } else {
@@ -279,6 +282,7 @@ export class CoolCache {
             } catch (e) {
                 console.info(`Error loading value for key ${key}:`, e);
                 promiseRes(null); // bc goofy exceptions that are caught but also arent
+                await this.delete(key);
                 // try {
                 //     promiseRej(new Error(`Error loading value for key ${key}: ` + e.message));
                 // } catch (e) {

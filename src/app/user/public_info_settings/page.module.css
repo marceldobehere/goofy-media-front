@@ -1,0 +1,56 @@
+.MainDiv {
+    background: var(--account-settings-background);
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
+}
+
+.MainDiv h3 {
+    display: block;
+    margin: 1rem auto 0.5rem auto;
+    font-size: 1.5rem;
+    width: max-content;
+}
+
+.MainDiv input {
+    display: block;
+    margin: auto;
+    width: max-content;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
+
+.MainDiv textarea {
+    display: block;
+    margin: auto;
+    width: 80%;
+    min-height: 8rem;
+    max-height: 30rem;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    resize: vertical;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
+
+}
+
+.MainDiv button {
+    display: block;
+    margin: auto;
+    width: max-content;
+}
+
+.FinalButtonContainer {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+.FinalButtonContainer button {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-size: 1.4rem;
+}

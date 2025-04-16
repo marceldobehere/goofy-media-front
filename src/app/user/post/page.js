@@ -85,6 +85,15 @@ export default function PostPage() {
                             }, 2000);
                         }}>Copy Smol Link
                         </button>
+                        <button id={"copy-post-uuid"} style={{float: "right", marginRight: "1rem"}} onClick={() => {
+                            navigator.clipboard.writeText(postData.uuid);
+                            const button = document.getElementById("copy-post-uuid");
+                            button.innerText = "Copied!";
+                            setTimeout(() => {
+                                button.innerText = "Copy Post UUID";
+                            }, 2000);
+                        }}>Copy Post UUID
+                        </button>
 
                     </div> : <></>}
 

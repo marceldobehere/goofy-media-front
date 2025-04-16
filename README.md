@@ -189,7 +189,13 @@ Here are some of the implemented features:
 * [X] Live Post Preview (For Desktop Users)
 * [X] Basic image upload using https://files.catbox.moe/
 * [X] Adding some trusted domains for embedded media
-
+* [X] Basic Public User Profile / Information
+  * [X] Display Name
+  * [X] Basic Profile Settings
+  * [X] Profile Bio
+  * [X] Profile Pronouns
+  * [X] Profile Links
+  * [X] Pinned Post
 
 
 ### TODOs
@@ -234,17 +240,13 @@ Here are some of my TODOs:
   * [ ] Profile Content Warnings
   * [ ] Post Content Warning Settings
   * [ ] Potentially hide / filter out posts with content warnings
-* [ ] Public User Profile / Information
-  * [ ] Display Name
-  * [ ] Profile editor
-  * [ ] Profile settings
+* [ ] Improved Public User Profile / Information
   * [ ] Profile Picture
-  * [ ] Profile Bio
-  * [ ] Profile Pronouns
-  * [ ] Profile Links
-  * [ ] Profile Custom CSS?
-  * [ ] Profile Banner?
-  * [ ] Pinned Post(s)
+  * [ ] Profile Bio with Markdown
+  * [ ] Profile Links with Markdown
+  * [ ] Profile Custom CSS
+  * [ ] Profile Banner
+  * [ ] Improved Settings + Display
 * [ ] User search (by handle or display name)
 * [ ] Potentially post search by text (posts that contain ...)
 * [ ] Server Lockdown / Privacy Settings (Decide how public endpoints are)

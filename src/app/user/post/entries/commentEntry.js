@@ -3,17 +3,19 @@
 import styles from "@/app/user/post/entries/commentEntry.module.css";
 import {useState} from "react";
 import {basePath} from "@/lib/goPath";
-import {GlobalStuff} from "@/lib/globalStateStuff";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {loadRepliesForComment, loadReplyCountForComment} from "@/lib/post/commentUitls";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
+import {usePathname} from "next/navigation";
 
 export default function CommentEntry({comment}) {
+    const pathName = usePathname();
     const [isValid, setIsValid] = useState();
     const [replies, setReplies] = useState(undefined);
     const [replyCount, setReplyCount] = useState(comment.replyCount);
-    // console.log(comment)
+    const [displayName, setDisplayName] = useState();
 
     // setIsValid(undefined);
     if (isValid == undefined)
@@ -21,6 +23,12 @@ export default function CommentEntry({comment}) {
             comment.valid().then((res) => {
                 setIsValid(res);
             })
+
+    if (displayName == undefined)
+        if (comment.displayName)
+            comment.displayName().then((res) => {
+                setDisplayName(res);
+            });
 
     const validStuff = [
         {emoji: "❌", title: `Error: ${isValid ? isValid.error : ""}`},
@@ -54,8 +62,8 @@ export default function CommentEntry({comment}) {
 
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
-            <b>{comment.displayName}</b> <a style={{textDecoration: "none"}}
-                                            href={`${basePath}/user/profile?userId=${encodeURIComponent(comment.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+            <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
+                                                        href={`${basePath}/user/profile?userId=${encodeURIComponent(comment.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
         </div>
         <hr/>
 

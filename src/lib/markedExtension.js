@@ -4,11 +4,11 @@ import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {LocalSettings} from "@/lib/localSettings";
 import postStyles from "@/app/user/home/entries/postCss.module.css";
 import {CoolCache} from "@/lib/coolCache";
-import {getPublicKeyFromUserId} from "@/lib/post/postUtils";
 import {basePath, goPath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import marked from "@/lib/marked";
 import DOMPurify from "@/lib/purify";
+import {getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 let idSet = new Set();
 
 function waitForElm(selector, func) {

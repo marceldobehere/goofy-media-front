@@ -7,6 +7,7 @@ import {usePathname} from "next/navigation";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import {
+    loadPost,
     loadUserPosts,
     onWindowGoBack,
     postListGoToPage
@@ -17,12 +18,13 @@ import {CoolCache} from "@/lib/coolCache";
 import {followUser, isUserFollowed, unfollowUser} from "@/lib/follows/followUtils";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {getPublicInfoForUser} from "@/lib/publicInfo/publicInfoUtils";
 
 const followingUserCache = new CoolCache({
     localStorageKey: "IS_USER_FOLLOWED",
     maxSize: 2000,
     saveToLocalStorageFreq: 1,
-    cacheEntryTimeout: 1000 * 60 * 30
+    cacheEntryTimeout: 1000 * 60 * 60 * 24 * 5 // 5 days
 });
 
 
@@ -33,9 +35,26 @@ export default function Profile() {
     let [query, _setQuery] = useState({page: 0, userId: ""});
     const [postData, setPostData] = useState({posts: [], isOnLastPage: false, isOnFirstPage: true});
     const [isFollowed, setisFollowed] = useState();
+    const [profileInfo, setProfileInfo] = useState({});
+    const [pinnedPostObj, setPinnedPostObj] = useState();
+
     const setQuery = (q) => {
         _setQuery(q);
         loadPosts(q);
+        if (q.page == 0)
+            getPublicInfoForUser(q.userId).then(async (info) => {
+                if (info !== undefined) {
+                    setProfileInfo(info);
+                    if (info.pinnedPostUuid !== undefined) {
+                        const res = await loadPost(info.pinnedPostUuid);
+                        if (res !== undefined) {
+                            setPinnedPostObj(res);
+                        } else
+                            setPinnedPostObj(undefined);
+                    }
+                } else
+                    setProfileInfo({})
+            });
     }
 
     async function loadPosts(nQuery) {
@@ -91,6 +110,8 @@ export default function Profile() {
         if (GlobalStuff.loggedIn) {
             await checkFollowingStatus(userId);
         }
+    }, () => {
+
     });
 
     async function checkFollowingStatus(userId) {
@@ -138,17 +159,44 @@ export default function Profile() {
             </button>
 
             <br/>
-            <p>
-                This is some amazing profile info for this user.<br/>
-                They are a very interesting person.<br/>
-                They have a lot of interesting things to say.<br/>
-                They are very cool.<br/>
+            <div>
                 <br/>
-                Look at all these cool posts they have made.
-            </p>
+                <hr/>
+                <div className={styles.MainInfo}>
+                    <h3>Info</h3>
+                    Display name: {profileInfo.displayName !== undefined ?
+                    <b>{profileInfo.displayName}</b> : "N/A"}<br/>
+                    Pronouns: {profileInfo.profilePronouns !== undefined ?
+                    <b>{profileInfo.profilePronouns}</b> : "N/A"}<br/>
+                </div>
+                <hr/>
+                <div className={styles.Bio}>
+                    <h3>Bio</h3>
+                    {profileInfo.profileBio !== undefined ? profileInfo.profileBio : "(The User does not have a Bio)"}
+                </div>
+                <hr/>
+                {(profileInfo.profileLinks !== undefined && profileInfo.profileLinks.length > 0) ?
+                    <>
+                        <div className={styles.Links}>
+                            <h3>Links</h3>
+                            {profileInfo.profileLinks !== undefined ? profileInfo.profileLinks : "(No Links)"}
+                        </div>
+                        <hr/>
+                    </> : ""}
+                {profileInfo.pinnedPostUuid !== undefined ?
+                    <>
+                        <div className={styles.PinnedPost}>
+                            <h3>Pinned Post</h3>
+                            {pinnedPostObj ?
+                                <PostEntry post={pinnedPostObj}></PostEntry> :
+                                <p style={{textAlign: "center"}}><br/>Loading...</p>}
+                        </div>
+                        <hr/>
+                    </> : ""}
+            </div>
 
             <br/>
-            <button disabled={isFollowed == undefined}
+            <button className={styles.FollowBtn} disabled={isFollowed == undefined}
                     onClick={toggleFollow}>{isFollowed ? "Unfollow" : "Follow"}</button>
         </div>
     </div>;

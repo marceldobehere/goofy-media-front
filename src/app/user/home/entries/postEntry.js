@@ -18,7 +18,7 @@ const likedPostCache = new CoolCache({
     localStorageKey: "IS_POST_LIKED",
     maxSize: 2000,
     saveToLocalStorageFreq: 1,
-    cacheEntryTimeout: 1000 * 60 * 30
+    cacheEntryTimeout: 1000 * 60 * 60 * 24 * 5 // 5 days
 });
 
 export default function PostEntry({post}) {
@@ -26,6 +26,7 @@ export default function PostEntry({post}) {
     const [innerHTML, setInnerHTML] = useState();
     const [isValid, setIsValid] = useState();
     const [isLiked, setIsLiked] = useState();
+    const [displayName, setDisplayName] = useState();
 
     const openInNewTab = LocalSettings.openPostInNewTab;
 
@@ -65,6 +66,10 @@ export default function PostEntry({post}) {
             post.valid().then((res) => {
                 setIsValid(res);
             })
+        if (post.displayName)
+            post.displayName().then((res) => {
+                setDisplayName(res);
+            });
     });
 
 
@@ -95,7 +100,7 @@ export default function PostEntry({post}) {
     return (
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
-                <b>{post.displayName}</b> <a style={{textDecoration: "none"}}
+                <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                              href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
             <hr/>
