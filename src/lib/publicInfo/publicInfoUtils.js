@@ -46,7 +46,7 @@ export const recentlyFailedDisplayNamesCache = new CoolCache({localStorageKey: "
 
 export async function getDisplayNameFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
-        console.error("> User ID MISSING");
+        console.info("> User ID MISSING");
         return undefined;
     }
 

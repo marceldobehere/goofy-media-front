@@ -72,6 +72,14 @@ export default function PostEntry({post}) {
             });
     });
 
+    useEffect(() => {
+        if (post.likeOverride)
+            if (post.displayName)
+                post.displayName().then((res) => {
+                    setDisplayName(res);
+                });
+    }, [post]);
+
 
     async function toggleLike() {
         if (isLiked == undefined)

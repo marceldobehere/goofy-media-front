@@ -4,19 +4,23 @@ import styles from "@/app/user/notifications/entries/notificationEntry.module.cs
 import {useEffect, useState} from "react";
 import {loadPost} from "@/lib/post/postUtils";
 import {basePath} from "@/lib/goPath";
-import {GlobalStuff} from "@/lib/globalStateStuff";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {loadCommentByUuid} from "@/lib/post/commentUitls";
+import {usePathname} from "next/navigation";
+import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
 export default function NotificationEntry({notification}) {
+    const pathName = usePathname();
     const [postTitle, setPostTitle] = useState(undefined);
     const [commentText1, setCommentText1] = useState(undefined);
     const [commentText2, setCommentText2] = useState(undefined);
+    const [displayName, setDisplayName] = useState(undefined);
 
     const userIdLink = <a
         href={`${basePath}/user/profile?userId=${encodeURIComponent(notification.otherUserId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
         target={"_blank"} style={{textDecoration: "none", fontWeight: "bold"}}
-    >@{notification.otherUserId}</a>;
+    >{displayName ? <span>{displayName} <span style={{fontWeight:"normal"}}>(@{notification.otherUserId})</span></span> : `@${notification.otherUserId}`}</a>;
 
     const postLink = <span>
         {postTitle == undefined ? "" : "post "}
@@ -44,7 +48,14 @@ export default function NotificationEntry({notification}) {
     else if (notification.type == "follow")
         resElement = <span>{userIdLink} followed you</span>;
 
-    useEffect( () => {
+    useGlobalState(pathName, false, false, async () => {
+        if (notification.otherUserId == undefined)
+            return;
+        const res = await getDisplayNameFromUserId(notification.otherUserId);
+        if (res != undefined)
+            setDisplayName(res);
+
+    }, () => {
         setTimeout(async () => {
             if (notification.type == "comment") {
                 if (postTitle == undefined) {
@@ -84,7 +95,7 @@ export default function NotificationEntry({notification}) {
                 }
             }
         }, getRandomIntInclusive(80,500));
-    }, []);
+    })
 
     return (
         <div className={`${styles.NotificationEntryDiv} ${notification.isRead ? styles.Read : styles.Unread}`}>

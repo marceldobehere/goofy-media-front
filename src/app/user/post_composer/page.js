@@ -10,18 +10,25 @@ import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {uploadData} from "@/lib/fileUtils";
+import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
 export default function Home() {
     const pathName = usePathname();
-    useGlobalState(pathName, true, false, async () => {
-        if (!GlobalStuff.loggedIn)
-            goPath("/guest/login")
-    });
-
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [tagStr, setTagStr] = useState("");
     const [showEdit, setShowEdit] = useState(true);
+    const [displayName, setDisplayName] = useState();
+
+
+    useGlobalState(pathName, true, false, async () => {
+        if (!GlobalStuff.loggedIn)
+            goPath("/guest/login")
+
+        const res = await getDisplayNameFromUserId(GlobalStuff.userId);
+        if (res != undefined)
+            setDisplayName(res);
+    });
 
     function parseTags() {
         let tagList = tagStr.split(",");
@@ -196,7 +203,7 @@ export default function Home() {
     function getPreview(livePrev) {
         return (<>
             <PostEntry post={{
-                displayName: "Display Name",
+                displayName: async () => (displayName),
                 author: GlobalStuff.userId,
                 createdAt: Date.now(),
                 title: title,

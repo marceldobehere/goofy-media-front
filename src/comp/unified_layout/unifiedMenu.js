@@ -85,8 +85,10 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         <Link href={"/guest/search?tag=global"}>Global Feed</Link>
         {(GlobalStuff.loggedIn) ? (<>
             <a onClick={async () => {
-                await logout();
-                goPath("/guest/login")
+                if (confirm("Are you sure?")) {
+                    await logout();
+                    goPath("/guest/login")
+                }
             }}>Logout</a>
         </>) : (<>
             <a onClick={async () => {

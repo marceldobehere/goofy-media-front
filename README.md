@@ -200,6 +200,7 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Showing Display Names for Following and Followers
 * [ ] Better Post Style Guide
 * [ ] Converting :emojis: in Posts and comments
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
