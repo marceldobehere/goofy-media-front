@@ -326,6 +326,7 @@ export default function Register() {
                            onClick={(state.selection === "server") ? registerServer : registerLocal}></input>
                     <div className={styles.OtherList}>
                         <Link className={"cont-inp-btn"} href={"/guest/login"}>Login</Link>
+                        <Link className={"cont-inp-btn"} href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#server-rules"} target={"_blank"}>Rules</Link>
                         <button className={"cont-inp-btn"} onClick={async () => {
                             const msg = prompt("Enter a message to send to me, please include a way to contact you lol.");
                             if (msg === null || msg === "")

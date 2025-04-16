@@ -72,6 +72,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
             loadNotifs().then();
     }, checkSizes);
 
+    const isHome = (typeof window !== "undefined") ? window.location.href.includes("/home") : false;
 
     const btnCol = notifCount > 0 ? "orange" : "white";
     const navLinks = <p>
@@ -80,7 +81,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                 href={"/user/notifications"}
                 style={{color: btnCol}}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
         </> : ""}
-        <Link href={"/user/home"}>Home</Link>
+        {isHome ? <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"}>Github Repo</a> : <Link href={"/user/home"}>Home</Link>}
         <Link href={"/guest/search?tag=global"}>Global Feed</Link>
         {(GlobalStuff.loggedIn) ? (<>
             <a onClick={async () => {

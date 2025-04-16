@@ -4,7 +4,7 @@
 
 .OtherList {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 2fr;
     margin: 1rem 0rem 0.9rem 0rem;
 }
 
@@ -29,7 +29,12 @@
 }
 
 @media (max-width: 900px) {
+    .OtherList {
+        grid-template-columns: 1fr 1fr;
+    }
+
     .OtherList button {
-        font-size: 1rem;
+        grid-column: 1 / -1;
+        margin-top: 1rem;
     }
 }

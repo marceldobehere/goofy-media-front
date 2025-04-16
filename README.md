@@ -117,6 +117,35 @@ Most properties will work just fine. Notable exclusions are `position` and any U
 
 custom css can be disabled in the account settings as well as animations
 
+Silly example of cursed css by @mrhax00: (You'll need to remove the `-` before the `)
+```html
+<style "font-size: .7em; transform: rotate(-10deg) scale(120%, 120%) translate(4em, 0em); outline: #0e0e42 solid 100em">
+-```bash
+while [ "$Missing" = "1" ]; do
+        echo -n ",["
+        
+        StartBlock
+                StrProp name error
+                StrProp full_text "Too few or invalid arguments. "
+                StrProp color "#ff0000"
+        EndBlock
+
+        echo "]"
+        SeperateBlock=0 # drawing by nona
+        sleep 1
+done
+-```
+</style>
+
+<style "transform: translate(10vw, -10em)">
+<style "font-size: .3em; animation: spin 4s ease-in-out infinite; margin:auto;">
+<style "font-size: 50em; animation: spin 4s ease-in-out reverse infinite; margin:auto; width: 1em">
+<style "animation: spin 6s ease-in-out reverse infinite; margin:auto; width: 1em; height: 1em">
+<style "animation: spin 6s .2s ease-in-out infinite; margin:auto; width: 1em; height: 1em">
+![](https://www.dropbox.com/scl/fi/hrl93hfm1p6nkb4bvdkgh/I_like_my_background_empty_bruh.png?rlkey=fo310ev7gvj9wn3ynvenrexqf&st=00f25wk3&raw=1)
+</style></style></style></style></style>
+```
+
 ## Features
 Goofy Media is still a WIP and far from done but it has enough features to be usable currently.
 
@@ -158,6 +187,7 @@ Here are some of the implemented features:
 * [X] Homepage toggle for users to switch between Personal Feed and Global Feed
 * [X] Unified UI System
 * [X] Live Post Preview (For Desktop Users)
+* [X] Basic image upload using https://files.catbox.moe/
 
 
 ### TODOs
