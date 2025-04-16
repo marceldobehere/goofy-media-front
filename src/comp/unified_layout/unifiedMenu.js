@@ -1,4 +1,5 @@
 'use client';
+
 import styles from "./unifiedMenu.module.css";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
@@ -52,8 +53,11 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                 alert("Failed to get notifications");
             return;
         }
-        if (count > 0 && typeof document !== "undefined") {
-            document.title = `Goofy Media (${notifCount})`;
+        if (typeof document !== "undefined") {
+            if (count > 0)
+                document.title = `Goofy Media (${notifCount})`;
+            else
+                document.title = "Goofy Media";
         }
         setNotifCount(count);
     }

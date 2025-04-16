@@ -36,22 +36,23 @@ async function runMaybeAsyncCallback(fn) {
     }
 }
 
-export function useGlobalState(pathName, needLogin, needAdmin, doneCallBack, preCallback) {
+export function useGlobalState(pathName, needLogin, needAdmin, doneCallBack, preCallback, extraDependencies) {
+    const depends = extraDependencies === undefined ? [pathName] : [pathName, ...extraDependencies];
     useEffect(() => {
         runMaybeAsyncCallback(preCallback).then(() => {
             initGlobalState(pathName, needLogin, needAdmin).then(async () => {
                 runMaybeAsyncCallback(doneCallBack).then();
             });
         });
-    }, [pathName])
+    }, depends)
 }
 
 
 export async function initGlobalState(pathName, needLogin, needAdmin, callback) {
     pathName = pathName.split("#")[0];
-    console.info("> Starting Global State Init: ", pathName);
+    // console.info("> Starting Global State Init: ", pathName);
     if (lastPath == pathName) {
-        console.info("> Already initialized for this path");
+        // console.info("> Already initialized for this path");
         await lastPathPromise;
         return;
     }
@@ -59,6 +60,7 @@ export async function initGlobalState(pathName, needLogin, needAdmin, callback) 
         lastPathPromiseResolve = resolve;
     });
     lastPath = pathName;
+    console.info("> Starting Global State Init: ", pathName);
 
     try {
         await initLocalSettings();
@@ -238,4 +240,20 @@ function LsSet(key, value) {
 
 function LsDel(key) {
     localStorage.removeItem(ENV_LS_OFFSET + key);
+}
+
+export function LsReset() {
+    let keys = LsGetAll();
+    for (let i = 0; i < keys.length; i++)
+        LsDel(keys[i].key);
+}
+
+function LsGetAll() {
+    let keys = [];
+    for (let i = 0; i < localStorage.length; i++)
+        if (localStorage.key(i).startsWith(ENV_LS_OFFSET)) {
+            const key = localStorage.key(i).substring(ENV_LS_OFFSET.length);
+            keys.push({ key: key, value: localStorage.getItem(localStorage.key(i)) });
+        }
+    return keys;
 }

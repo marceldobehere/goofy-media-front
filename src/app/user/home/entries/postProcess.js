@@ -15,6 +15,9 @@ export function getPostHtml(text)
         markedUsed = true;
     }
 
+    if (typeof DOMPurify == "undefined")
+        return;
+
     try {
         const dirty = marked.parse(text);
         // console.log(dirty);

@@ -1,15 +1,6 @@
-// import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
+import {Dynamic} from "@/comp/testDyn";
 
-// const geistSans = Geist({
-//     variable: "--font-geist-sans",
-//     subsets: ["latin"],
-// });
-//
-// const geistMono = Geist_Mono({
-//     variable: "--font-geist-mono",
-//     subsets: ["latin"],
-// });
 
 export const metadata = {
     title: "Goofy Media",
@@ -23,10 +14,8 @@ export default function RootLayout({children}) {
             <link rel={"icon"} href={"/goofy-media-front/icon.ico"} sizes={"any"}></link>
         </head>
         <body>
-        <div id={"main-loading-div"} style={{display:"none", zIndex: 150}}>
-
-        </div>
-        {children}
+        <div id={"main-loading-div"} style={{display: "none", zIndex: 150}}></div>
+        <Dynamic>{children}</Dynamic>
         </body>
         </html>
     );

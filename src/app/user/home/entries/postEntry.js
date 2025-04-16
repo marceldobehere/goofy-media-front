@@ -4,21 +4,26 @@ import styles from "@/app/user/home/entries/postEntry.module.css";
 import {basePath, goPath} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
-import Link from "next/link";
-import {GlobalStuff} from "@/lib/globalStateStuff";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
 import {isPostLiked, likePost, unlikePost} from "@/lib/likes/likeUtils";
 import {CoolCache} from "@/lib/coolCache";
+import {usePathname} from "next/navigation";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
 }
 
-const likedPostCache = new CoolCache({localStorageKey: "IS_POST_LIKED", maxSize: 2000, saveToLocalStorageFreq: 1, cacheEntryTimeout: 1000*60*30});
+const likedPostCache = new CoolCache({
+    localStorageKey: "IS_POST_LIKED",
+    maxSize: 2000,
+    saveToLocalStorageFreq: 1,
+    cacheEntryTimeout: 1000 * 60 * 30
+});
 
 export default function PostEntry({post}) {
+    const pathName = usePathname();
     const [innerHTML, setInnerHTML] = useState();
-    const [lastPostText, setLastPostText] = useState();
     const [isValid, setIsValid] = useState();
     const [isLiked, setIsLiked] = useState();
 
@@ -35,25 +40,33 @@ export default function PostEntry({post}) {
         }
     }
 
-    if (lastPostText !== post.text) {
-        setLastPostText(post.text);
-        setIsValid(undefined);
+    useEffect(() => {
+        if (typeof window == "undefined")
+            return;
 
-        setTimeout(() => {
+        if (window.location.href.includes("post_composer"))
             loadGetPostHtml().then((getPostHtml) => {
                 setInnerHTML(getPostHtml(post.text));
             });
+        else
+            setTimeout(() => {
+                loadGetPostHtml().then((getPostHtml) => {
+                    setInnerHTML(getPostHtml(post.text));
+                });
+            }, getRandomIntInclusive(50, 250))
+    }, [post]);
 
-            if (post.valid)
-                post.valid().then((res) => {
-                    setIsValid(res);
-                })
+    useGlobalState(pathName, false, false, () => {
+        if (post.likeOverride == undefined && GlobalStuff.loggedIn) {
+            setTimeout(checkLikedStatus, getRandomIntInclusive(50, 250));
+        }
+    }, () => {
+        if (post.valid)
+            post.valid().then((res) => {
+                setIsValid(res);
+            })
+    });
 
-            if (post.likeOverride == undefined && GlobalStuff.loggedIn) {
-                checkLikedStatus();
-            }
-        }, getRandomIntInclusive(50, 250))
-    }
 
     async function toggleLike() {
         if (isLiked == undefined)
@@ -71,12 +84,6 @@ export default function PostEntry({post}) {
         }
         await checkLikedStatus();
     }
-
-    // useEffect(() => {
-    //     loadGetPostHtml().then((getPostHtml) => {
-    //         setInnerHTML(getPostHtml(post.text));
-    //     });
-    // }, []);
 
     const validStuff = [
         {emoji: "❌", title: `Error: ${isValid ? isValid.error : ""}`},

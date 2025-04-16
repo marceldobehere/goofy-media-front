@@ -4,11 +4,12 @@ import styles from "./page.module.css";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {useState} from "react";
 import {signObj} from "@/lib/rsa";
-import {postWithAuth} from "@/lib/req";
+import {postWithAuth, putWithAuth, rawPostWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {uploadData} from "@/lib/fileUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -73,13 +74,13 @@ export default function Home() {
     async function checkPost(dontSay) {
         const postObj = await getPostObj();
         if (postObj === undefined)
-            return;
+            return false;
         console.log(postObj);
 
         const res = await postWithAuth("/user/post/verify", {post: postObj});
         if (res === undefined) {
             alert("Failed to verify post");
-            return;
+            return false;
         }
 
         const valid = res.valid;
@@ -99,6 +100,10 @@ export default function Home() {
         if (postObj === undefined)
             return;
 
+        const checked = await checkPost(true);
+        if (!checked)
+            return;
+
         const res = await postWithAuth("/user/post/", {post: postObj});
         if (res === undefined) {
             alert("Failed to post");
@@ -110,6 +115,37 @@ export default function Home() {
 
     const toggleEdit = () => {
         setShowEdit(!showEdit);
+    }
+
+    // Using My server that uses https://catbox.moe to upload files
+    // POST /user/upload/file
+    async function uploadMedia() {
+        if (!confirm("The uploaded image will not be hosted on goofy media, instead it will be hosted on https://catbox.moe\nIt may disappear at some point or not work!\nYou can also just embed your own media from a link."))
+            return;
+
+        let files = await uploadData();
+        if (files === undefined || files.length < 1)
+            return;
+
+        const data = new FormData()
+        data.append('file', files[0]);
+
+        try {
+            let file = files[0];
+            const res = await rawPostWithAuth("/user/upload/file", data);
+            console.log("> Upload response:", res);
+            if (res == undefined)
+                return alert("Failed to upload image");
+
+            const url = res.url;
+            console.log("> Upload URL:", url);
+
+            setText(text + `\n![${file.name}](${url})`);
+        } catch (e) {
+            console.error(e);
+            return alert("Failed to upload image");
+        }
+
     }
 
     function getEdit() {
@@ -143,9 +179,7 @@ export default function Home() {
                     </button>
                     <button className={"cont-inp-btn"}
                             style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                            onClick={() => {
-                                checkPost()
-                            }}>Check
+                            onClick={uploadMedia}>Add Img
                     </button>
                     <button className={"cont-inp-btn"}
                             style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}

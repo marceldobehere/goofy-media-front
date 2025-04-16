@@ -1,3 +1,5 @@
+'use client';
+
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 import {useEffect, useRef} from "react";
 

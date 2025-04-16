@@ -91,6 +91,17 @@ const fixSizeScroll = (element) => {
     // console.log("SCROLLING: " + element.clientHeight);
 }
 
+function checkIfUrlIsInTrusted(url) {
+    if (!LocalSettings.autoLoadMediaFromTrustedUrls)
+        return false;
+
+    const arr = LocalSettings.trustedAutoLoadMediaUrls;
+    for (let i = 0; i < arr.length; i++)
+        if (url.startsWith(arr[i]))
+            return true;
+    return false;
+}
+
 // Override function
 const renderer = {
     image(token) {
@@ -98,7 +109,7 @@ const renderer = {
         let text = token.text;
 
         {
-            if (LocalSettings.autoLoadMedia || window.location.href.includes("post_composer"))// (settingsObj["chat"]["allow-external-sources-global"])
+            if (LocalSettings.autoLoadMedia || window.location.href.includes("post_composer") || checkIfUrlIsInTrusted(url))// (settingsObj["chat"]["allow-external-sources-global"])
             {
                 let randomId = getRandomIntInclusive(100000, 9999999);
                 let element = document.createElement("a");

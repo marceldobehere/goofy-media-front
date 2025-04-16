@@ -2,10 +2,14 @@
 
 import {convertCssString} from "@/lib/customCssConverter";
 
+const defaultTrustedUrls = ["https://buzzheavier.com/", "https://cdn.marceldobehere.com/", "https://www.dropbox.com/", "https://files.catbox.moe/"];
+
 export let LocalSettings = {
     autoLoadMedia: false,
+    autoLoadMediaFromTrustedUrls: true,
+    trustedAutoLoadMediaUrls: [],
     enabledCustomPostCss: true,
-    enabledCustomPostAnimations: false,
+    enabledCustomPostAnimations: true,
     customCss: "",
     openPostInNewTab: true,
     extendPostClickHitbox: false,
@@ -85,8 +89,10 @@ export async function saveKeyObj(key, key2, value) {
 export async function loadLocalSettings() {
     LocalSettings = {};
     LocalSettings.autoLoadMedia = await loadKeyOrDefault("autoLoadMedia", false);
+    LocalSettings.autoLoadMediaFromTrustedUrls = await loadKeyOrDefault("autoLoadMediaFromTrustedUrls", true);
+    LocalSettings.trustedAutoLoadMediaUrls = await loadKeyOrDefault("trustedAutoLoadMediaUrls", defaultTrustedUrls);
     LocalSettings.enabledCustomPostCss = await loadKeyOrDefault("enabledCustomPostCss", true);
-    LocalSettings.enabledCustomPostAnimations = await loadKeyOrDefault("enabledCustomPostAnimations", false);
+    LocalSettings.enabledCustomPostAnimations = await loadKeyOrDefault("enabledCustomPostAnimations", true);
     LocalSettings.customCss = await loadKeyOrDefault("customCss", "");
     LocalSettings.openPostInNewTab = await loadKeyOrDefault("openPostInNewTab", true);
     LocalSettings.extendPostClickHitbox = await loadKeyOrDefault("extendPostClickHitbox", false);
@@ -97,6 +103,8 @@ export async function loadLocalSettings() {
 
 export async function saveLocalSettings() {
     await saveKey("autoLoadMedia", LocalSettings.autoLoadMedia);
+    await saveKey("autoLoadMediaFromTrustedUrls", LocalSettings.autoLoadMediaFromTrustedUrls);
+    await saveKey("trustedAutoLoadMediaUrls", LocalSettings.trustedAutoLoadMediaUrls);
     await saveKey("enabledCustomPostCss", LocalSettings.enabledCustomPostCss);
     await saveKey("enabledCustomPostAnimations", LocalSettings.enabledCustomPostAnimations);
     await saveKey("customCss", LocalSettings.customCss);

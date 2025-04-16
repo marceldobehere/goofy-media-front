@@ -6,6 +6,14 @@
     border-radius: 0.5rem;
 }
 
+.TrustedUrlsInput {
+    width: 20rem;
+}
+
+.TrustedUrlsInputButton {
+    margin-left: 1rem;
+}
+
 .CssTextArea {
     display: block;
     margin: 1rem auto;

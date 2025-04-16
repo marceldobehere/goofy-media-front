@@ -50,25 +50,30 @@ async function getSignatureAndId(body) {
     return {signature, id, validUntil, publicKey: GlobalStuff.publicKey};
 }
 
-export async function reqWithAuth(path, method, data, headers, sendRawResponse) {
+export async function reqWithAuth(path, method, data, headers, sendRawResponse, sendRawBody) {
     if (headers === undefined)
         headers = {};
 
-    let {signature, id, validUntil, publicKey} = await getSignatureAndId(data);
+    let {signature, id, validUntil, publicKey} = await getSignatureAndId(sendRawBody ? "FILE" : data);
 
     let options = {
         method: method,
         headers: {
-            'Content-Type': 'application/json',
             'X-Goofy-Signature': encodeURIComponent(signature),
             'X-Goofy-Id': id,
             'X-Goofy-Valid-Until': validUntil,
             'X-Goofy-Public-Key': encodeURIComponent(publicKey),
+            'X-Goofy-RAW': !!sendRawBody,
             ...headers
         }
     };
+    if (!sendRawBody)
+        options.headers['Content-Type'] =  'application/json';
     if (data) {
-        options.body = JSON.stringify(data);
+        if (sendRawBody)
+            options.body = data;
+        else
+            options.body = JSON.stringify(data);
     }
     let res;
     await SpinActivity(async () => {
@@ -105,21 +110,25 @@ export async function reqWithAuth(path, method, data, headers, sendRawResponse) 
 }
 
 export async function getWithAuth(path, headers, sendRawResponse) {
-    return await reqWithAuth(path, "GET", undefined, headers, sendRawResponse);
+    return await reqWithAuth(path, "GET", undefined, headers, sendRawResponse, false);
 }
 
 export async function postWithAuth(path, data, headers, sendRawResponse) {
-    return await reqWithAuth(path, "POST", data, headers, sendRawResponse);
+    return await reqWithAuth(path, "POST", data, headers, sendRawResponse, false);
+}
+
+export async function rawPostWithAuth(path, data, headers, sendRawResponse) {
+    return await reqWithAuth(path, "POST", data, headers, sendRawResponse, true);
 }
 
 export async function putWithAuth(path, data, headers, sendRawResponse) {
-    return await reqWithAuth(path, "PUT", data, headers, sendRawResponse);
+    return await reqWithAuth(path, "PUT", data, headers, sendRawResponse, false);
 }
 
 export async function deleteWithAuth(path, headers, sendRawResponse) {
-    return await reqWithAuth(path, "DELETE", undefined, headers, sendRawResponse);
+    return await reqWithAuth(path, "DELETE", undefined, headers, sendRawResponse, false);
 }
 
 export async function getNoAuth(path, headers, sendRawResponse) {
-    return await reqNoAuth(path, "GET", undefined, headers, sendRawResponse);
+    return await reqNoAuth(path, "GET", undefined, headers, sendRawResponse, false);
 }

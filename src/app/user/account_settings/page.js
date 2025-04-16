@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
-import {GlobalStuff, logout, useGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, logout, LsReset, useGlobalState} from "@/lib/globalStateStuff";
 import {goPath} from "@/lib/goPath";
 import {useState} from "react";
 import {usePathname} from "next/navigation";
@@ -36,6 +36,8 @@ export default function Home() {
     const pathName = usePathname();
     const [userId, setUsername] = useState("...");
     const [autoLoadMedia, setAutoLoadMedia] = useState(false);
+    const [autoLoadMediaFromTrustedUrls, setAutoLoadMediaFromTrustedUrls] = useState(true);
+    const [trustedAutoLoadMediaUrls, setTrustedAutoLoadMediaUrls] = useState([]);
     const [enabledCustomPostCss, setEnabledCustomPostCss] = useState(true);
     const [enabledCustomPostAnimations, setEnabledCustomPostAnimations] = useState(false);
     const [openPostNewTab, setOpenPostNewTab] = useState(true);
@@ -70,6 +72,8 @@ export default function Home() {
         }
 
         setAutoLoadMedia(LocalSettings.autoLoadMedia);
+        setAutoLoadMediaFromTrustedUrls(LocalSettings.autoLoadMediaFromTrustedUrls);
+        setTrustedAutoLoadMediaUrls(LocalSettings.trustedAutoLoadMediaUrls);
         setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
         setCustomCss(LocalSettings.customCss);
         setOpenPostNewTab(LocalSettings.openPostInNewTab);
@@ -94,6 +98,25 @@ export default function Home() {
                         await saveLocalSettingsKey("autoLoadMedia", yes);
                         setAutoLoadMedia(yes);
                     }}/><br/>
+
+                    Auto Load Media From Trusted Urls: &nbsp;
+                    <input type="checkbox" checked={autoLoadMediaFromTrustedUrls} onChange={async (e) => {
+                        const yes = e.target.checked;
+                        await saveLocalSettingsKey("autoLoadMediaFromTrustedUrls", yes);
+                        setAutoLoadMediaFromTrustedUrls(yes);
+                    }}/><br/>
+
+                    Trusted Auto Load Media URLs: &nbsp;
+                    <input className={styles.TrustedUrlsInput} type="text" value={trustedAutoLoadMediaUrls.join(",")} onChange={async (e) => {
+                        const urls = e.target.value.split(",").map(url => url.trim());
+                        setTrustedAutoLoadMediaUrls(urls);
+                    }} placeholder={"Comma separated list of URLs"}/>
+                    <button className={styles.TrustedUrlsInputButton} onClick={async () => {
+                        const urls = document.querySelector(`.${styles.TrustedUrlsInput}`).value.split(",").map(url => url.trim());
+                        await saveLocalSettingsKey("trustedAutoLoadMediaUrls", urls);
+                        setTrustedAutoLoadMediaUrls(urls);
+                    }}>Save</button>
+                    <br/>
 
                     Enable Custom Post CSS: &nbsp;
                     <input type="checkbox" checked={enabledCustomPostCss} onChange={async (e) => {
@@ -247,12 +270,22 @@ export default function Home() {
                         <br/>
                     </> : ""}
 
+                    {(GlobalStuff.loggedIn) ? <>
+                        <button onClick={async () => {
+                            alert("Not implemented")
+                        }}>Delete Account and all associated Data
+                        </button>
+                        <br/>
+                    </> : ""}
+
                     <button onClick={() => {
-                        alert("Not implemented")
-                    }}>Delete All Data
+                        if (confirm("Are you sure?")) {
+                            LsReset();
+                            goPath("/")
+                        }
+                    }}>Delete all Data in LocalStorage
                     </button>
                     <br/>
-
                 </div>
             </div>
         }
