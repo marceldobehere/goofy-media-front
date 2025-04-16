@@ -1,15 +1,15 @@
 'use client';
 
 import styles from "./page.module.css";
-import {useEffect, useState} from "react";
-import {initGlobalState} from "@/lib/globalStateStuff";
+import {useState} from "react";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
-import MainFooter from "@/comp/mainFooter";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
-import {loadNewsPosts, onWindowGoBack, postListGoToPage, transformPostObjArr} from "@/lib/post/postUtils";
+import {loadNewsPosts, onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
 import {searchButtonMenu} from "@/comp/buttonMenu";
 import usefulStyles from "@/comp/useful.module.css";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 let onceLoaded = undefined;
 export default function News() {
@@ -43,50 +43,48 @@ export default function News() {
         setQuery({page});
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, false, false, async () => {
-            const query = new URLSearchParams(window.location.search);
+    useGlobalState(pathName, false, false, async () => {
+        const query = new URLSearchParams(window.location.search);
+        let page = query.get("page");
+        if (page === null)
+            page = 0;
+        else
+            page = parseInt(page);
+        setQuery({page: page});
+    }, () => {
+        onWindowGoBack((query) => {
             let page = query.get("page");
             if (page === null)
                 page = 0;
             else
                 page = parseInt(page);
-            setQuery({page: page});
 
-            onWindowGoBack((query) => {
-                let page = query.get("page");
-                if (page === null)
-                    page = 0;
-                else
-                    page = parseInt(page);
-
-                onceLoaded = undefined;
-                setQuery({page});
-            });
+            onceLoaded = undefined;
+            setQuery({page});
         });
-    }, []);
+    });
 
     const buttonMenu = searchButtonMenu(goToPage, query.page, postData.isOnFirstPage, postData.isOnLastPage);
-    return (
-        <div>
-            <main className={styles.main}>
-                <h1>News</h1>
 
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={
+            <div>
+                <h1>News</h1>
                 <h3>Showing news {query.page == 0 ? (<></>) : (<span> (Page {query.page})</span>)}</h3>
                 <br/>
 
                 {buttonMenu}
                 <br/><br/>
-
                 <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={postData.posts}
-                               compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>
+                               compFn={(post) => (<PostEntry post={post}></PostEntry>)}
+                               keyFn={(post) => (post.uuid)}></EntryList>
                 </div>
                 <br/>
                 {buttonMenu}
                 <br/><br/>
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+            </div>
+        }
+    />;
 }

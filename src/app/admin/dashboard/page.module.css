@@ -1,0 +1,37 @@
+.MainContent {
+    padding: 1rem;
+    background-color: var(--central-background);
+}
+
+.Code {
+    /*monospace*/
+    font-family: Consolas, monospace;
+    font-weight: bold;
+}
+
+.CodeList {
+    padding: 1rem;
+    border: 2px solid red;
+    margin: 1rem 0 1rem 0;
+}
+
+.CodeList li {
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.SillySpace {
+    display: inline-block;
+    width: 2rem;
+}
+
+@media (max-width: 900px) {
+    .SillySpace {
+        display: block;
+    }
+
+    .CodeList li {
+        margin-left: 1rem;
+        margin-bottom: 1rem;
+    }
+}

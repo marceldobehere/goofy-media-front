@@ -1,10 +1,9 @@
 'use client';
 
 import styles from "./page.module.css";
-import {useEffect, useState} from "react";
-import {initGlobalState} from "@/lib/globalStateStuff";
+import {useState} from "react";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
-import MainFooter from "@/comp/mainFooter";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import {basePath, goPath} from "@/lib/goPath";
@@ -16,6 +15,7 @@ import {
 } from "@/lib/post/postUtils";
 import {searchButtonMenu} from "@/comp/buttonMenu";
 import usefulStyles from "@/comp/useful.module.css";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 let onceLoaded = undefined;
 export default function Search() {
@@ -55,33 +55,31 @@ export default function Search() {
         setQuery(newQuery);
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, false, false, async () => {
-            const query = new URLSearchParams(window.location.search);
-            console.log("> Search: ", window.location.search)
-            console.log("> Query: ", query)
+    useGlobalState(pathName, false, false, async () => {
+        const query = new URLSearchParams(window.location.search);
+        console.log("> Search: ", window.location.search)
+        console.log("> Query: ", query)
+        const tag = query.get("tag");
+        console.log("> Tag: ", tag);
+        let page = query.get("page");
+        if (page === null)
+            page = 0;
+        else
+            page = parseInt(page);
+        setQuery({tag: tag, page: page});
+    }, () => {
+        onWindowGoBack((query) => {
             const tag = query.get("tag");
-            console.log("> Tag: ", tag);
             let page = query.get("page");
             if (page === null)
                 page = 0;
             else
                 page = parseInt(page);
-            setQuery({tag: tag, page: page});
 
-            onWindowGoBack((query) => {
-                const tag = query.get("tag");
-                let page = query.get("page");
-                if (page === null)
-                    page = 0;
-                else
-                    page = parseInt(page);
-
-                onceLoaded = undefined;
-                setQuery({tag, page});
-            });
+            onceLoaded = undefined;
+            setQuery({tag, page});
         });
-    }, []);
+    });
 
     const buttonMenu = searchButtonMenu(goToPage, query.page, postData.isOnFirstPage, postData.isOnLastPage);
     const mainContent = (query.tag != undefined) ? (
@@ -112,9 +110,9 @@ export default function Search() {
             <h1>Search</h1>
 
             <div className={usefulStyles.CenterContentDiv}>
-                <div style={{width: "250px", margin: "auto"}}>
-                    <label>Enter Search Tag:</label><br/>
-                    <input id={"tag-input"} type={"text"} value={searchText.search}
+                <div style={{width: "300px", margin: "auto"}}>
+                    <label className={styles.SearchLabel}>Enter Search Tag:</label>
+                    <input className={styles.SearchInput} id={"tag-input"} type={"text"} value={searchText.search}
                            onChange={async (e) => {
                                const tagVal = e.target.value;
                                setSearchText({search: tagVal, res: searchText.res});
@@ -133,15 +131,15 @@ export default function Search() {
                                    goPath(`/guest/search?tag=${encodeURIComponent(searchText.search)}`);
                                    return;
                                }
-                           }}></input>&nbsp;&nbsp;
-                    <button onClick={() => {
+                           }}></input>
+                    <button className={styles.SearchButton} onClick={() => {
                         goPath(`/guest/search?tag=${encodeURIComponent(searchText.search)}`);
                     }}>Search
                     </button>
                     <br/>
                     <br/><br/>
-                    <h3>Tags:</h3>
-                    <div style={{maxHeight: "300px", overflowY: "auto"}}>
+                    <h3 className={styles.SearchLabel}>Tags:</h3>
+                    <div style={{height: "250px", overflowY: "auto"}}>
                         <ul>
                             {searchText.res.map((tag, idx) => (
                                 <li key={idx}>
@@ -157,12 +155,7 @@ export default function Search() {
         </>
     );
 
-    return (
-        <div>
-            <main className={styles.main}>
-                {mainContent}
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={mainContent}></UnifiedMenu>;
 }

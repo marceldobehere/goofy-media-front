@@ -1,0 +1,5 @@
+@media (max-width: 900px) {
+    .PostDiv > div {
+        margin: 0 0 2rem 0;
+    }
+}

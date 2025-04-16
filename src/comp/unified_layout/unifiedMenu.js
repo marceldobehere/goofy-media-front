@@ -3,7 +3,7 @@ import styles from "./unifiedMenu.module.css";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
 import {GlobalStuff, initGlobalState, logout, useGlobalState} from "@/lib/globalStateStuff";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {LocalSettings} from "@/lib/localSettings";
 import {usePathname} from "next/navigation";
@@ -20,12 +20,12 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     }
 
     if (rightDivData == undefined)
-        rightDivData = "RIGHT";
+        rightDivData = "";
     if (mainDivData == undefined)
-        mainDivData = "MAIN";
+        mainDivData = "";
 
     const pathName = usePathname();
-    const [mobileDevice, setMobileDevice] = useState(false);
+    const [mobileDevice, setMobileDevice] = useState();
     const [showBurgerMenu, setBurger] = useState(false);
     const [admin, setAdmin] = useState(false);
     const [notifCount, setNotifCount] = useState();
@@ -70,7 +70,8 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     const navLinks = <p>
         {(GlobalStuff.loggedIn) ? <>
             <Link
-                href={"/user/notifications"} style={{color: btnCol}}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
+                href={"/user/notifications"}
+                style={{color: btnCol}}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
         </> : ""}
         <Link href={"/user/home"}>Home</Link>
         <Link href={"/guest/search?tag=global"}>Global Feed</Link>
@@ -85,7 +86,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
             }}>Login</a>
         </>)}
         <Link href={"/guest/news"}>News</Link>
-        <Link href={"/guest/search"}>Search</Link>
+        <a href={`${basePath}/guest/search`}>Search</a>
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/following"}>Following</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link></> : ""}
@@ -102,27 +103,29 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         </svg>
     </div>;
 
-    const leftNavDiv = <div className={styles.LeftNavDiv}>
-        {mobileDevice ?
-            <div className={styles.LeftNavDivMobile}>
-                <div className={styles.LeftNavDivMobileHeader}>
-                    <button onClick={() => {
-                        setBurger(!showBurgerMenu);
-                    }}>
-                        {showBurgerMenu ?
-                            <div style={{transform: "rotateZ(90deg)"}}>{hamburger}</div> :
-                            <div>{hamburger}</div>}
-                    </button>
-                    <h2 className={styles.NavMobileHeader}><a href={"#top"}>Goofy Media</a></h2>
-                    <span></span>
-                </div>
-                {showBurgerMenu ? <div className={styles.LeftNavDivMobileBody}>
-                    {navLinks}
-                </div> : <></>}
-            </div> : <div className={styles.LeftNavDivDesktop}>
-                <h2>Navigation</h2>
+    const navContent = mobileDevice ?
+        <div className={styles.LeftNavDivMobile}>
+            <div className={styles.LeftNavDivMobileHeader}>
+                <button onClick={() => {
+                    setBurger(!showBurgerMenu);
+                }}>
+                    {showBurgerMenu ?
+                        <div style={{transform: "rotateZ(90deg)"}}>{hamburger}</div> :
+                        <div>{hamburger}</div>}
+                </button>
+                <h2 className={styles.NavMobileHeader}><a href={"#top"}>Goofy Media</a></h2>
+                <span></span>
+            </div>
+            {showBurgerMenu ? <div className={styles.LeftNavDivMobileBody}>
                 {navLinks}
-            </div>}
+            </div> : <></>}
+        </div> : <div className={styles.LeftNavDivDesktop}>
+            <h2>Navigation</h2>
+            {navLinks}
+        </div>;
+
+    const leftNavDiv = <div className={styles.LeftNavDiv}>
+        {mobileDevice != undefined ? navContent : ""}
     </div>;
 
     const mainDiv = <div className={styles.MainDiv}>

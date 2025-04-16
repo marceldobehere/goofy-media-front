@@ -2,16 +2,15 @@
 
 import {usePathname} from "next/navigation";
 import {onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
-import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
-import {searchButtonMenu} from "@/comp/buttonMenu";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import styles from "@/app/user/following/page.module.css";
 import EntryList from "@/app/user/home/entries/EntryList";
-import MainFooter from "@/comp/mainFooter";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {getFollowing} from "@/lib/follows/followUtils";
 import {basePath} from "@/lib/goPath";
 import Link from "next/link";
 import usefulStyles from "@/comp/useful.module.css";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 
 let onceLoaded = undefined;
@@ -48,17 +47,15 @@ export default function Following() {
         setQuery({page});
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, true, false, async () => {
-            const query = new URLSearchParams(window.location.search);
-            let page = query.get("page");
-            if (page === null)
-                page = 0;
-            else
-                page = parseInt(page);
-            setQuery({page: page});
-        });
-
+    useGlobalState(pathName, true, false, async () => {
+        const query = new URLSearchParams(window.location.search);
+        let page = query.get("page");
+        if (page === null)
+            page = 0;
+        else
+            page = parseInt(page);
+        setQuery({page: page});
+    }, () => {
         onWindowGoBack((query) => {
             let page = query.get("page");
             if (page === null)
@@ -69,24 +66,23 @@ export default function Following() {
             onceLoaded = undefined;
             setQuery({page});
         });
-    }, []);
+    });
 
-    const buttonMenu = searchButtonMenu(goToPage, query.page, notifData.isOnFirstPage, notifData.isOnLastPage);
-    return (
-        <div>
-            <main className={styles.main}>
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={
+            <div>
                 <h1>Following</h1>
 
                 <h3>Showing users you follow {query.page == 0 ? (<></>) : (<span> (Page {query.page})</span>)}</h3>
                 <br/>
 
-                {/*{buttonMenu}*/}
-                <br/>
                 <div style={{width: "max-content", margin: "auto"}}>
                     <button onClick={async () => {
                         loadFollowing({page: query.page})
                     }}>Refresh
-                    </button>&nbsp;&nbsp;
+                    </button>
+                    &nbsp;&nbsp;
                     <Link href={"/user/home"}>Home</Link>
                 </div>
                 <br/>
@@ -102,10 +98,7 @@ export default function Following() {
                     {notifData.following.length == 0 ? <h3>No users found</h3> : ""}
                 </div>
                 <br/>
-                {/*{buttonMenu}*/}
-                <br/><br/>
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+            </div>
+        }
+    />;
 }

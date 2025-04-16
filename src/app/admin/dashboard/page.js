@@ -1,17 +1,18 @@
 'use client';
 
 import styles from "./page.module.css";
-import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
-import {useEffect, useState} from "react";
-import MainFooter from "@/comp/mainFooter";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useState} from "react";
 import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
 import Link from "next/link";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 export default function Home() {
     const pathName = usePathname();
+    let [codes, setCodes] = useState([]);
 
     async function loadCodes() {
         let res = await getWithAuth("/admin/codes", {});
@@ -55,28 +56,20 @@ export default function Home() {
         alert("Imported data");
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, true, true, async () => {
-            if (!GlobalStuff.loggedIn)
-                return goPath("/guest/login");
-            if (!GlobalStuff.admin)
-                return goPath("/user/home");
-            loadCodes();
-        });
-    })
+    useGlobalState(pathName, true, false, async () => {
+        if (!GlobalStuff.loggedIn)
+            return goPath("/guest/login");
+        if (!GlobalStuff.admin)
+            return goPath("/user/home");
+        loadCodes();
+    });
 
-    let [codes, setCodes] = useState([]);
-
-    return (
-        <div className={styles.page}>
-            <main className={styles.main}>
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={
+            <div className={styles.MainContent}>
                 <h1>Admin Dashboard</h1>
-
-                <Link href={"/guest/login"}>Login</Link><br/>
-                <Link href={"/guest/register"}>Register</Link><br/>
-                <Link href={"/user/home"}>Home</Link><br/>
-
-                <br/><br/><br/>
+                <br/>
 
                 <h2>Complete Data Export/Import</h2>
                 <div style={{border: "2px solid blue", margin: "auto", width: "max-content"}}>
@@ -85,9 +78,8 @@ export default function Home() {
                 </div>
 
 
-                <br/><br/><br/>
-
-                <div style={{border: "2px solid red"}}>
+                <br/><br/>
+                <div>
                     <h2>Code List</h2>
 
                     <div style={{display: "block", margin: "auto", width: "max-content"}}>
@@ -120,7 +112,7 @@ export default function Home() {
 
 
                     <h3>Unused</h3>
-                    <ul>
+                    <ul className={styles.CodeList}>
                         {codes.filter((code) => !code.used).map((code, i) => {
                             const admin = code.admin ? "Admin" : "User";
                             const used = code.used ? "Used" : "Not Used";
@@ -128,16 +120,20 @@ export default function Home() {
                             const createdAt = (code.createdAt == undefined) ? "N/A" : new Date(code.createdAt).toLocaleString();
                             const usedAt = (code.usedAt == undefined) ? "N/A" : new Date(code.usedAt).toLocaleString();
                             return <li key={i}>
-                                {code.code} - {admin} - {used} - {usedBy} - Created: {createdAt} -
-                                Used: {usedAt} &nbsp; &nbsp;{(code.used) ? <></> : <button onClick={() => {
-                                deleteCode(code.code)
-                            }}>Delete</button>}
+                                <span className={styles.Code}>{code.code}</span> - {admin}
+                                <span className={styles.SillySpace}/>
+                                Created: {createdAt}
+                                <span className={styles.SillySpace}/>
+                                <button onClick={() => {
+                                    deleteCode(code.code)
+                                }}>Delete
+                                </button>
                             </li>
                         })}
                     </ul>
                     <br/>
                     <h3>Used</h3>
-                    <ul>
+                    <ul className={styles.CodeList}>
                         {codes.filter((code) => code.used).map((code, i) => {
                             const admin = code.admin ? "Admin" : "User";
                             const used = code.used ? "Used" : "Not Used";
@@ -145,16 +141,17 @@ export default function Home() {
                             const createdAt = (code.createdAt == undefined) ? "N/A" : new Date(code.createdAt).toLocaleString();
                             const usedAt = (code.usedAt == undefined) ? "N/A" : new Date(code.usedAt).toLocaleString();
                             return <li key={i}>
-                                {code.code} - {admin} - {used} - {usedBy} - Created: {createdAt} - Used: {usedAt}
+                                <span className={styles.Code}>{code.code}</span> - {admin}
+                                <span className={styles.SillySpace}/>
+                                {usedBy}
+                                <br/>
+                                Created: {createdAt} - Used: {usedAt}
                             </li>
                         })}
                     </ul>
                     <br/>
                 </div>
-
-            </main>
-
-            <MainFooter></MainFooter>
-        </div>
-    );
+            </div>
+        }
+    />;
 }

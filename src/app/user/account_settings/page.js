@@ -1,16 +1,17 @@
 'use client';
 
 import styles from "./page.module.css";
-import MainFooter from "@/comp/mainFooter";
-import {GlobalStuff, initGlobalState, logout} from "@/lib/globalStateStuff";
+import {GlobalStuff, logout, useGlobalState} from "@/lib/globalStateStuff";
 import {goPath} from "@/lib/goPath";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {usePathname} from "next/navigation";
-import {initLocalSettings, LocalSettings, saveLocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
+import {LocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
 import {getAllAvailableClassNames} from "@/lib/customCssConverter";
 
 import QRCodeGen from "@/lib/qrgen/qrcodegen";
 import {postWithAuth} from "@/lib/req";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+
 const QrCode = QRCodeGen.QrCode;
 
 function toSvgString(qr, border, lightColor, darkColor) {
@@ -61,26 +62,25 @@ export default function Home() {
         }
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, false, false, async () => {
-            if (GlobalStuff.loggedIn) {
-                setUsername(GlobalStuff.userId);
-            } else {
-                setUsername("Guest");
-            }
+    useGlobalState(pathName, false, false, async () => {
+        if (GlobalStuff.loggedIn) {
+            setUsername(GlobalStuff.userId);
+        } else {
+            setUsername("Guest");
+        }
 
-            setAutoLoadMedia(LocalSettings.autoLoadMedia);
-            setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
-            setCustomCss(LocalSettings.customCss);
-            setOpenPostNewTab(LocalSettings.openPostInNewTab);
-            setExtendPostHitbox(LocalSettings.extendPostClickHitbox);
-            setEnabledCustomPostAnimations(LocalSettings.enabledCustomPostAnimations);
-        });
-    })
+        setAutoLoadMedia(LocalSettings.autoLoadMedia);
+        setEnabledCustomPostCss(LocalSettings.enabledCustomPostCss);
+        setCustomCss(LocalSettings.customCss);
+        setOpenPostNewTab(LocalSettings.openPostInNewTab);
+        setExtendPostHitbox(LocalSettings.extendPostClickHitbox);
+        setEnabledCustomPostAnimations(LocalSettings.enabledCustomPostAnimations);
+    });
 
-    return (
-        <div className={styles.page}>
-            <main className={styles.main}>
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={
+            <div>
                 <div className={styles.MainDiv}>
                     <h1>Account Settings</h1>
 
@@ -254,8 +254,7 @@ export default function Home() {
                     <br/>
 
                 </div>
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+            </div>
+        }
+    />;
 }

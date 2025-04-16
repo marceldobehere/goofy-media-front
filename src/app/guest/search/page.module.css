@@ -1,0 +1,37 @@
+.SearchLabel {
+    font-size: 1.5rem;
+    padding: 0.2rem;
+    display: block;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.SearchInput {
+    font-size: 1.2rem;
+    padding: 0.2rem;
+    border: 1px solid var(--text-gray);
+    display: block;
+    margin: auto auto 1.2rem auto;
+}
+
+.SearchButton {
+    font-size: 1.2rem;
+    padding: 0.2rem;
+    border: 2px solid var(--text-gray);
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.TagDiv {
+    font-size: 1.3rem;
+    color: var(--text-gray);
+    margin-bottom: 0.2rem;
+}
+
+.TagDiv a {
+    text-decoration: none;
+    color: var(--foreground);
+}
+

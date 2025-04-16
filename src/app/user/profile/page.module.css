@@ -1,0 +1,7 @@
+.PostList > ul > li {
+    margin: 0rem 0 2rem 0;
+}
+
+.PostList > ul > li > div{
+    margin: 0rem 0 2rem 0;
+}

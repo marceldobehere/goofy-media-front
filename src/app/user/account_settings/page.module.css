@@ -1,6 +1,5 @@
 .MainDiv {
     background: var(--account-settings-background);
-    width: 80%;
     margin: 0 auto;
     padding: 1rem;
     border: 1px solid var(--text-gray);
@@ -33,10 +32,4 @@
     min-height: 100px;
     max-height: 500px;
     padding: 10px;
-}
-
-@media (max-width: 900px) {
-    .MainDiv {
-        width: 100%;
-    }
 }

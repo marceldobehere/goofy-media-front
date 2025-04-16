@@ -23,6 +23,7 @@
     position: fixed;
     height: calc(100vh - var(--footer-size));
     width: var(--left-size);
+    z-index: 150;
 }
 
 .MainDiv {
@@ -82,13 +83,13 @@
 
 .LeftNavDivMobileBody {
     position: absolute;
-    z-index: 150;
+    z-index: 350;
     background-color: var(--nav-body-mobile-background);
     width: 100vw;
     height: max-content;
     padding: 1rem 0 1rem 0;
     border-radius: 0px 0px 1rem 1rem;
-    border: 2px solid var(--nav-body-mobile-border);
+    border: 3px solid var(--nav-body-mobile-border);
 }
 
 .LeftNavDivMobileBody p {
@@ -162,7 +163,7 @@
         margin: var(--header-size) 0 0 0;
         display: block;
         position: initial;
-        z-index: -5;
+        z-index: 0;
         min-height: var(--min-height-body);
     }
 

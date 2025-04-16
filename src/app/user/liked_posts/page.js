@@ -1,16 +1,16 @@
 'use client';
 
 import {usePathname} from "next/navigation";
-import {loadNewsPosts, onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
-import {initGlobalState} from "@/lib/globalStateStuff";
+import {onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {searchButtonMenu} from "@/comp/buttonMenu";
 import styles from "@/app/guest/news/page.module.css";
 import EntryList from "@/app/user/home/entries/EntryList";
-import MainFooter from "@/comp/mainFooter";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {getLikedPosts} from "@/lib/likes/likeUtils";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import usefulStyles from "@/comp/useful.module.css";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 
 let onceLoaded = undefined;
@@ -47,17 +47,15 @@ export default function LikedPosts() {
         setQuery({page});
     }
 
-    useEffect(() => {
-        initGlobalState(pathName, true, false, async () => {
-            const query = new URLSearchParams(window.location.search);
-            let page = query.get("page");
-            if (page === null)
-                page = 0;
-            else
-                page = parseInt(page);
-            setQuery({page: page});
-        });
-
+    useGlobalState(pathName, true, false, async () => {
+        const query = new URLSearchParams(window.location.search);
+        let page = query.get("page");
+        if (page === null)
+            page = 0;
+        else
+            page = parseInt(page);
+        setQuery({page: page});
+    }, () => {
         onWindowGoBack((query) => {
             let page = query.get("page");
             if (page === null)
@@ -68,12 +66,13 @@ export default function LikedPosts() {
             onceLoaded = undefined;
             setQuery({page});
         });
-    }, []);
+    })
 
     const buttonMenu = searchButtonMenu(goToPage, query.page, likeData.isOnFirstPage, likeData.isOnLastPage);
-    return (
-        <div>
-            <main className={styles.main}>
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "60vw", right: "20vw"}}
+        mainDivData={
+            <div>
                 <h1>Liked Posts</h1>
 
                 <h3>Showing liked Posts {query.page == 0 ? (<></>) : (<span> (Page {query.page})</span>)}</h3>
@@ -99,8 +98,7 @@ export default function LikedPosts() {
                 <br/>
                 {buttonMenu}
                 <br/><br/>
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+            </div>
+        }
+    />;
 }

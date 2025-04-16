@@ -1,23 +1,21 @@
 'use client';
 
 import styles from "./page.module.css";
-import {GlobalStuff, initGlobalState} from "@/lib/globalStateStuff";
-import {useEffect, useState} from "react";
-import MainFooter from "@/comp/mainFooter";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useState} from "react";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
+import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 export default function Home() {
     const pathName = usePathname();
-    useEffect(() => {
-        initGlobalState(pathName, true, false, async () => {
-            if (!GlobalStuff.loggedIn)
-                goPath("/guest/login")
-        });
-    })
+    useGlobalState(pathName, true, false, async () => {
+        if (!GlobalStuff.loggedIn)
+            goPath("/guest/login")
+    });
 
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
@@ -161,7 +159,7 @@ export default function Home() {
         </>);
     }
 
-    function getPreview() {
+    function getPreview(livePrev) {
         return (<>
             <PostEntry post={{
                 displayName: "Display Name",
@@ -175,28 +173,40 @@ export default function Home() {
                 likeOverride: true
             }}></PostEntry>
 
-            <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
-                <button className={"cont-inp-btn"}
-                        style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                        onClick={toggleEdit}>Edit
-                </button>
-            </div>
+            {livePrev ? "" :
+                <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
+                    <button className={"cont-inp-btn"}
+                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                            onClick={toggleEdit}>Edit
+                    </button>
+                </div>
+            }
+
         </>);
     }
 
-    return (
-        <div className={styles.page}>
-            <main className={styles.main}>
+    return <UnifiedMenu
+        divSizes={{left: "20vw", main: "40vw", right: "40vw"}}
+        mainDivData={
+            <div>
                 <h1>Post Composer</h1>
 
-                <div className={"container"}>
+                <div className={styles.MainContainer}>
                     <h2>Create Post</h2>
 
                     {showEdit ? getEdit() : getPreview()}
                 </div>
+            </div>
+        }
 
-            </main>
-            <MainFooter></MainFooter>
-        </div>
-    );
+        rightDivData={
+            <div>
+                <h1>Live Post Preview</h1>
+
+                <div className={styles.MainContainer}>
+                    {getPreview(true)}
+                </div>
+            </div>
+        }
+    />;
 }
