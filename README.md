@@ -156,14 +156,24 @@ Here are some of the implemented features:
 * [X] Client-side caching of data
 * [X] Live Notification polling
 * [X] Homepage toggle for users to switch between Personal Feed and Global Feed
+* [X] Unified UI System
+* [X] Live Post Preview (For Desktop Users)
 
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Better Post Style Guide
+* [ ] Converting :emojis: in Posts and comments
+* [ ] Improving the Post Entry Component to not do silly DOM shenanigans
+* [ ] Getting the raw post body (Either a button or a setting)
+* [ ] Adding some trusted domains for embedded media
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback
 * [ ] Bug reporting (Unsure if Registered Only or also Guests)
+* [ ] Improve Custom CSS and add some premade themes to choose from
+* [ ] Automatic Daily/Weekly/Monthly Backups with a max amount of backups
+* [ ] Clicking on embedded media opens it in a new tab
 * [ ] Seeing who liked your post
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
@@ -232,12 +242,13 @@ Here are some of my TODOs:
   * This page is optional to visit and optional for the server owner to implement/use, potentially might be good to limit the post spots too?
   * Maybe add grouping to the page based on topics/tags
 * [ ] Docs for writing bots + Example code?
+* [ ] Improving Trusted Domains (As a setting with a list of domains)
 * [ ] Potentially (optional) Push Notifications
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
 * [ ] Potentially support for ActivityPub / RSS for public servers
-* [ ] Potentially adding tag grouping?
 * [ ] Live Notification polling using WS
 * [ ] Scanning QR Codes with the camera to log in
+* [ ] Potentially adding tag grouping?
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching
 * [ ] Improve Credits

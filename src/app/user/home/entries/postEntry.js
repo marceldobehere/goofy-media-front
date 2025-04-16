@@ -120,7 +120,7 @@ export default function PostEntry({post}) {
                 <span key={idx}><a
                     href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a></span>))}</p>
 
-            <hr style={{marginBottom: "10px"}}/>
+            <hr/>
             <div className={styles.PostEntryFooter}>
                 <a style={{textDecoration: "none"}}
                    href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}

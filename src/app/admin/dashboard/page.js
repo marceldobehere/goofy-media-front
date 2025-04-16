@@ -110,7 +110,7 @@ export default function Home() {
                         </button>
                     </div>
 
-
+                    <br/><br/>
                     <h3>Unused</h3>
                     <ul className={styles.CodeList}>
                         {codes.filter((code) => !code.used).map((code, i) => {
@@ -131,6 +131,7 @@ export default function Home() {
                             </li>
                         })}
                     </ul>
+
                     <br/>
                     <h3>Used</h3>
                     <ul className={styles.CodeList}>
