@@ -2,10 +2,9 @@
 import styles from "./unifiedMenu.module.css";
 import MainFooter from "@/comp/mainFooter";
 import Link from "next/link";
-import {GlobalStuff, initGlobalState, logout, useGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, logout, useGlobalState} from "@/lib/globalStateStuff";
 import {basePath, goPath} from "@/lib/goPath";
-import {useEffect, useState} from "react";
-import {LocalSettings} from "@/lib/localSettings";
+import {useState} from "react";
 import {usePathname} from "next/navigation";
 import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
 import {useInterval} from "@/comp/unified_layout/userInterval";
@@ -65,6 +64,8 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
 
     useGlobalState(pathName, false, false, async () => {
         setAdmin(GlobalStuff.admin);
+        if (GlobalStuff.loggedIn)
+            loadNotifs().then();
     }, checkSizes);
 
 
