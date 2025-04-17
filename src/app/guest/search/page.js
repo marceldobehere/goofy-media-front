@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import {useState} from "react";
-import {useGlobalState} from "@/lib/globalStateStuff";
+import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
@@ -16,12 +16,13 @@ import {
 import {searchButtonMenu} from "@/comp/buttonMenu";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {getSimilarUsers} from "@/lib/publicInfo/publicInfoUtils";
 
 let onceLoaded = undefined;
 export default function Search() {
     const pathName = usePathname();
     const pageLimit = 5;
-    const [searchText, setSearchText] = useState({search: "", res: []});
+    const [searchText, setSearchText] = useState({search: "", resTags: [], resUsers: []});
     const [query, _setQuery] = useState({tag: "", page: 0});
     const [postData, setPostData] = useState({posts: undefined, isOnLastPage: true, isOnFirstPage: true});
     const setQuery = (q) => {
@@ -99,7 +100,8 @@ export default function Search() {
                         (postData.posts.length === 0) ? (
                             <div style={{height: "200px"}}><h3>No posts found.</h3></div>) : (
                             <EntryList elements={postData.posts}
-                                       compFn={(post) => (<PostEntry post={post}></PostEntry>)} keyFn={(post) => (post.uuid)}></EntryList>)
+                                       compFn={(post) => (<PostEntry post={post}></PostEntry>)}
+                                       keyFn={(post) => (post.uuid)}></EntryList>)
                     )}
             </div>
             <br/>
@@ -110,18 +112,23 @@ export default function Search() {
             <h1>Search</h1>
 
             <div className={usefulStyles.CenterContentDiv}>
-                <div style={{width: "300px", margin: "auto"}}>
-                    <label className={styles.SearchLabel}>Enter Search Tag:</label>
+                <div style={{width: "85%", margin: "auto"}}>
+                    <label className={styles.SearchLabel}>Enter Query: (Tag / User)</label>
                     <input className={styles.SearchInput} id={"tag-input"} type={"text"} value={searchText.search}
                            onChange={async (e) => {
                                const tagVal = e.target.value;
-                               setSearchText({search: tagVal, res: searchText.res});
+                               setSearchText({
+                                   search: tagVal,
+                                   resTags: searchText.resTags,
+                                   resUsers: searchText.resUsers
+                               });
 
                                const tags = await getSimilarTags(tagVal);
+                               const users = await getSimilarUsers(tagVal);
                                // console.log(tags)
                                setSearchText((prevState) => {
                                    if (prevState == undefined || prevState.search == tagVal) {
-                                       return {search: tagVal, res: tags};
+                                       return {search: tagVal, resTags: tags, resUsers: users};
                                    }
                                    return prevState;
                                })
@@ -137,14 +144,28 @@ export default function Search() {
                     }}>Search
                     </button>
                     <br/>
-                    <br/><br/>
                     <h3 className={styles.SearchLabel}>Tags:</h3>
-                    <div style={{height: "250px", overflowY: "auto"}}>
+                    <div className={styles.SearchResBox}>
                         <ul>
-                            {searchText.res.map((tag, idx) => (
+                            {searchText.resTags.map((tag, idx) => (
                                 <li key={idx}>
                                     <div key={idx} className={styles.TagDiv}>
                                         <a href={`${basePath}/guest/search?tag=${encodeURIComponent(tag.tag)}`}>#{tag.tag}</a> ({tag.count})
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <h3 className={styles.SearchLabel}>Users:</h3>
+                    <div className={styles.SearchResBox}>
+                        <ul>
+                            {searchText.resUsers.map((userEntry, idx) => (
+                                <li key={idx}>
+                                    <div key={idx} className={styles.LinkDiv}>
+                                        <a href={`${basePath}/user/profile?userId=${encodeURIComponent(userEntry.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>
+                                            {userEntry.displayName} <span>({userEntry.userId})</span>
+                                        </a>
                                     </div>
                                 </li>
                             ))}

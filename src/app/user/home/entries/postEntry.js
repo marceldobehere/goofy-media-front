@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "@/app/user/home/entries/postEntry.module.css";
-import {basePath, goPath} from "@/lib/goPath";
+import {basePath, goPath, refreshPage} from "@/lib/goPath";
 import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
@@ -9,6 +9,7 @@ import {LocalSettings} from "@/lib/localSettings";
 import {isPostLiked, likePost, unlikePost} from "@/lib/likes/likeUtils";
 import {CoolCache} from "@/lib/coolCache";
 import {usePathname} from "next/navigation";
+import {deletePost} from "@/lib/post/postUtils";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -27,6 +28,7 @@ export default function PostEntry({post}) {
     const [isValid, setIsValid] = useState();
     const [isLiked, setIsLiked] = useState();
     const [displayName, setDisplayName] = useState();
+    let [canDelete, setCanDelete] = useState(false);
 
     const openInNewTab = LocalSettings.openPostInNewTab;
 
@@ -60,6 +62,9 @@ export default function PostEntry({post}) {
     useGlobalState(pathName, false, false, () => {
         if (post.likeOverride == undefined && GlobalStuff.loggedIn) {
             setTimeout(checkLikedStatus, getRandomIntInclusive(50, 250));
+
+            if (GlobalStuff.admin || post.author == GlobalStuff.userId)
+                setCanDelete(true);
         }
     }, () => {
         if (post.valid)
@@ -109,7 +114,7 @@ export default function PostEntry({post}) {
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
                 <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
-                                             href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
+                                                            href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
             <hr/>
 
@@ -118,7 +123,7 @@ export default function PostEntry({post}) {
                                                       target={openInNewTab ? "_blank" : ""}>{post.title}</a></h3>
 
             <div className={"post-click-div-thing"} onClick={(event) => {
-                if (event.target == undefined || event.target.tagName == undefined || !LocalSettings.extendPostClickHitbox)
+                if (event.target == undefined || event.target.tagName === undefined || !LocalSettings.extendPostClickHitbox)
                     return;
                 const tagName = event.target.tagName.toLowerCase();
                 if (["a", "img", "video", "audio", "input"].includes(tagName))
@@ -128,7 +133,8 @@ export default function PostEntry({post}) {
                 event.preventDefault();
             }}>
                 {innerHTML !== undefined ?
-                    <p className={styles.PostBody} style={{isolation: "isolate"}} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                    <p className={styles.PostBody} style={{isolation: "isolate"}}
+                       dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                     <p className={styles.PostBody}>{post.text}</p>}
             </div>
 
@@ -145,9 +151,21 @@ export default function PostEntry({post}) {
                 <a style={{textDecoration: "none"}}
                    href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
                    target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
-                <span>&nbsp; - &nbsp;</span>
+
                 <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
                 </button>
+
+                {canDelete ?
+                    <button onClick={async () => {
+                        if (confirm("Are you sure you want to delete the post?")) {
+                            if (await deletePost(post.uuid))
+                                alert("Post deleted");
+                            else
+                                alert("Post deletion failed!")
+                        }
+
+                        refreshPage();
+                    }}>Delete</button> : <></>}
             </div>
         </div>
     );

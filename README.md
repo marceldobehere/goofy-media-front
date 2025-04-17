@@ -166,7 +166,9 @@ Here are some of the implemented features:
 * [X] Global Feed
 * [X] News Feed
 * [X] Tag System
-* [X] Tag Search (With post counts)
+* [X] Search Page
+  * [X] Tag Search (With post counts)
+  * [X] User Search
 * [X] Post Tag Validation
 * [X] Home Page with infinite scroll and dynamic post loading
 * [X] Profile Page
@@ -196,7 +198,9 @@ Here are some of the implemented features:
   * [X] Profile Pronouns
   * [X] Profile Links
   * [X] Pinned Post
-
+* [X] Post deletion
+* [X] Comment deletion
+* [X] Delete user and all user data
 
 ### TODOs
 Here are some of my TODOs:
@@ -216,9 +220,6 @@ Here are some of my TODOs:
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
-* [ ] Post deletion
-* [ ] Comment deletion
-* [ ] Delete user and all user data
 * [ ] Export all user data
 * [ ] API Rate Limiting
 * [ ] Post sharing

@@ -189,7 +189,7 @@ export default function Profile() {
                             <h3>Pinned Post</h3>
                             {pinnedPostObj ?
                                 <PostEntry post={pinnedPostObj}></PostEntry> :
-                                <p style={{textAlign: "center"}}><br/>Loading...</p>}
+                                <p style={{textAlign: "center"}}><br/>Pinned post does not exist.</p>}
                         </div>
                         <hr/>
                     </> : ""}

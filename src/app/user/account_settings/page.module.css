@@ -41,3 +41,14 @@
     max-height: 500px;
     padding: 10px;
 }
+
+.LastButtons {
+
+}
+
+.LastButtons button {
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    width: fit-content;
+}

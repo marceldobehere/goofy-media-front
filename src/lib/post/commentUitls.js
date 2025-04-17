@@ -1,6 +1,6 @@
 'use client';
 
-import {getWithAuth} from "@/lib/req";
+import {deleteWithAuth, getWithAuth} from "@/lib/req";
 import {verifyObj} from "@/lib/rsa";
 import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
 import {sleep} from "@/lib/utils";
@@ -150,6 +150,14 @@ export async function loadCommentByUuid(uuid) {
         return alert("Failed to transform comment");
 
     return comment[0];
+}
+
+export async function deleteComment(uuid) {
+    let res = await deleteWithAuth(`/user/comment/comment/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return false;
+
+    return true;
 }
 
 export async function loadCommentsForPost(uuid) {

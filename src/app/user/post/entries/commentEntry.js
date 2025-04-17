@@ -2,9 +2,9 @@
 
 import styles from "@/app/user/post/entries/commentEntry.module.css";
 import {useState} from "react";
-import {basePath} from "@/lib/goPath";
+import {basePath, refreshPage} from "@/lib/goPath";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
-import {loadRepliesForComment, loadReplyCountForComment} from "@/lib/post/commentUitls";
+import {deleteComment, loadRepliesForComment, loadReplyCountForComment} from "@/lib/post/commentUitls";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
@@ -16,6 +16,12 @@ export default function CommentEntry({comment}) {
     const [replies, setReplies] = useState(undefined);
     const [replyCount, setReplyCount] = useState(comment.replyCount);
     const [displayName, setDisplayName] = useState();
+    let [canDelete, setCanDelete] = useState(false);
+
+    useGlobalState(pathName, false, false, async () => {
+        if (GlobalStuff.admin || comment.userId == GlobalStuff.userId)
+            setCanDelete(true);
+    });
 
     // setIsValid(undefined);
     if (isValid == undefined)
@@ -60,6 +66,49 @@ export default function CommentEntry({comment}) {
         }
     }
 
+    async function addReply() {
+        const text = prompt("Enter text to reply:");
+        if (text == undefined || text == "")
+            return;
+
+        const _comment = {
+            text: text,
+            postUuid: comment.postUuid,
+            createdAt: Date.now(),
+            replyCommentUuid: comment.uuid
+        };
+
+        const signature = await signObj(_comment);
+
+        const mainBody = {
+            comment: _comment,
+            signature: signature,
+            publicKey: GlobalStuff.publicKey,
+            userId: GlobalStuff.userId
+        };
+        console.log(mainBody);
+
+        const res = await postWithAuth("/user/comment/", {comment: mainBody});
+        if (res === undefined) {
+            alert("Failed to comment");
+            return;
+        }
+        loadReplies()
+    }
+
+
+    const delButton = canDelete ?
+        <button onClick={async () => {
+            if (confirm("Are you sure you want to delete the comment?")) {
+                if (await deleteComment(comment.uuid))
+                    alert("Comment deleted");
+                else
+                    alert("Comment deletion failed!")
+            }
+
+            refreshPage();
+        }}>Delete</button> : <></>;
+
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
             <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
@@ -75,58 +124,30 @@ export default function CommentEntry({comment}) {
         <div className={styles.CommentFooter}>
             {replies == undefined ?
                 <>
-                    <button onClick={async () => {
-                        loadReplies()
-                    }}>Show {replyCount} repl{(replyCount == 1) ? "y" : "ies"}</button>
+                    <div className={styles.CommentButtonDiv}>
+                        <button onClick={loadReplies}>Show {replyCount} repl{(replyCount == 1) ? "y" : "ies"}</button>
+                        {delButton}
+                    </div>
                 </> :
                 <>
                     <h4>Replies:</h4>
                     <EntryList elements={replies}
                                compFn={(_comment) => (
-                                   <CommentEntry comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)}
+                                   <CommentEntry
+                                       comment={{..._comment, updateFunc: comment.updateFunc}}></CommentEntry>)}
                                keyFn={(comment) => (comment.uuid)}></EntryList>
 
-                    <button onClick={async () => {
-                        const text = prompt("Enter text to reply:");
-                        if (text == undefined || text == "")
-                            return;
-
-                        const _comment = {
-                            text: text,
-                            postUuid: comment.postUuid,
-                            createdAt: Date.now(),
-                            replyCommentUuid: comment.uuid
-                        };
-
-                        const signature = await signObj(_comment);
-
-                        const mainBody = {
-                            comment: _comment,
-                            signature: signature,
-                            publicKey: GlobalStuff.publicKey,
-                            userId: GlobalStuff.userId
-                        };
-                        console.log(mainBody);
-
-                        const res = await postWithAuth("/user/comment/", {comment: mainBody});
-                        if (res === undefined) {
-                            alert("Failed to comment");
-                            return;
-                        }
-                        loadReplies()
-                    }} disabled={!GlobalStuff.loggedIn}>Add Reply
-                    </button>
-                    &nbsp;&#32;&nbsp;
-                    <button onClick={() => {
-                        loadReplies()
-                    }}>Refresh
-                    </button>
-                    &nbsp;&#32;&nbsp;
-                    <button onClick={() => {
-                        setReplies(undefined)
-                    }}>Hide replies
-                    </button>
-                    <br/>
+                    <div className={styles.CommentButtonDiv}>
+                        <button onClick={addReply} disabled={!GlobalStuff.loggedIn}>Add Reply
+                        </button>
+                        <button onClick={loadReplies}>Refresh
+                        </button>
+                        <button onClick={() => {
+                            setReplies(undefined)
+                        }}>Hide replies
+                        </button>
+                        {delButton}
+                    </div>
                 </>}
         </div>
 

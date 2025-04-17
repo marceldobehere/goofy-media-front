@@ -10,3 +10,7 @@ export function goPath(path, newTab) {
     else
         window.location.href = basePath + path;
 }
+
+export function refreshPage() {
+    window.location.reload();
+}

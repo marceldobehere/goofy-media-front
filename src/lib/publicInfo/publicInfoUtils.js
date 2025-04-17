@@ -41,6 +41,30 @@ export async function getPublicKeyFromUserId(userId) {
     return publicKey;
 }
 
+
+export async function getSimilarUsers(query) {
+    if (query == "")
+        return [];
+    query = query.toLowerCase();
+
+    let userIds = await getWithAuth(`/user/user-data/like/${encodeURIComponent(query)}`);
+    if (userIds === undefined)
+        return alert("Failed to get similar users");
+
+    const userEntries = [];
+    for (let userId of userIds) {
+        let displayName = await getDisplayNameFromUserId(userId);
+        userEntries.push({
+            displayName: displayName ? displayName : "?",
+            userId: userId
+        });
+    }
+
+    return userEntries;
+}
+
+
+
 export const displayNameCache = new CoolCache({localStorageKey: "DISPLAY_NAMES", cacheEntryTimeout: 1000  * 60 * 30});
 export const recentlyFailedDisplayNamesCache = new CoolCache({localStorageKey: "DISPLAY_NAMES_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
 

@@ -9,7 +9,7 @@ import {LocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
 import {getAllAvailableClassNames} from "@/lib/customCssConverter";
 
 import QRCodeGen from "@/lib/qrgen/qrcodegen";
-import {postWithAuth} from "@/lib/req";
+import {deleteWithAuth, postWithAuth} from "@/lib/req";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 
 const QrCode = QRCodeGen.QrCode;
@@ -261,31 +261,48 @@ export default function Home() {
                     <hr/>
                     <br/><br/>
 
-                    {(GlobalStuff.loggedIn) ? <>
-                        <button onClick={async () => {
-                            await logout();
-                            goPath("/guest/login")
-                        }}>Logout
+                    <div className={styles.LastButtons}>
+                        {(GlobalStuff.loggedIn) ? <>
+                            <button onClick={async () => {
+                                await logout();
+                                goPath("/guest/login")
+                            }}>Logout
+                            </button>
+                            <br/>
+                        </> : ""}
+
+                        {(GlobalStuff.loggedIn) ? <>
+                            <button onClick={async () => {
+                                if (!confirm("Are you sure?"))
+                                    return;
+                                if (!confirm("Are you very sure?"))
+                                    return;
+                                if (!confirm("Are you really sure? Your account will be lost and not exist anymore."))
+                                    return;
+                                if (!confirm("Press OK to delete your Account."))
+                                    return;
+
+                                const res = await deleteWithAuth("/user/user-data/");
+                                if (res)
+                                    alert("Account deleted");
+                                else
+                                    alert("Failed to delete account");
+
+                                goPath("/")
+                            }}>Delete Account and all associated Data
+                            </button>
+                            <br/>
+                        </> : ""}
+
+                        <button onClick={() => {
+                            if (confirm("Are you sure?")) {
+                                LsReset();
+                                goPath("/")
+                            }
+                        }}>Delete all Data in LocalStorage
                         </button>
                         <br/>
-                    </> : ""}
-
-                    {(GlobalStuff.loggedIn) ? <>
-                        <button onClick={async () => {
-                            alert("Not implemented")
-                        }}>Delete Account and all associated Data
-                        </button>
-                        <br/>
-                    </> : ""}
-
-                    <button onClick={() => {
-                        if (confirm("Are you sure?")) {
-                            LsReset();
-                            goPath("/")
-                        }
-                    }}>Delete all Data in LocalStorage
-                    </button>
-                    <br/>
+                    </div>
                 </div>
             </div>
         }

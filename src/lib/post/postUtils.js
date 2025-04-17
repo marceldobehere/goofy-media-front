@@ -1,9 +1,8 @@
 'use client';
 
-import {getWithAuth} from "@/lib/req";
+import {deleteWithAuth, getWithAuth} from "@/lib/req";
 import {verifyObj} from "@/lib/rsa";
 import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
-import {GlobalStuff} from "@/lib/globalStateStuff";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
 import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
@@ -160,7 +159,7 @@ async function loadPosts(url, headers) {
 export async function loadPost(uuid) {
     let res = await getWithAuth(`/user/post/uuid/${encodeURIComponent(uuid)}`);
     if (res === undefined)
-        return alert("Failed to get post");
+        return; // alert("Failed to get post");
 
     const post = await transformPostObjArr([res]);
     if (post === undefined)
@@ -169,12 +168,20 @@ export async function loadPost(uuid) {
     return post[0];
 }
 
+export async function deletePost(uuid) {
+    let res = await deleteWithAuth(`/user/post/uuid/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return false;
+
+    return true;
+}
+
 export async function getSimilarTags(tag) {
     if (tag == "")
         return [];
     tag = tag.toLowerCase();
 
-    let res = await getWithAuth(`/user/post/tags/like/${tag}`);
+    let res = await getWithAuth(`/user/post/tags/like/${encodeURIComponent(tag)}`);
     if (res === undefined)
         return alert("Failed to get similar tags");
 

@@ -2,9 +2,8 @@
     font-size: 1.5rem;
     padding: 0.2rem;
     display: block;
-    margin: auto;
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin: 1rem 0 0.5rem 0;
 }
 
 .SearchInput {
@@ -25,9 +24,9 @@
 }
 
 .TagDiv {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: var(--text-gray);
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.1rem;
 }
 
 .TagDiv a {
@@ -35,3 +34,56 @@
     color: var(--foreground);
 }
 
+.SearchResBox {
+    margin: 0.5rem 0 0.5rem 0;
+    min-height: 2rem;
+    max-height: 15rem;
+    overflow: auto;
+}
+
+.LinkDiv {
+    font-size: 1.2rem;
+    color: var(--text-gray);
+    margin-bottom: 0.1rem;
+}
+
+.LinkDiv a {
+    text-decoration: none;
+    color: var(--foreground);
+    font-weight: bold;
+}
+
+.LinkDiv span {
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: normal;
+}
+
+
+@media (max-width: 900px) {
+    .SearchLabel {
+        font-size: 1.3rem;
+        padding: 0.1rem;
+        margin: 0.5rem 0 0 0;
+    }
+
+    .SearchResBox {
+        margin: 0.5rem 0 1rem 0;
+        min-height: 2rem;
+        max-height: 8rem;
+    }
+
+    .SearchInput {
+        font-size: 1rem;
+    }
+
+    .TagDiv {
+        font-size: 1rem;
+        margin-bottom: 0.1rem;
+    }
+
+    .LinkDiv {
+        font-size: 1.1rem;
+        margin-bottom: 0.1rem;
+    }
+}

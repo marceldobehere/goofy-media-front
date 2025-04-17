@@ -73,3 +73,15 @@
 .PostTags span {
     margin-right: 0.5rem;
 }
+
+.PostEntryFooter button {
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    border: 2px solid var(--text-gray);
+    margin: 0 0 0 1rem;
+}
+
+@media (max-width: 900px) {
+    .PostEntryFooter button {
+        margin: 0 0 0 0.6rem;
+    }
+}
