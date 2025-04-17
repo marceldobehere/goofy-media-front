@@ -201,6 +201,8 @@ Here are some of the implemented features:
 * [X] Post deletion
 * [X] Comment deletion
 * [X] Delete user and all user data
+* [X] Short Links including metadata for embedding on other sites
+* [X] Seeing who liked your post
 
 ### TODOs
 Here are some of my TODOs:
@@ -212,11 +214,11 @@ Here are some of my TODOs:
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback
+* [X] Improve Seeing who liked your post
 * [ ] Bug reporting (Unsure if Registered Only or also Guests)
 * [ ] Improve Custom CSS and add some premade themes to choose from
 * [ ] Automatic Daily/Weekly/Monthly Backups with a max amount of backups
 * [ ] Clicking on embedded media opens it in a new tab
-* [ ] Seeing who liked your post
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
@@ -226,7 +228,6 @@ Here are some of my TODOs:
 * [ ] Probably Keeping the tag order correctly (currently auto sorted alphabetically)
 * [ ] Blocking System (Blocking, Seeing blocked users, unblocking, automatic filtering of content from blocked users)
 * [ ] Improved Commenting UI
-* [ ] Short Links including metadata for embedding on other sites
 * [ ] Basic Admin Moderation (deleting posts, comments, users) (All actions will be signed and stored in a different table or something)
 * [ ] Reporting System
     * [ ] Post reporting

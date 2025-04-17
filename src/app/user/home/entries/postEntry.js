@@ -6,10 +6,11 @@ import {useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
-import {isPostLiked, likePost, unlikePost} from "@/lib/likes/likeUtils";
+import {getUsersThatLikedPost, isPostLiked, likePost, unlikePost} from "@/lib/likes/likeUtils";
 import {CoolCache} from "@/lib/coolCache";
 import {usePathname} from "next/navigation";
 import {deletePost} from "@/lib/post/postUtils";
+import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -154,6 +155,30 @@ export default function PostEntry({post}) {
 
                 <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
                 </button>
+
+                {post.author == GlobalStuff.userId ?
+                    <button onClick={async () => {
+                        const users = await getUsersThatLikedPost(post.uuid);
+                        if (users == undefined)
+                            return alert("Failed to get users!");
+
+                        if (users.length == 0)
+                            return alert("No one has liked your post yet :(");
+
+                        const userArr = [];
+                        for (let userId of users) {
+                            const displayName = await getDisplayNameFromUserId(userId);
+                            if (displayName == undefined || displayName == "")
+                                userArr.push(` - @${userId}`);
+                            else
+                                userArr.push(` - ${displayName} (@${userId})`);
+                        }
+
+                        const userStr = "Users that liked your post: \n" + userArr.join("\n");
+                        alert(userStr);
+                    }}>
+                        Liked by
+                    </button> : <></>}
 
                 {canDelete ?
                     <button onClick={async () => {

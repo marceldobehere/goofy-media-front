@@ -53,6 +53,15 @@ export async function isPostLiked(uuid) {
     return res.liked;
 }
 
+export async function getUsersThatLikedPost(uuid) {
+    const res = await getWithAuth(`/user/likes/post/likes/${encodeURIComponent(uuid)}`);
+    if (res === undefined)
+        return undefined;
+
+    return res;
+
+}
+
 export async function getLikedPosts(pageLimit, page) {
     const [limit, pageNum] = getPageLimitAndPage(pageLimit, page);
 
