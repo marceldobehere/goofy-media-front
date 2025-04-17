@@ -5,12 +5,13 @@ import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {useState} from "react";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth, putWithAuth, rawPostWithAuth} from "@/lib/req";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {uploadData} from "@/lib/fileUtils";
 import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getSimilarTags} from "@/lib/post/postUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -19,6 +20,8 @@ export default function Home() {
     const [tagStr, setTagStr] = useState("");
     const [showEdit, setShowEdit] = useState(true);
     const [displayName, setDisplayName] = useState();
+    const [tagSearchRes, setTagSearchRes] = useState(undefined);
+    const [tagSearchHide, setTagSearchHide] = useState(true);
 
 
     useGlobalState(pathName, true, false, async () => {
@@ -169,9 +172,63 @@ export default function Home() {
                       }}></textarea>
 
             <p className={"cont-inp-header"}>Tags</p>
-            <input placeholder={"cool, post, amazing"} value={tagStr} className={"cont-inp"}
-                   onChange={(e) => {
+            <div className={styles.TagSearchList} style={{display: (tagSearchRes && !tagSearchHide) ? "block" : "none"}}>
+                <div>
+                    <ul>
+                        {(tagSearchRes || []).map((tag, idx) => (
+                            <li key={idx}>
+                                <div key={idx} className={styles.TagDiv}>
+                                    <a onClick={() => {
+                                        const tags = tagStr.split(",");
+                                        if (tags.length < 1)
+                                            tags.push("");
+                                        tags[tags.length - 1] = tag.tag;
+                                        for (let i = 0; i < tags.length; i++) {
+                                            tags[i] = tags[i].trim();
+                                            if (tags[i] === "") {
+                                                tags.splice(i, 1);
+                                                i--;
+                                            }
+                                        }
+                                        setTagStr(tags.join(", ") + ", ");
+                                        setTagSearchRes(undefined);
+
+                                        const elem = document.getElementById("tagListYes");
+                                        if (elem)
+                                            elem.focus();
+                                    }}>#{tag.tag}</a> ({tag.count})
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+            <input id={"tagListYes"} placeholder={"cool, post, amazing"} value={tagStr} className={"cont-inp"}
+                   onBlur={(e) => {
+                       setTimeout(() => {
+                           setTagSearchHide(true);
+                       }, 150);
+                   }}
+                   onFocus={(e) => {
+                       setTagSearchHide(false);
+                       setTimeout(() => {
+                           setTagSearchHide(false);
+                       }, 200);
+                   }}
+                   onChange={async (e) => {
                        setTagStr(e.target.value);
+
+                       const tags = e.target.value.split(",");
+                       if (tags.length < 1)
+                           tags.push("");
+
+                       const lastTag = tags[tags.length - 1].trim();
+                       if (lastTag.length > 0) {
+                           const tags = await getSimilarTags(lastTag);
+                           setTagSearchRes(tags)
+                       } else {
+                           setTagSearchRes(undefined);
+                       }
                    }} onKeyUp={(e) => {
                 if (e.key === 'Enter') {
                     attemptPost();
@@ -193,10 +250,13 @@ export default function Home() {
                             onClick={attemptPost}>Post
                     </button>
                 </div>
+                <br/>
                 <a style={{textAlign: "center", display: "block", margin: "auto", padding: "5px 10px 5px 10px"}}
                    href={"https://github.com/marceldobehere/goofy-media-front?tab=readme-ov-file#styling-info"}
                    target={"_blank"}>Post Styling</a>
             </div>
+
+            <br/><br/>
         </>);
     }
 

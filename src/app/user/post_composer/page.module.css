@@ -6,3 +6,24 @@
     border: 1px solid var(--container-border);
     padding: 1rem;
 }
+
+.TagSearchList > div {
+    width: 100%;
+    height: 8rem;
+    padding: 0.5rem;
+    overflow: auto;
+    border: 1px solid var(--text-gray);
+    border-radius: 0.5rem;
+    background-color: rgba(0,0,0,0.6);
+    position: relative;
+    transform: translateY(calc(00% + 2rem));
+    display: inline-block;
+}
+
+.TagSearchList > div > ul > li {
+    margin-bottom: 0.3rem;;
+}
+
+.TagSearchList {
+    height: 0;
+}
