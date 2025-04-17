@@ -139,7 +139,7 @@ export default function Home() {
         <UnifiedMenu
             mainDivData={
                 <div className={styles.PostDiv}>
-                    <h2 id={"top"}>{(GlobalStuff.loggedIn) ? (<span>Hi, <a
+                    <h2>{(GlobalStuff.loggedIn) ? (<span>Hi, <a
                         href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
                         target={"_blank"}
                         style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>

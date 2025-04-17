@@ -128,7 +128,7 @@ export default function PostEntry({post}) {
                 event.preventDefault();
             }}>
                 {innerHTML !== undefined ?
-                    <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                    <p className={styles.PostBody} style={{isolation: "isolate"}} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
                     <p className={styles.PostBody}>{post.text}</p>}
             </div>
 

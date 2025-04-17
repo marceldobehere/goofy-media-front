@@ -67,6 +67,7 @@
     white-space: pre-line;
     padding: 0.8rem 1rem 0.5rem 1rem;
     color: var(--text-gray);
+    overflow-x: auto;
 }
 
 .PostTags span {

@@ -5,7 +5,7 @@ import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {useState} from "react";
 import {deleteWithAuth, getWithAuth, postWithAuth} from "@/lib/req";
 import Link from "next/link";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
@@ -115,10 +115,7 @@ export default function Home() {
                     <ul className={styles.CodeList}>
                         {codes.filter((code) => !code.used).map((code, i) => {
                             const admin = code.admin ? "Admin" : "User";
-                            const used = code.used ? "Used" : "Not Used";
-                            const usedBy = (code.usedBy == undefined) ? "N/A" : `@${code.usedBy}`;
-                            const createdAt = (code.createdAt == undefined) ? "N/A" : new Date(code.createdAt).toLocaleString();
-                            const usedAt = (code.usedAt == undefined) ? "N/A" : new Date(code.usedAt).toLocaleString();
+                            const createdAt = new Date(code.createdAt).toLocaleString();
                             return <li key={i}>
                                 <span className={styles.Code}>{code.code}</span> - {admin}
                                 <span className={styles.SillySpace}/>
@@ -137,10 +134,9 @@ export default function Home() {
                     <ul className={styles.CodeList}>
                         {codes.filter((code) => code.used).map((code, i) => {
                             const admin = code.admin ? "Admin" : "User";
-                            const used = code.used ? "Used" : "Not Used";
-                            const usedBy = (code.usedBy == undefined) ? "N/A" : `@${code.usedBy}`;
-                            const createdAt = (code.createdAt == undefined) ? "N/A" : new Date(code.createdAt).toLocaleString();
-                            const usedAt = (code.usedAt == undefined) ? "N/A" : new Date(code.usedAt).toLocaleString();
+                            const usedBy = <a href={`${basePath}/user/profile?userId=${encodeURIComponent(code.usedBy)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} style={{textDecoration: "none"}}>@{code.usedBy}</a>;
+                            const createdAt = new Date(code.createdAt).toLocaleString();
+                            const usedAt = new Date(code.usedAt).toLocaleString();
                             return <li key={i}>
                                 <span className={styles.Code}>{code.code}</span> - {admin}
                                 <span className={styles.SillySpace}/>

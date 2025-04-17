@@ -84,7 +84,7 @@ export async function getDisplayNameFromUserId(userId) {
 
 export async function getPublicInfoForUser(userId, inside) {
     if (userId === undefined || typeof userId !== 'string') {
-        console.error("> User ID MISSING");
+        console.info("> User ID MISSING");
         return undefined;
     }
 

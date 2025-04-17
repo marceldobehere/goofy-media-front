@@ -125,7 +125,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                         <div style={{transform: "rotateZ(90deg)"}}>{hamburger}</div> :
                         <div>{hamburger}</div>}
                 </button>
-                <h2 className={styles.NavMobileHeader}><a href={"#top"}>Goofy Media</a></h2>
+                <h2 className={styles.NavMobileHeader}><a onClick={() => {window.scrollTo(0,0)}}>Goofy Media</a></h2>
                 <span></span>
             </div>
             {showBurgerMenu ? <div className={styles.LeftNavDivMobileBody}>

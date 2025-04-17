@@ -102,6 +102,31 @@ function checkIfUrlIsInTrusted(url) {
     return false;
 }
 
+function filterPartsOut(str, filterArr, replaceArr) {
+    if (replaceArr == undefined) {
+        replaceArr = [];
+        for (let i = 0; i < filterArr.length; i++)
+            replaceArr.push("");
+    }
+
+    while (true) {
+        let changed = false;
+        for (let i = 0; i < filterArr.length; i++) {
+            let filter = filterArr[i];
+            let replace = replaceArr[i];
+            if (str.includes(filter)) {
+                str = str.replaceAll(filter, replace);
+                changed = true;
+            }
+        }
+
+        if (!changed)
+            break;
+    }
+
+    return str;
+}
+
 // Override function
 const renderer = {
     image(token) {
@@ -282,20 +307,11 @@ const renderer = {
             // console.log("Escaped Style: ", escapedStyle);
 
             // Filtering some annoying properties
-            let filteredStyle = escapedStyle
-                .replaceAll("position", "")
-                .replaceAll("url", "")
-                .replaceAll("src", "")
-                .replaceAll("data:", "")
-                .replaceAll("//", "");
-            // console.log("Filtered Style: ", filteredStyle);
-
-            if (!LocalSettings.enabledCustomPostAnimations && !window.location.href.includes("post_composer"))
-                filteredStyle = filteredStyle
-                    .replaceAll("animation", "")
-                    .replaceAll("transition", "")
-                    .replaceAll("transform", "")
-                    .replaceAll("keyframes", "");
+            const styleBaseFilter = ["position", "url", "src", "data:", "expression", "//"];
+            const styleAnimationFilter = ["animation", "transition", "keyframes"];
+            const styleFilter = (!LocalSettings.enabledCustomPostAnimations && !window.location.href.includes("post_composer")) ?
+                styleBaseFilter.concat(styleAnimationFilter) : styleBaseFilter;
+            const filteredStyle = filterPartsOut(escapedStyle, styleFilter);
 
             // Recursive parsing of inside elements
             let inbetweenHtml = inbetween;
@@ -310,7 +326,7 @@ const renderer = {
             }
             // console.log("Inbetween HTML: ", inbetweenHtml);
 
-            return `<div style="${filteredStyle};isolation: isolate !important;position: inherit !important;">${inbetweenHtml}</div>`;
+            return `<div style="${filteredStyle};*/;position: inherit !important;">${inbetweenHtml}</div>`;
         } else {
             const text2 = text
                 .replaceAll("<", "&lt;")

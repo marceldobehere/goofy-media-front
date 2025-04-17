@@ -32,13 +32,22 @@
     overflow-y: auto;
 }
 
+.PinnedPost > h3 {
+    font-size: 1.2rem;
+
+}
+
 .PinnedPost {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    font-size: 1.2rem;
     white-space: pre-line;
     max-height: 30rem;
     overflow-y: auto;
+}
+
+.PinnedPost > div{
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .FollowBtn {
@@ -48,4 +57,16 @@
     border-radius: 0.5rem;
     display: block;
     margin: auto;
+}
+
+
+@media (max-width: 900px) {
+    .Bio, .Links, .MainInfo, .PinnedPost {
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+
+    .Bio > h3, .Links > h3, .MainInfo > h3, .PinnedPost  > h3 {
+        margin-bottom: 1.3rem;
+    }
 }
