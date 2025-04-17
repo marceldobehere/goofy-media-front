@@ -156,7 +156,7 @@ export default function PostEntry({post}) {
                 <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}
                 </button>
 
-                {post.author == GlobalStuff.userId ?
+                {(post.author == GlobalStuff.userId && post.likeOverride == undefined) ?
                     <button onClick={async () => {
                         const users = await getUsersThatLikedPost(post.uuid);
                         if (users == undefined)
