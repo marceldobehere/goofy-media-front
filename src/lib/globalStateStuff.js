@@ -220,6 +220,7 @@ export async function saveGlobalStateKey(key, value) {
 }
 
 export async function logout() {
+    GlobalStuff.server = null;
     GlobalStuff.publicKey = null;
     GlobalStuff.privateKey = null;
     GlobalStuff.userId = null;
