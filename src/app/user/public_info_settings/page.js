@@ -6,7 +6,7 @@ import {goPath} from "@/lib/goPath";
 import {useState} from "react";
 import {usePathname} from "next/navigation";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
-import {getPublicInfoForUser, setPublicInfo} from "@/lib/publicInfo/publicInfoUtils";
+import {getPublicInfoForUser, setPublicInfo, uploadMediaToServer} from "@/lib/publicInfo/publicInfoUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -105,19 +105,28 @@ export default function Home() {
                     }} placeholder={"/*Custom CSS - NOT SUPPORTED YET*/"}/>
                     <br/><br/>
 
-                    <h3 style={{textAlign: "left"}}>Profile Picture</h3>
+                    <h3>Profile Picture</h3>
+                    <img src={profilePictureUrl ? profilePictureUrl : "/goofy-media-front/unknown_user.png"}></img>
                     <button onClick={async () => {
-                        alert("Not implemented yet!");
+                        const res = await uploadMediaToServer();
+                        if (res == undefined) {
+                            if (confirm("Do you want to reset the PFP?"))
+                                setProfilePictureUrl(undefined);
+                        }
+                        else {
+                            setProfilePictureUrl(res.url);
+                        }
                     }}>Upload Profile Picture
                     </button>
                     <br/><br/>
 
-                    <h3 style={{textAlign: "left"}}>Profile Banner</h3>
+                    <h3>Profile Banner</h3>
                     <button onClick={async () => {
                         alert("Not implemented yet!");
                     }}>Upload Profile Banner
                     </button>
-                    <br/><br/>
+                    <br/>
+                    <br/>
 
                     <h3 style={{textAlign: "left"}}>Pinned Post</h3>
                     <input type="text" value={(pinnedPostUuid != undefined) ? pinnedPostUuid : ""} onChange={(e) => {

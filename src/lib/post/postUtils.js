@@ -5,7 +5,7 @@ import {verifyObj} from "@/lib/rsa";
 import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
-import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getDisplayNameFromUserId, getPublicKeyFromUserId, getUserPfpFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 
@@ -120,10 +120,10 @@ export async function transformPostObjArr(postObjArr) {
             text: convertTextWithEmojis(postObj.post.text),
             author: postObj.userId,
             displayName: async () => {
-                const res = await getDisplayNameFromUserId(postObj.userId);
-                if (res === undefined)
-                    return undefined;
-                return res;
+                return await getDisplayNameFromUserId(postObj.userId);
+            },
+            pfpUrl: async () => {
+                return await getUserPfpFromUserId(postObj.userId);
             },
             createdAt: postObj.post.createdAt,
             tags: postObj.post.tags,

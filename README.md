@@ -112,7 +112,7 @@ code goes here
 
 #### Emojis
 
-Emojis like :sob: are also supported.
+Emojis like `:sob:` are also supported.
 
 
 #### Mentions
@@ -215,6 +215,7 @@ Here are some of the implemented features:
   * [X] Profile Pronouns
   * [X] Profile Links
   * [X] Pinned Post
+  * [ ] Profile Picture
 * [X] Post deletion
 * [X] Comment deletion
 * [X] Delete user and all user data
@@ -273,7 +274,6 @@ Here are some of my TODOs:
   * [ ] Post Content Warning Settings
   * [ ] Potentially hide / filter out posts with content warnings
 * [ ] Improved Public User Profile / Information
-  * [ ] Profile Picture
   * [ ] Profile Bio with Markdown
   * [ ] Profile Links with Markdown
   * [ ] Profile Custom CSS
@@ -340,7 +340,7 @@ For each new commit the actions will build the project and deploy it to the url 
 
 I used parts from goofy chat 2 and other projects so mostly my black magic code.
 
-Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help with the design.
+Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help with the design and the unknown PFP.
 
 The Favicon was made by [@NoFrootLoops](https://goofy.media/smol/user/eagre_mence768).
 

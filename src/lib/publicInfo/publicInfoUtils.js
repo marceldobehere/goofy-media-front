@@ -1,9 +1,41 @@
 'use client';
 
-import {getNoAuth, getWithAuth, postWithAuth} from "@/lib/req";
+import {getNoAuth, getWithAuth, postWithAuth, rawPostWithAuth} from "@/lib/req";
 import {signObj, verifyObj} from "@/lib/rsa";
 import {userHash} from "@/lib/cryptoUtils";
 import {CoolCache} from "@/lib/coolCache";
+import {uploadData} from "@/lib/fileUtils";
+
+
+export async function uploadMediaToServer() {
+    try {
+        let files = await uploadData();
+        if (files === undefined || files.length < 1)
+            return undefined;
+
+        const data = new FormData()
+        data.append('file', files[0]);
+
+        try {
+            let file = files[0];
+            const res = await rawPostWithAuth("/user/upload/file", data);
+            console.log("> Upload response:", res);
+            if (res == undefined)
+                return alert("Failed to upload image");
+
+            const url = res.url;
+            console.log("> Upload URL:", url);
+
+            return {filename: file.name, url: url};
+        } catch (e) {
+            console.error(e);
+            return alert("Failed to upload image");
+        }
+    } catch (e) {
+        console.error(e);
+        return undefined;
+    }
+}
 
 
 export const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
@@ -106,6 +138,51 @@ export async function getDisplayNameFromUserId(userId) {
 }
 
 
+
+export const userPfpCache = new CoolCache({localStorageKey: "USER_PFP", cacheEntryTimeout: 1000  * 60 * 30});
+export const recentlyFailedUserPfpsCache = new CoolCache({localStorageKey: "USER_PFP_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
+
+export async function getUserPfpFromUserId(userId) {
+    if (userId === undefined || typeof userId !== 'string') {
+        console.info("> User ID MISSING");
+        return undefined;
+    }
+
+    // Check if we have a cached value
+    const recentlyFailed = await recentlyFailedUserPfpsCache.get(userId);
+    if (recentlyFailed) {
+        console.info("> Recently failed to get display name for userId: ", userId);
+        return undefined;
+    }
+
+    const pfpUrl = userPfpCache.get(userId, async () => {
+        console.log("> Getting pfp for userId: ", userId);
+        const publicInfo = await getPublicInfoForUser(userId, true);
+        if (publicInfo === undefined || publicInfo.profilePictureUrl == undefined || publicInfo.profilePictureUrl == "") {
+            console.info("> Failed to request public info for userId: ", userId);
+
+            await recentlyFailedUserPfpsCache.set(userId, true);
+            console.log(recentlyFailedUserPfpsCache);
+            throw new Error("Failed to request public info");
+        }
+
+        console.log("> Got pfp for userId: ", userId, " -> ", publicInfo.profilePictureUrl);
+        await recentlyFailedUserPfpsCache.delete(userId);
+        return publicInfo.profilePictureUrl;
+    });
+
+    if (pfpUrl == undefined) {
+        console.error("> Failed to get pfp for userId: ", userId);
+        return undefined;
+    }
+
+    return pfpUrl;
+}
+
+
+
+
+
 export async function getPublicInfoForUser(userId, inside) {
     if (userId === undefined || typeof userId !== 'string') {
         console.info("> User ID MISSING");
@@ -133,6 +210,8 @@ export async function getPublicInfoForUser(userId, inside) {
     if (!inside) {
         await displayNameCache.delete(userId);
         await recentlyFailedDisplayNamesCache.delete(userId);
+        await userPfpCache.delete(userId);
+        await recentlyFailedUserPfpsCache.delete(userId);
     }
 
     return publicInfo;

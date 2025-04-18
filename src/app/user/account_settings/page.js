@@ -197,7 +197,7 @@ export default function Home() {
                                         " - Open the Server Settings and go to Integrations\n" +
                                         " - Click on WebHooks and create a new WebHook\n" +
                                         " - Give it a name and select the channel it should send messages to\n" +
-                                        " - Copy the WebHook URL and use it for one of the settings above.\n" +
+                                        " - Copy the WebHook URL and use it for one or more of the settings above.\n" +
                                         " - That was it!")
                                 }}>How to set up webhook notifications
                                 </button>

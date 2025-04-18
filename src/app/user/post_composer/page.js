@@ -9,8 +9,11 @@ import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
-import {uploadData} from "@/lib/fileUtils";
-import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {
+    getDisplayNameFromUserId,
+    getUserPfpFromUserId,
+    uploadMediaToServer
+} from "@/lib/publicInfo/publicInfoUtils";
 import {getSimilarTags} from "@/lib/post/postUtils";
 import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
@@ -21,6 +24,7 @@ export default function Home() {
     const [tagStr, setTagStr] = useState("");
     const [showEdit, setShowEdit] = useState(true);
     const [displayName, setDisplayName] = useState();
+    const [pfpUrl, setPfpUrl] = useState();
     const [tagSearchRes, setTagSearchRes] = useState(undefined);
     const [tagSearchHide, setTagSearchHide] = useState(true);
 
@@ -29,9 +33,8 @@ export default function Home() {
         if (!GlobalStuff.loggedIn)
             goPath("/guest/login")
 
-        const res = await getDisplayNameFromUserId(GlobalStuff.userId);
-        if (res != undefined)
-            setDisplayName(res);
+        setDisplayName(await getDisplayNameFromUserId(GlobalStuff.userId));
+        setPfpUrl(await getUserPfpFromUserId(GlobalStuff.userId));
     });
 
     function parseTags() {
@@ -134,29 +137,11 @@ export default function Home() {
         if (!confirm("The uploaded image will not be hosted on goofy media, instead it will be hosted on https://catbox.moe\nIt may disappear at some point or not work!\nYou can also just embed your own media from a link."))
             return;
 
-        let files = await uploadData();
-        if (files === undefined || files.length < 1)
+        const res = await uploadMediaToServer();
+        if (res == undefined)
             return;
 
-        const data = new FormData()
-        data.append('file', files[0]);
-
-        try {
-            let file = files[0];
-            const res = await rawPostWithAuth("/user/upload/file", data);
-            console.log("> Upload response:", res);
-            if (res == undefined)
-                return alert("Failed to upload image");
-
-            const url = res.url;
-            console.log("> Upload URL:", url);
-
-            setText(text + `\n![${file.name}](${url})`);
-        } catch (e) {
-            console.error(e);
-            return alert("Failed to upload image");
-        }
-
+        setText(text + `\n![${res.filename}](${res.url})`);
     }
 
     function getEdit() {
@@ -268,6 +253,7 @@ export default function Home() {
                 author: GlobalStuff.userId,
                 createdAt: Date.now(),
                 title: convertTextWithEmojis(title),
+                pfpUrl: async () => (pfpUrl),
                 text: text,
                 tags: parseTags(),
                 commentCount: 0,

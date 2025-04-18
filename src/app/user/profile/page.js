@@ -13,7 +13,7 @@ import {
     postListGoToPage
 } from "@/lib/post/postUtils";
 import {searchButtonMenu} from "@/comp/buttonMenu";
-import {goPath} from "@/lib/goPath";
+import {basePath, goPath} from "@/lib/goPath";
 import {CoolCache} from "@/lib/coolCache";
 import {followUser, isUserFollowed, unfollowUser} from "@/lib/follows/followUtils";
 import usefulStyles from "@/comp/useful.module.css";
@@ -165,6 +165,11 @@ export default function Profile() {
                 <hr/>
                 <div className={styles.MainInfo}>
                     <h3>Info</h3>
+                    <img
+                        src={profileInfo.profilePictureUrl ? profileInfo.profilePictureUrl : "/goofy-media-front/unknown_user.png"} onClick={() => {
+                            if (profileInfo.profilePictureUrl)
+                                window.open(profileInfo.profilePictureUrl, "_blank").focus();
+                    }}></img>
                     Display name: {profileInfo.displayName !== undefined ?
                     <b>{profileInfo.displayName}</b> : "N/A"}<br/>
                     Pronouns: {profileInfo.profilePronouns !== undefined ?
@@ -178,7 +183,7 @@ export default function Profile() {
                 <hr/>
                 {(profileInfo.profileLinks !== undefined && profileInfo.profileLinks.length > 0) ?
                     <>
-                        <div className={styles.Links}>
+                    <div className={styles.Links}>
                             <h3>Links</h3>
                             {profileInfo.profileLinks !== undefined ? convertTextWithEmojis(profileInfo.profileLinks) : "(No Links)"}
                         </div>

@@ -30,6 +30,7 @@ export default function PostEntry({post}) {
     const [isValid, setIsValid] = useState();
     const [isLiked, setIsLiked] = useState();
     const [displayName, setDisplayName] = useState();
+    const [pfpUrl, setPfpUrl] = useState();
     let [canDelete, setCanDelete] = useState(false);
 
     const openInNewTab = LocalSettings.openPostInNewTab;
@@ -77,14 +78,23 @@ export default function PostEntry({post}) {
             post.displayName().then((res) => {
                 setDisplayName(res);
             });
+        if (post.pfpUrl)
+            post.pfpUrl().then((res) => {
+                setPfpUrl(res);
+            });
     });
 
     useEffect(() => {
-        if (post.likeOverride)
+        if (post.likeOverride) {
             if (post.displayName)
                 post.displayName().then((res) => {
                     setDisplayName(res);
                 });
+            if (post.pfpUrl)
+                post.pfpUrl().then((res) => {
+                    setPfpUrl(res);
+                });
+        }
     }, [post]);
 
 
@@ -115,8 +125,11 @@ export default function PostEntry({post}) {
     return (
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
-                <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
-                                                            href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
+                <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+                <span className={styles.PostUserHeaderSpan}>
+                    <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
+                                                                href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
+                </span>
             </div>
             <hr/>
 
