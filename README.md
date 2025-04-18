@@ -314,6 +314,8 @@ I used parts from goofy chat 2 and other projects so mostly my black magic code.
 
 Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help with the design.
 
+The Favicon was made by [@NoFrootLoops](https://media.marceldobehere.com/smol/user/eagre_mence768).
+
 Credits for the backend can be found [here](https://github.com/marceldobehere/goofy-media-back).
 
 ### Libraries

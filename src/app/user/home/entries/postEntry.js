@@ -146,7 +146,7 @@ export default function PostEntry({post}) {
 
             <p className={styles.PostTags}>{(post.tags.length == 0) ? "No tags" : ""}{post.tags.map((tag, idx) => (
                 <span key={idx}><a
-                    href={getSearchWithTagUrl(tag.tag)}>#{tag}</a></span>))}</p>
+                    href={getSearchWithTagUrl(tag)}>#{tag}</a></span>))}</p>
 
             <hr/>
             <div className={styles.PostEntryFooter}>
