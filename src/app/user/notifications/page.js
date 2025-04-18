@@ -11,6 +11,7 @@ import NotificationEntry from "@/app/user/notifications/entries/notificationEntr
 import {getNotifications, markAllNotificationsAsRead} from "@/lib/notifications/notificationUtils";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {refreshPage} from "@/lib/goPath";
 
 
 let onceLoaded = undefined;
@@ -85,7 +86,7 @@ export default function Notifications() {
                     <button onClick={async () => {
                         if (!await markAllNotificationsAsRead())
                             return alert("Failed to mark notifications as read");
-                        loadNotifications({page: query.page})
+                        refreshPage();
                     }}>Mark all as read
                     </button>
                     &nbsp;&#32;&nbsp;
