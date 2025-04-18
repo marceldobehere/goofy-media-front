@@ -127,6 +127,9 @@ export default function PostEntry({post}) {
             <div className={"post-click-div-thing"} onClick={(event) => {
                 if (event.target == undefined || event.target.tagName === undefined || !LocalSettings.extendPostClickHitbox)
                     return;
+                if (window.location.href.includes("/user/post"))
+                    return console.info("> Ignoring Click on: /user/post");
+
                 const tagName = event.target.tagName.toLowerCase();
                 if (["a", "img", "video", "audio", "input"].includes(tagName))
                     return console.info("> Ignoring Click on: " + tagName);
