@@ -65,7 +65,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
 
     useInterval(() => {
         loadNotifs(true).then();
-    }, 20000);
+    }, 40000);
 
     useGlobalState(pathName, false, false, async () => {
         setAdmin(GlobalStuff.admin);
