@@ -105,6 +105,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         {(GlobalStuff.loggedIn) ? <><a href={getProfileUrl(GlobalStuff.userId)}>View Profile</a></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/public_info_settings"}>Public Info Settings</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link></> : ""}
+        {(!GlobalStuff.loggedIn) ? <><Link href={"/user/account_settings"}>Anonymous Feedback</Link></> : ""}
         {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
     </p>;
 

@@ -349,6 +349,12 @@ const renderer = {
                 let randomInt = getRandomIntInclusive(100000, 9999999);
                 let pingId = `chat-ping-${randomInt}-user-${ping}`;
                 waitForElm(`#${pingId}`, async (element) => {
+                    if (ping == "everyone") {
+                        element.textContent = `@everyone`;
+                        element.className = postStyles.pingEveryone;
+                        return;
+                    }
+
                     const publicKey = await getPublicKeyFromUserId(ping);
                     if (publicKey == undefined) {
                         element.textContent = `@Unknown User`;

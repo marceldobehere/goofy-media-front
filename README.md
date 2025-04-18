@@ -77,7 +77,9 @@ Specific server rules will be added but for now the most important thing is no i
 
 
 ### Styling Info
-Posts can be styled using markdown.
+Posts can be styled with several things!
+
+#### Markdown
 ```
 # Hi
 This is a *very* **cool** text.
@@ -96,6 +98,9 @@ Additionally, pictures, videos and audios can be embedded using `![alt text](url
 
 Embedded media can autoload depending on the user settings. Autoloading is off by default for security reasons.
 
+
+#### Syntax Highlighting
+
 There is also syntax highlighting for code blocks:
 ```
 Replace all the ' with `
@@ -104,8 +109,18 @@ code goes here
 '''
 ```
 
+
+#### Emojis
+
 Emojis like :sob: are also supported.
 
+
+#### Mentions
+
+You can mention users by using `@handle` and they will be notified.
+
+
+#### Custom Cursed CSSS
 
 Custom css can also be added for blocks by using the following `<style "...">...</style>` "element":
 ```html
@@ -146,6 +161,7 @@ done
 ![](https://www.dropbox.com/scl/fi/hrl93hfm1p6nkb4bvdkgh/I_like_my_background_empty_bruh.png?rlkey=fo310ev7gvj9wn3ynvenrexqf&st=00f25wk3&raw=1)
 </style></style></style></style></style>
 ```
+
 
 ## Features
 Goofy Media is still a WIP and far from done but it has enough features to be usable currently.
@@ -207,6 +223,10 @@ Here are some of the implemented features:
 * [X] Showing Display Names for Following and Followers
 * [X] Converting :emojis: in Posts and comments
 * [X] Clicking on embedded media opens it in a new tab
+* [X] Optional Anonymous Feedback
+* [X] Admins mentioning @everyone
+* [X] Basic Notifications using Webhooks
+
 
 ### TODOs
 Here are some of my TODOs:
@@ -219,11 +239,11 @@ Here are some of my TODOs:
     * [ ] (Inside the post composer) check out how you can add images to your post
   * [ ] Check out the Local Settings (bc you can change stuff there)
 * [ ] Better Post Style Guide
+* [ ] Improved Notifications using Webhooks
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
 * [ ] Getting the raw post body (Either a button or a setting)
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
-* [ ] Optional Anonymous Feedback
 * [ ] Improve Seeing who liked your post
 * [ ] Bug reporting (Unsure if Registered Only or also Guests)
 * [ ] Improve Custom CSS and add some premade themes to choose from

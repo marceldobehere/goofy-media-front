@@ -9,8 +9,9 @@ import {LocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
 import {getAllAvailableClassNames} from "@/lib/customCssConverter";
 
 import QRCodeGen from "@/lib/qrgen/qrcodegen";
-import {deleteWithAuth, postWithAuth} from "@/lib/req";
+import {deleteWithAuth, postNoAuth, postWithAuth} from "@/lib/req";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {registerUserWebhook} from "@/lib/notifications/notificationUtils";
 
 const QrCode = QRCodeGen.QrCode;
 
@@ -86,69 +87,127 @@ export default function Home() {
         mainDivData={
             <div>
                 <div className={styles.MainDiv}>
-                    <h1>Account Settings</h1>
+                    <div className={styles.FirstSection}>
+                        <h1>Account Settings</h1>
 
-                    Generated Handle: @<span>{userId}</span><br/>
-                    <br/>
+                        Generated Handle: @<span>{userId}</span><br/>
+                        <br/>
 
-                    <h3 style={{textAlign: "left"}}>Settings</h3>
-                    Auto Load Media: &nbsp;
-                    <input type="checkbox" checked={autoLoadMedia} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("autoLoadMedia", yes);
-                        setAutoLoadMedia(yes);
-                    }}/><br/>
+                        <h3 style={{textAlign: "left"}}>Settings</h3>
+                        Auto Load Media: &nbsp;
+                        <input type="checkbox" checked={autoLoadMedia} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("autoLoadMedia", yes);
+                            setAutoLoadMedia(yes);
+                        }}/><br/>
 
-                    Auto Load Media From Trusted Urls: &nbsp;
-                    <input type="checkbox" checked={autoLoadMediaFromTrustedUrls} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("autoLoadMediaFromTrustedUrls", yes);
-                        setAutoLoadMediaFromTrustedUrls(yes);
-                    }}/><br/>
+                        Auto Load Media From Trusted Urls: &nbsp;
+                        <input type="checkbox" checked={autoLoadMediaFromTrustedUrls} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("autoLoadMediaFromTrustedUrls", yes);
+                            setAutoLoadMediaFromTrustedUrls(yes);
+                        }}/><br/>
 
-                    Trusted Auto Load Media URLs: &nbsp;
-                    <input className={styles.TrustedUrlsInput} type="text" value={trustedAutoLoadMediaUrls.join(",")} onChange={async (e) => {
-                        const urls = e.target.value.split(",").map(url => url.trim());
-                        setTrustedAutoLoadMediaUrls(urls);
-                    }} placeholder={"Comma separated list of URLs"}/>
-                    <button className={styles.TrustedUrlsInputButton} onClick={async () => {
-                        const urls = document.querySelector(`.${styles.TrustedUrlsInput}`).value.split(",").map(url => url.trim());
-                        await saveLocalSettingsKey("trustedAutoLoadMediaUrls", urls);
-                        setTrustedAutoLoadMediaUrls(urls);
-                    }}>Save</button>
-                    <br/>
+                        Trusted Auto Load Media URLs: &nbsp;
+                        <input className={styles.TrustedUrlsInput} type="text"
+                               value={trustedAutoLoadMediaUrls.join(",")}
+                               onChange={async (e) => {
+                                   const urls = e.target.value.split(",").map(url => url.trim());
+                                   setTrustedAutoLoadMediaUrls(urls);
+                               }} placeholder={"Comma separated list of URLs"}/>
+                        <button className={styles.TrustedUrlsInputButton} onClick={async () => {
+                            const urls = document.querySelector(`.${styles.TrustedUrlsInput}`).value.split(",").map(url => url.trim());
+                            await saveLocalSettingsKey("trustedAutoLoadMediaUrls", urls);
+                            setTrustedAutoLoadMediaUrls(urls);
+                        }}>Save
+                        </button>
+                        <br/>
 
-                    Enable Custom Post CSS: &nbsp;
-                    <input type="checkbox" checked={enabledCustomPostCss} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("enabledCustomPostCss", yes);
-                        setEnabledCustomPostCss(yes);
-                    }}/><br/>
+                        Enable Custom Post CSS: &nbsp;
+                        <input type="checkbox" checked={enabledCustomPostCss} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("enabledCustomPostCss", yes);
+                            setEnabledCustomPostCss(yes);
+                        }}/><br/>
 
-                    Enable Custom Post Animations: &nbsp;
-                    <input type="checkbox" checked={enabledCustomPostAnimations} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("enabledCustomPostAnimations", yes);
-                        setEnabledCustomPostAnimations(yes);
-                    }}/><br/>
+                        Enable Custom Post Animations: &nbsp;
+                        <input type="checkbox" checked={enabledCustomPostAnimations} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("enabledCustomPostAnimations", yes);
+                            setEnabledCustomPostAnimations(yes);
+                        }}/><br/>
 
-                    Open Post in new Tab: &nbsp;
-                    <input type="checkbox" checked={openPostNewTab} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("openPostInNewTab", yes);
-                        setOpenPostNewTab(yes);
-                    }}/><br/>
+                        Open Post in new Tab: &nbsp;
+                        <input type="checkbox" checked={openPostNewTab} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("openPostInNewTab", yes);
+                            setOpenPostNewTab(yes);
+                        }}/><br/>
 
-                    Click anywhere on post to open it: &nbsp;
-                    <input type="checkbox" checked={extendPostHitbox} onChange={async (e) => {
-                        const yes = e.target.checked;
-                        await saveLocalSettingsKey("extendPostClickHitbox", yes);
-                        setExtendPostHitbox(yes);
-                    }}/><br/>
+                        Click anywhere on post to open it: &nbsp;
+                        <input type="checkbox" checked={extendPostHitbox} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("extendPostClickHitbox", yes);
+                            setExtendPostHitbox(yes);
+                        }}/><br/>
 
-                    <br/><br/>
-                    <hr/>
-                    <br/><br/>
+                        {GlobalStuff.loggedIn ?
+                            <>
+                                <br/>
+                                <hr/>
+                                <br/>
+                                <h3 style={{textAlign: "left"}}>Notification Settings</h3>
+
+                                General Notifications: &nbsp;
+                                <button onClick={async () => {
+                                    const url = prompt("Enter Webhook URL: (Leave empty to remove notifications)")
+                                    if (url == undefined)
+                                        return;
+                                    const res = await registerUserWebhook("all-notifications", url);
+                                    if (res) {
+                                        alert((url == "" ? "Removed" : "Set") + " webhook for all notifications");
+                                    } else {
+                                        alert("Failed to set webhook!");
+                                    }
+                                }}>Set
+                                </button>
+                                <br/>
+
+                                New Posts from people you follow: &nbsp;
+                                <button onClick={async () => {
+                                    const url = prompt("Enter Webhook URL: (Leave empty to remove notifications)")
+                                    if (url == undefined)
+                                        return;
+                                    const res = await registerUserWebhook("new-post-in-feed", url);
+                                    if (res) {
+                                        alert((url == "" ? "Removed" : "Set") + " webhook for new post notifications");
+                                    } else {
+                                        alert("Failed to set webhook!");
+                                    }
+                                }}>Set
+                                </button>
+                                <br/>
+
+
+                                <br/><br/>
+                                <button onClick={() => {
+                                    alert("To set up webhook notifications you need to do the following:\n" +
+                                        " - Create a Discord server (Or use one you own)\n" +
+                                        " - Create one or more channels for your notifications to get sent to\n" +
+                                        " - Open the Server Settings and go to Integrations\n" +
+                                        " - Click on WebHooks and create a new WebHook\n" +
+                                        " - Give it a name and select the channel it should send messages to\n" +
+                                        " - Copy the WebHook URL and use it for one of the settings above.\n" +
+                                        " - That was it!")
+                                }}>How to set up webhook notifications
+                                </button>
+                            </> : <></>}
+
+
+                        <br/><br/>
+                        <hr/>
+                        <br/><br/>
+                    </div>
 
                     <h3>Custom CSS</h3>
                     <textarea className={styles.CssTextArea} value={customCss}
@@ -212,30 +271,30 @@ export default function Home() {
                     <br/>
                     <br/>
 
-                    {(GlobalStuff.loggedIn) ? <>
-                        <h3>Feedback</h3>
-                        <div style={{margin: "auto", textAlign: "center"}}>
-                            <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
-                            <button onClick={async () => {
-                                const feedback = document.getElementById("feedback-textarea");
-                                const msg = feedback.value;
-                                if (msg == "") {
-                                    alert("Feedback cannot be empty");
-                                    return;
-                                }
+                    <h3>{GlobalStuff.loggedIn ? "" : "Anonymous "}Feedback</h3>
+                    <div style={{margin: "auto", textAlign: "center"}}>
+                        <textarea className={styles.FeedbackTextArea} id={"feedback-textarea"}></textarea>
+                        <button onClick={async () => {
+                            const feedback = document.getElementById("feedback-textarea");
+                            const msg = feedback.value;
+                            if (msg == "") {
+                                alert("Feedback cannot be empty");
+                                return;
+                            }
 
-                                const res = await postWithAuth('/user/verify/feedback-msg', {msg: msg}, undefined, true);
-                                if (res.status == 200) {
-                                    feedback.value = "";
-                                    alert("Message sent!");
-                                } else
-                                    alert("Failed to send message: " + await res.text());
-                            }}>Send Feedback
-                            </button>
-                        </div>
-                        <br/>
-                        <br/>
-                    </> : ""}
+                            const res = (GlobalStuff.loggedIn ?
+                                await postWithAuth('/user/verify/feedback-msg', {msg: msg}, undefined, true) :
+                                await postNoAuth('/guest/register/feedback-msg', {msg: msg}, undefined, true));
+                            if (res.status == 200) {
+                                feedback.value = "";
+                                alert("Message sent!");
+                            } else
+                                alert("Failed to send message: " + await res.text());
+                        }}>Send Feedback
+                        </button>
+                    </div>
+                    <br/>
+                    <br/>
 
 
                     {(GlobalStuff.loggedIn) ? <>

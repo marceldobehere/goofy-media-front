@@ -46,3 +46,21 @@ export async function getNotifications(pageLimit, page) {
         notifications.pop();
     return {notifications, isOnLastPage, isOnFirstPage};
 }
+
+export async function registerUserWebhook(type, webhookUrl) {
+    if (type === undefined || webhookUrl === undefined)
+        return false;
+
+    // check if type
+    if (type !== "all-notifications" && type !== "new-post-in-feed")
+        return false;
+
+    const res = await postWithAuth("/user/notifications/register-user-webhook", {
+        webhookService: "discord",
+        webhookUrl,
+        webhookType: type});
+    if (res === undefined)
+        return false;
+
+    return true;
+}

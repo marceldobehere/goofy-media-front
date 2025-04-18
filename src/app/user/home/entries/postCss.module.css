@@ -56,3 +56,9 @@
     cursor: not-allowed;
     color: red;
 }
+
+.pingEveryone {
+    text-decoration: none;
+    cursor: not-allowed;
+    color: orange;
+}

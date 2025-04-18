@@ -4,25 +4,28 @@ import {GlobalStuff} from "@/lib/globalStateStuff";
 import {SpinActivity} from "@/lib/spinner";
 
 
-export async function reqNoAuth(path, method, data) {
+export async function reqNoAuth(path, method, data, headers, sendRawResponse, sendRawBody) {
+    if (headers === undefined)
+        headers = {};
+
     let options = {
         method: method,
-        headers: {
-            'Content-Type': 'application/json',
-        }
+        headers: headers
     };
+
+    if (!sendRawBody)
+        options.headers['Content-Type'] = 'application/json';
     if (data) {
-        options.body = JSON.stringify(data);
+        if (sendRawBody)
+            options.body = data;
+        else
+            options.body = JSON.stringify(data);
     }
 
     let res;
     await SpinActivity(async () => {
         try {
             res = await fetch(GlobalStuff.server + path, options);
-            if (res.status !== 200 && res.status !== 201) {
-                console.info("> Failed request: ", await res.text(), res);
-                res = undefined;
-            }
         } catch (e) {
             console.info("> Failed request: ", e);
             res = undefined;
@@ -31,6 +34,14 @@ export async function reqNoAuth(path, method, data) {
 
     if (res === undefined)
         return undefined;
+
+    if (sendRawResponse)
+        return res;
+
+    if (res.status !== 200 && res.status !== 201) {
+        console.info("> Failed request: ", await res.text(), res);
+        return undefined;
+    }
 
     const text = await res.text();
     try {
@@ -68,7 +79,7 @@ export async function reqWithAuth(path, method, data, headers, sendRawResponse, 
         }
     };
     if (!sendRawBody)
-        options.headers['Content-Type'] =  'application/json';
+        options.headers['Content-Type'] = 'application/json';
     if (data) {
         if (sendRawBody)
             options.body = data;
@@ -131,4 +142,8 @@ export async function deleteWithAuth(path, headers, sendRawResponse) {
 
 export async function getNoAuth(path, headers, sendRawResponse) {
     return await reqNoAuth(path, "GET", undefined, headers, sendRawResponse, false);
+}
+
+export async function postNoAuth(path, data, headers, sendRawResponse) {
+    return await reqNoAuth(path, "POST", data, headers, sendRawResponse, false);
 }
