@@ -127,6 +127,11 @@ h2 {
   border-radius: 0.5rem;
 }
 
+.cont-btn:hover:enabled {
+  background-color: var(--nav-link-hover-background);
+  color: #ffffff;
+}
+
 .cont-inp-btn {
   display: inline-block;
   margin: 2px auto 8px auto;
@@ -134,6 +139,11 @@ h2 {
 
   border: 2px solid var(--container-border);
   border-radius: 0.5rem;
+}
+
+.cont-inp-btn:hover:enabled {
+  background-color: var(--nav-link-hover-background);
+  color: #ffffff;
 }
 
 input, button {
