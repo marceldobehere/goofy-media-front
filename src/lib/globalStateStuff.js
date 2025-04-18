@@ -226,7 +226,7 @@ export async function logout() {
     GlobalStuff.userId = null;
     GlobalStuff.loggedIn = false;
     GlobalStuff.lastCheck = null;
-    await saveGlobalState();
+    await saveGlobalState(true);
 }
 
 const ENV_LS_OFFSET = "__GOOFY_MEDIA__";
