@@ -2,15 +2,15 @@
 
 import {usePathname} from "next/navigation";
 import {onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
-import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import styles from "@/app/user/following/page.module.css";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {useState} from "react";
 import {getFollowing} from "@/lib/follows/followUtils";
-import {basePath} from "@/lib/goPath";
 import Link from "next/link";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import UserEntry from "@/app/user/followers/entries/userEntry";
 
 
 let onceLoaded = undefined;
@@ -90,10 +90,7 @@ export default function Following() {
                 <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={notifData.following}
                                compFn={(followUserId) => (
-                                   <div className={styles.UserEntry}>
-                                       <a href={`${basePath}/user/profile?userId=${encodeURIComponent(followUserId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
-                                          target={"_blank"}>@{followUserId}</a>
-                                   </div>)}
+                                   <UserEntry userEntry={{userId: followUserId, extraTextPre: "You are following"}}/>)}
                                keyFn={(followUserId) => (followUserId)}></EntryList>
                     {notifData.following.length == 0 ? <h3>No users found</h3> : ""}
                 </div>

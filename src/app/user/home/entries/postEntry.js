@@ -11,6 +11,7 @@ import {CoolCache} from "@/lib/coolCache";
 import {usePathname} from "next/navigation";
 import {deletePost} from "@/lib/post/postUtils";
 import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getPostUrl, getProfileUrl, getSearchWithTagUrl} from "@/lib/publicInfo/links";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -115,12 +116,12 @@ export default function PostEntry({post}) {
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
                 <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
-                                                            href={`${basePath}/user/profile?userId=${encodeURIComponent(post.author)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
+                                                            href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
             </div>
             <hr/>
 
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
-                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+                                                      href={getPostUrl(post.uuid)}
                                                       target={openInNewTab ? "_blank" : ""}>{post.title}</a></h3>
 
             <div className={"post-click-div-thing"} onClick={(event) => {
@@ -145,12 +146,12 @@ export default function PostEntry({post}) {
 
             <p className={styles.PostTags}>{(post.tags.length == 0) ? "No tags" : ""}{post.tags.map((tag, idx) => (
                 <span key={idx}><a
-                    href={`${basePath}/guest/search?tag=${encodeURIComponent(tag)}`}>#{tag}</a></span>))}</p>
+                    href={getSearchWithTagUrl(tag.tag)}>#{tag}</a></span>))}</p>
 
             <hr/>
             <div className={styles.PostEntryFooter}>
                 <a style={{textDecoration: "none"}}
-                   href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&scrollToComments=true`}
+                   href={`${getPostUrl(post.uuid)}&scrollToComments=true`}
                    target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
 
                 <button disabled={isLiked == undefined} onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}

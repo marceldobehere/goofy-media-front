@@ -9,6 +9,7 @@ import {GlobalStuff} from "@/lib/globalStateStuff";
 import marked from "@/lib/marked";
 import DOMPurify from "@/lib/purify";
 import {getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getProfileUrl} from "@/lib/publicInfo/links";
 let idSet = new Set();
 
 function waitForElm(selector, func) {
@@ -358,7 +359,7 @@ const renderer = {
                     const linkElement = document.createElement("a");
                     linkElement.textContent = `@${ping}`;
                     linkElement.className = (ping == GlobalStuff.userId) ? postStyles.pingSelf : postStyles.pingOther;
-                    linkElement.href = `${basePath}/user/profile?userId=${encodeURIComponent(ping)}&serverId=${encodeURIComponent(GlobalStuff.server)}`;
+                    linkElement.href = getProfileUrl(ping);
                     linkElement.target = "_blank";
                     element.replaceWith(linkElement);
                 });

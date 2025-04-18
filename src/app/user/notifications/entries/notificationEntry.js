@@ -9,6 +9,7 @@ import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {loadCommentByUuid} from "@/lib/post/commentUitls";
 import {usePathname} from "next/navigation";
 import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getPostUrl, getProfileUrl} from "@/lib/publicInfo/links";
 
 export default function NotificationEntry({notification}) {
     const pathName = usePathname();
@@ -18,20 +19,20 @@ export default function NotificationEntry({notification}) {
     const [displayName, setDisplayName] = useState(undefined);
 
     const userIdLink = <a
-        href={`${basePath}/user/profile?userId=${encodeURIComponent(notification.otherUserId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+        href={getProfileUrl(notification.otherUserId)}
         target={"_blank"} style={{textDecoration: "none", fontWeight: "bold"}}
     >{displayName ? <span>{displayName} <span style={{fontWeight:"normal"}}>(@{notification.otherUserId})</span></span> : `@${notification.otherUserId}`}</a>;
 
     const postLink = <span>
         {postTitle == undefined ? "" : "post "}
-        <a href={`${basePath}/user/post?uuid=${encodeURIComponent(notification.postUuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+        <a href={getPostUrl(notification.postUuid)}
            target={"_blank"}
            style={{textDecoration: "none", fontWeight: "bold"}}
         >{postTitle == undefined ? "post" : postTitle}</a>
     </span>;
 
     const commentLink = <a
-        href={`${basePath}/user/post?uuid=${encodeURIComponent(notification.postUuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}&markComment=${encodeURIComponent(notification.commentUuid)}`}
+        href={`${getPostUrl(notification.postUuid)}&markComment=${encodeURIComponent(notification.commentUuid)}`}
         target={"_blank"} style={{textDecoration: "none", fontWeight: "bold"}}
     >comment</a>;
 

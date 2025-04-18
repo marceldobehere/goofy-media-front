@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {basePath, goPath} from "@/lib/goPath";
 import {GlobalStuff} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
+import {getPostUrl} from "@/lib/publicInfo/links";
 
 const loadGetPostHtml = async () => {
     return (await import("@/app/user/home/entries/postProcess.js")).getPostHtml;
@@ -21,7 +22,7 @@ export default function NewsEntry({post}) {
     return (
         <div className={styles.PostEntryDiv}>
             <h3 className={styles.PostEntryHeader}><a style={{textDecoration: "none"}}
-                                                      href={`${basePath}/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} target={openInNewTab ? "_blank" : ""}>{post.title}</a>
+                                                      href={getPostUrl(post.uuid)} target={openInNewTab ? "_blank" : ""}>{post.title}</a>
             </h3>
 
             <div className={"post-click-div-thing"} onClick={(event) => {

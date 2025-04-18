@@ -2,15 +2,15 @@
 
 import {usePathname} from "next/navigation";
 import {onWindowGoBack, postListGoToPage} from "@/lib/post/postUtils";
-import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {searchButtonMenu} from "@/comp/buttonMenu";
 import styles from "@/app/user/followers/page.module.css";
 import EntryList from "@/app/user/home/entries/EntryList";
 import {useState} from "react";
 import {getFollowers, getFollowing} from "@/lib/follows/followUtils";
-import {basePath} from "@/lib/goPath";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import UserEntry from "@/app/user/followers/entries/userEntry";
 
 
 let onceLoaded = undefined;
@@ -90,12 +90,7 @@ export default function Followers() {
 
                 <div className={usefulStyles.CenterContentDiv}>
                     <EntryList elements={notifData.followers}
-                               compFn={(follower) => (
-                                   <div className={styles.UserEntry}>
-                                       <a href={`${basePath}/user/profile?userId=${encodeURIComponent(follower.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
-                                          target={"_blank"}>@{follower.userId}</a> followed you on
-                                       the {(new Date(follower.followedAt)).toLocaleDateString()}
-                                   </div>)}
+                               compFn={(follower) => (<UserEntry userEntry={{...follower, extraText: `followed you on the ${(new Date(follower.followedAt)).toLocaleDateString()}`}}/>)}
                                keyFn={(followUserId) => (followUserId.userId)}></EntryList>
                     {notifData.followers.length == 0 ? <h3>No users found</h3> : ""}
                 </div>

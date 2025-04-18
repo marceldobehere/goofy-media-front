@@ -17,6 +17,7 @@ import {searchButtonMenu} from "@/comp/buttonMenu";
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {getSimilarUsers} from "@/lib/publicInfo/publicInfoUtils";
+import {getProfileUrl, getSearchWithTagUrl} from "@/lib/publicInfo/links";
 
 let onceLoaded = undefined;
 export default function Search() {
@@ -150,7 +151,7 @@ export default function Search() {
                             {searchText.resTags.map((tag, idx) => (
                                 <li key={idx}>
                                     <div key={idx} className={styles.TagDiv}>
-                                        <a href={`${basePath}/guest/search?tag=${encodeURIComponent(tag.tag)}`}>#{tag.tag}</a> ({tag.count})
+                                        <a href={getSearchWithTagUrl(tag.tag)}>#{tag.tag}</a> ({tag.count})
                                     </div>
                                 </li>
                             ))}
@@ -163,7 +164,7 @@ export default function Search() {
                             {searchText.resUsers.map((userEntry, idx) => (
                                 <li key={idx}>
                                     <div key={idx} className={styles.LinkDiv}>
-                                        <a href={`${basePath}/user/profile?userId=${encodeURIComponent(userEntry.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>
+                                        <a href={getProfileUrl(userEntry.userId)}>
                                             {userEntry.displayName} <span>({userEntry.userId})</span>
                                         </a>
                                     </div>

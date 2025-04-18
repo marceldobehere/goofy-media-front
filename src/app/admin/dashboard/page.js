@@ -9,6 +9,7 @@ import {basePath, goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {getProfileUrl} from "@/lib/publicInfo/links";
 
 export default function Home() {
     const pathName = usePathname();
@@ -134,7 +135,7 @@ export default function Home() {
                     <ul className={styles.CodeList}>
                         {codes.filter((code) => code.used).map((code, i) => {
                             const admin = code.admin ? "Admin" : "User";
-                            const usedBy = <a href={`${basePath}/user/profile?userId=${encodeURIComponent(code.usedBy)}&serverId=${encodeURIComponent(GlobalStuff.server)}`} style={{textDecoration: "none"}}>@{code.usedBy}</a>;
+                            const usedBy = <a href={getProfileUrl(code.usedBy)} style={{textDecoration: "none"}}>@{code.usedBy}</a>;
                             const createdAt = new Date(code.createdAt).toLocaleString();
                             const usedAt = new Date(code.usedAt).toLocaleString();
                             return <li key={i}>

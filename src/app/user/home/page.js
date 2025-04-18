@@ -20,6 +20,7 @@ import {
 } from "@/lib/post/postUtils";
 import {LocalSettings, saveLocalSettingsKey} from "@/lib/localSettings";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
+import {getProfileUrl} from "@/lib/publicInfo/links";
 
 export default function Home() {
     const pathName = usePathname();
@@ -140,7 +141,7 @@ export default function Home() {
             mainDivData={
                 <div className={styles.PostDiv}>
                     <h2>{(GlobalStuff.loggedIn) ? (<span>Hi, <a
-                        href={`${basePath}/user/profile?userId=${encodeURIComponent(username)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}
+                        href={getProfileUrl(username)}
                         target={"_blank"}
                         style={{textDecoration: "none"}}>@{username}</a></span>) : "Hi, Guest"}</h2>
 

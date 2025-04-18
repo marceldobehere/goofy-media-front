@@ -9,6 +9,7 @@ import EntryList from "@/app/user/home/entries/EntryList";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import {usePathname} from "next/navigation";
+import {getProfileUrl} from "@/lib/publicInfo/links";
 
 export default function CommentEntry({comment}) {
     const pathName = usePathname();
@@ -112,7 +113,7 @@ export default function CommentEntry({comment}) {
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
             <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
-                                                        href={`${basePath}/user/profile?userId=${encodeURIComponent(comment.userId)}&serverId=${encodeURIComponent(GlobalStuff.server)}`}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+                                                        href={getProfileUrl(comment.userId)}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
         </div>
         <hr/>
 

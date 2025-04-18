@@ -203,10 +203,11 @@ Here are some of the implemented features:
 * [X] Delete user and all user data
 * [X] Short Links including metadata for embedding on other sites
 * [X] Seeing who liked your post
+* [X] Showing Display Names for Following and Followers
+
 
 ### TODOs
 Here are some of my TODOs:
-* [ ] Showing Display Names for Following and Followers
 * [ ] Better Post Style Guide
 * [ ] Converting :emojis: in Posts and comments
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
@@ -224,7 +225,7 @@ Here are some of my TODOs:
 * [ ] Post editing
 * [ ] Export all user data
 * [ ] API Rate Limiting
-* [ ] Post sharing
+* [ ] Post sharing / reposting
 * [ ] Probably Keeping the tag order correctly (currently auto sorted alphabetically)
 * [ ] Blocking System (Blocking, Seeing blocked users, unblocking, automatic filtering of content from blocked users)
 * [ ] Improved Commenting UI

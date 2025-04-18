@@ -1,8 +1,0 @@
-.UserEntry {
-    background-color: var(--post-background);
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 2px solid var(--post-border);
-    padding: 10px;
-    margin: 10px auto 10px auto;
-}

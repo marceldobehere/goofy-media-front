@@ -9,6 +9,7 @@ import {useState} from "react";
 import {usePathname} from "next/navigation";
 import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
 import {useInterval} from "@/comp/unified_layout/userInterval";
+import {getProfileUrl} from "@/lib/publicInfo/links";
 
 export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     // divSizes = {left: "20vw", main: "60vw", right: "20vw"}
@@ -101,7 +102,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link></> : ""}
         <Link href={"/user/account_settings"}>Local Settings</Link>
-        {(GlobalStuff.loggedIn) ? <><Link href={`/user/profile?userId=${encodeURIComponent(GlobalStuff.userId)}`}>View Profile</Link></> : ""}
+        {(GlobalStuff.loggedIn) ? <><a href={getProfileUrl(GlobalStuff.userId)}>View Profile</a></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/public_info_settings"}>Public Info Settings</Link></> : ""}
         {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link></> : ""}
         {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
