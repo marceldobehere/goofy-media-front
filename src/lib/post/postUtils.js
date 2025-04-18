@@ -178,9 +178,12 @@ export async function deletePost(uuid) {
 }
 
 export async function getSimilarTags(tag) {
+    tag = tag.toLowerCase();
+    tag = tag.replaceAll("#", "");
+    tag = tag.replaceAll(".", "");
+    tag = tag.trim()
     if (tag == "")
         return [];
-    tag = tag.toLowerCase();
 
     let res = await getWithAuth(`/user/post/tags/like/${encodeURIComponent(tag)}`);
     if (res === undefined)

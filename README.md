@@ -210,6 +210,14 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Helper / Assistant Thingy for new users (Will give you like tips and force you to do stuff)
+  * [ ] Basic Thingy showing up on a page
+  * [ ] Set up public info / your profile / bio
+  * [ ] Read the rules
+  * [ ] Try making a post
+    * [ ] (Inside the post composer) check out the post styling guidelines
+    * [ ] (Inside the post composer) check out how you can add images to your post
+  * [ ] Check out the Local Settings (bc you can change stuff there)
 * [ ] Better Post Style Guide
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
 * [ ] Getting the raw post body (Either a button or a setting)
