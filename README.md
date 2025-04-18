@@ -104,6 +104,7 @@ code goes here
 '''
 ```
 
+Emojis like :sob: are also supported.
 
 
 Custom css can also be added for blocks by using the following `<style "...">...</style>` "element":
@@ -204,12 +205,12 @@ Here are some of the implemented features:
 * [X] Short Links including metadata for embedding on other sites
 * [X] Seeing who liked your post
 * [X] Showing Display Names for Following and Followers
+* [X] Converting :emojis: in Posts and comments
 
 
 ### TODOs
 Here are some of my TODOs:
 * [ ] Better Post Style Guide
-* [ ] Converting :emojis: in Posts and comments
 * [ ] Improving the Post Entry Component to not do silly DOM shenanigans
 * [ ] Getting the raw post body (Either a button or a setting)
 * [ ] Some kind of privacy policy / GDPR notice
@@ -326,3 +327,4 @@ Credits for the backend can be found [here](https://github.com/marceldobehere/go
 * Purify
 * CryptoJS
 * JSQR
+* JSEmoji

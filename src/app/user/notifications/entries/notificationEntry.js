@@ -1,15 +1,15 @@
 'use client';
 
 import styles from "@/app/user/notifications/entries/notificationEntry.module.css";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {loadPost} from "@/lib/post/postUtils";
-import {basePath} from "@/lib/goPath";
-import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {loadCommentByUuid} from "@/lib/post/commentUitls";
 import {usePathname} from "next/navigation";
 import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getPostUrl, getProfileUrl} from "@/lib/publicInfo/links";
+import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 export default function NotificationEntry({notification}) {
     const pathName = usePathname();
@@ -66,7 +66,7 @@ export default function NotificationEntry({notification}) {
 
                     const comment = await loadCommentByUuid(notification.commentResponseUuid);
                     if (comment)
-                        setCommentText1(`Them> ${comment.text}`);
+                        setCommentText1(`Them> ${convertTextWithEmojis(comment.text)}`);
                 }
             } else if (notification.type == "reply") {
                 if (postTitle == undefined) {
@@ -76,11 +76,11 @@ export default function NotificationEntry({notification}) {
 
                     const comment1 = await loadCommentByUuid(notification.commentUuid);
                     if (comment1)
-                        setCommentText1(`You: ${comment1.text}`);
+                        setCommentText1(`You: ${convertTextWithEmojis(comment1.text)}`);
 
                     const comment2 = await loadCommentByUuid(notification.commentResponseUuid);
                     if (comment2)
-                        setCommentText2(`Them: ${comment2.text}`);
+                        setCommentText2(`Them: ${convertTextWithEmojis(comment2.text)}`);
                 }
             } else if (notification.type == "mention") {
                 if (postTitle == undefined) {

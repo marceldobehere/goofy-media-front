@@ -5,13 +5,14 @@ import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {useState} from "react";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth, putWithAuth, rawPostWithAuth} from "@/lib/req";
-import {basePath, goPath} from "@/lib/goPath";
+import {goPath} from "@/lib/goPath";
 import {usePathname} from "next/navigation";
 import PostEntry from "@/app/user/home/entries/postEntry";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {uploadData} from "@/lib/fileUtils";
 import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getSimilarTags} from "@/lib/post/postUtils";
+import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 export default function Home() {
     const pathName = usePathname();
@@ -266,7 +267,7 @@ export default function Home() {
                 displayName: async () => (displayName),
                 author: GlobalStuff.userId,
                 createdAt: Date.now(),
-                title: title,
+                title: convertTextWithEmojis(title),
                 text: text,
                 tags: parseTags(),
                 commentCount: 0,

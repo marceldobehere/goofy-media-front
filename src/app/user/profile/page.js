@@ -19,6 +19,7 @@ import {followUser, isUserFollowed, unfollowUser} from "@/lib/follows/followUtil
 import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {getPublicInfoForUser} from "@/lib/publicInfo/publicInfoUtils";
+import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 const followingUserCache = new CoolCache({
     localStorageKey: "IS_USER_FOLLOWED",
@@ -172,14 +173,14 @@ export default function Profile() {
                 <hr/>
                 <div className={styles.Bio}>
                     <h3>Bio</h3>
-                    {profileInfo.profileBio !== undefined ? profileInfo.profileBio : "(The User does not have a Bio)"}
+                    {profileInfo.profileBio !== undefined ? convertTextWithEmojis(profileInfo.profileBio) : "(The User does not have a Bio)"}
                 </div>
                 <hr/>
                 {(profileInfo.profileLinks !== undefined && profileInfo.profileLinks.length > 0) ?
                     <>
                         <div className={styles.Links}>
                             <h3>Links</h3>
-                            {profileInfo.profileLinks !== undefined ? profileInfo.profileLinks : "(No Links)"}
+                            {profileInfo.profileLinks !== undefined ? convertTextWithEmojis(profileInfo.profileLinks) : "(No Links)"}
                         </div>
                         <hr/>
                     </> : ""}

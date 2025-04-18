@@ -6,6 +6,7 @@ import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
 import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 
 const validPostSigCache = new CoolCache({localStorageKey: "POST_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
@@ -115,8 +116,8 @@ export async function transformPostObjArr(postObjArr) {
     let posts = [];
     for (let postObj of postObjArr) {
         let post = {
-            title: postObj.post.title,
-            text: postObj.post.text,
+            title: convertTextWithEmojis(postObj.post.title),
+            text: convertTextWithEmojis(postObj.post.text),
             author: postObj.userId,
             displayName: async () => {
                 const res = await getDisplayNameFromUserId(postObj.userId);

@@ -2,7 +2,7 @@
 
 import styles from "@/app/user/post/entries/commentEntry.module.css";
 import {useState} from "react";
-import {basePath, refreshPage} from "@/lib/goPath";
+import {refreshPage} from "@/lib/goPath";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {deleteComment, loadRepliesForComment, loadReplyCountForComment} from "@/lib/post/commentUitls";
 import EntryList from "@/app/user/home/entries/EntryList";
@@ -10,6 +10,7 @@ import {signObj} from "@/lib/rsa";
 import {postWithAuth} from "@/lib/req";
 import {usePathname} from "next/navigation";
 import {getProfileUrl} from "@/lib/publicInfo/links";
+import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
 export default function CommentEntry({comment}) {
     const pathName = usePathname();
@@ -118,7 +119,7 @@ export default function CommentEntry({comment}) {
         <hr/>
 
         <div className={styles.CommentBody}>
-            {comment.text}
+            {convertTextWithEmojis(comment.text)}
         </div>
 
         <hr style={{marginBottom: "10px"}}/>
