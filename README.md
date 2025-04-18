@@ -206,7 +206,7 @@ Here are some of the implemented features:
 * [X] Seeing who liked your post
 * [X] Showing Display Names for Following and Followers
 * [X] Converting :emojis: in Posts and comments
-
+* [X] Clicking on embedded media opens it in a new tab
 
 ### TODOs
 Here are some of my TODOs:
@@ -216,11 +216,10 @@ Here are some of my TODOs:
 * [ ] Some kind of privacy policy / GDPR notice
 * [ ] Password rules for registration (enforced by the client)
 * [ ] Optional Anonymous Feedback
-* [X] Improve Seeing who liked your post
+* [ ] Improve Seeing who liked your post
 * [ ] Bug reporting (Unsure if Registered Only or also Guests)
 * [ ] Improve Custom CSS and add some premade themes to choose from
 * [ ] Automatic Daily/Weekly/Monthly Backups with a max amount of backups
-* [ ] Clicking on embedded media opens it in a new tab
 * [ ] Listing most common/used tags? (Maybe 24h, a week, a month or all time)
 * [ ] Bookmarking Tags (Bookmarking, Unbookmarking, showing bookmarked tags, Feed for bookmarked tags)
 * [ ] Post editing
