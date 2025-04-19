@@ -96,7 +96,7 @@ export async function getPublicKeyFromUserId(userId) {
         return undefined;
     }
 
-    const publicKey = publicKeyCache.get(userId, async () => {
+    const publicKey = await publicKeyCache.get(userId, async () => {
         console.log("> Getting public key for userId: ", userId);
         const res = await getWithAuth(`/user/user-data/${userId}/public-key`);
         if (res === undefined || res.publicKey === undefined) {
@@ -112,12 +112,12 @@ export async function getPublicKeyFromUserId(userId) {
         }
 
         console.log("> Got public key for userId: ", userId, " -> ", res.publicKey);
-
         return res.publicKey;
     });
 
-    if (publicKey == undefined) {
-        console.error("> Failed to get public key for userId: ", userId);
+    if (publicKey == undefined || typeof publicKey !== "string" || publicKey.length < 1) {
+        console.error("> Failed to get public key for userId: ", userId, publicKey);
+        await publicKeyCache.delete(userId);
         return undefined;
     }
 
