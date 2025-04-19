@@ -42,7 +42,23 @@ async function assistantClicked() {
     setBodyContent(`
         <h1>Hello</h1><br>
         This will be the assistant!<br>It will provide information on new features and help new users.<br><br>
-        It is still WIP, so don't worry about it <i>for now</i>
+        It is still WIP, so don't worry about it <i>for now</i><br><br>
+        
+        This will be dynamic and stuff later, but for now here are some of the things you should do, if you haven't:<br><br>
+        <ul style="margin-left: 1rem;">
+            <li>Check out the Rules in the Github Repository</li>
+            <li>Maybe Register if you want to</li>
+            <li>Set up your Profile in the Profile Settings</li>
+            <li>Check out the Local Settings for any interesting settings</li>
+            <li>Maybe Set up Discord Notifications in the Local Settings</li>
+            <li>Take a look at the Post Composer and look through the Styling Infos</li>
+            <li>Make your first Post!</li>
+            <li>Look through the Global Feed or maybe Search for something</li>
+            <li>Force your friends to try it lol</li>
+        </ul>
+        <br><br>
+        
+        That's about it for the assistant right now xd
         
     `);
     toggleBodyVis();
