@@ -16,7 +16,6 @@ If you want to register an account, just send me a message on discord or reach o
 
 
 
-
 ## General Infos
 
 ### Security
