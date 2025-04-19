@@ -218,7 +218,7 @@ Here are some of the implemented features:
 * [X] Post deletion
 * [X] Comment deletion
 * [X] Delete user and all user data
-* [X] Short Links including metadata for embedding on other sites
+* [X] Short Links including metadata for embedding on other sites using OpenGraph
 * [X] Seeing who liked your post
 * [X] Showing Display Names for Following and Followers
 * [X] Converting :emojis: in Posts and comments
@@ -230,6 +230,29 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Less Margin on the Post Composer for mobile users
+* [ ] Fixing the bottom part of a post on mobile
+* [ ] Improving the Navbar with a separator
+* [ ] Resizable Post Preview
+* [ ] Navbar with Icons
+* [ ] Make Navbar collapsible on desktop
+* [ ] Potentially Comment Previews on the homepage
+* [ ] Unknown Embed Links will be treated as File Links
+* [ ] The ability to export your keypair as a file 
+* [ ] The ability to change your password
+* [ ] Warning about the handle not being changeable
+* [ ] Easy way to regenerate the handle when registering + Confirm
+* [ ] Silly Font for Header
+* [ ] Showing Profile Pictures for Notifications, Followers and Following
+* [ ] Drag and Drop Media into the Post Composer
+* [ ] Rename Add Img to Add Media
+* [ ] Documenting the CSS vars for custom css
+* [ ] Adding all important classes for the custom css
+* [ ] Setting to open less stuff in a new tab
+* [ ] Better Share Post Button
+* [ ] Helper add an entry for sharing your post
+* [ ] Ability to post a post without it being in the global feed
+* [ ] Asking for feedback after having used the site for a while
 * [ ] Helper / Assistant Thingy for new users (Will give you like tips and force you to do stuff)
   * [X] Basic Thingy showing up on a page
   * [ ] Set up public info / your profile / bio
@@ -313,6 +336,10 @@ Here are some of my TODOs:
 * [ ] Live Notification polling using WS
 * [ ] Scanning QR Codes with the camera to log in
 * [ ] Potentially adding tag grouping?
+* [ ] Some form of user verification (like a badge or something)
+* [ ] Logging Register Code Requests + Feedback + Anonymous Feedback in the DB for Admins
+* [ ] Adding a way to contact the server owner (like a contact form or something)
+* 
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching
 * [ ] Improve Credits
