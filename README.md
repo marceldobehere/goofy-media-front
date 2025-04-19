@@ -343,6 +343,8 @@ Also thanks for [@PossiblyExo](https://github.com/PossiblyExo) for some help wit
 
 The Favicon was made by [@NoFrootLoops](https://goofy.media/smol/user/eagre_mence768).
 
+Currently using https://catbox.moe for image uploads.
+
 Credits for the backend can be found [here](https://github.com/marceldobehere/goofy-media-back).
 
 ### Libraries
@@ -356,3 +358,4 @@ Credits for the backend can be found [here](https://github.com/marceldobehere/go
 * CryptoJS
 * JSQR
 * JSEmoji
+* Piexifjs

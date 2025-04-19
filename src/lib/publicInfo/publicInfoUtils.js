@@ -5,6 +5,19 @@ import {signObj, verifyObj} from "@/lib/rsa";
 import {userHash} from "@/lib/cryptoUtils";
 import {CoolCache} from "@/lib/coolCache";
 import {uploadData} from "@/lib/fileUtils";
+import piexif from "@/lib/piexif/piexif"
+
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[arr.length - 1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+}
 
 
 export async function uploadMediaToServer() {
@@ -14,10 +27,48 @@ export async function uploadMediaToServer() {
             return undefined;
 
         const data = new FormData()
-        data.append('file', files[0]);
 
         try {
             let file = files[0];
+            console.log(file);
+
+            const reader = new FileReader();
+            const dataPromise = new Promise((res, rej) => {
+                reader.onload = function(e) {
+                    // read EXIF data and dump
+                    try {
+                        const exif = piexif.load(e.target.result);
+                        console.log(exif);
+
+                        // remove EXIF data
+                        const newData = piexif.remove(e.target.result);
+                        // console.log(newData);
+
+                        // convert to file
+                        const newFile = dataURLtoFile(newData, file.name);
+
+                        res(newFile);
+                    } catch (e) {
+                        console.info("Failed to read EXIF data: ", e);
+                        res(file);
+                    }
+                };
+                reader.onerror = function(e) {
+                    console.info("Failed to read file: ", e);
+                    rej(e);
+                };
+            })
+            reader.readAsDataURL(file);
+
+            try {
+                file = await dataPromise;
+            } catch (e) {
+                console.error("Failed to read file: ", e);
+            }
+
+            data.append('file', file);
+            console.log("> File: ", file);
+
             const res = await rawPostWithAuth("/user/upload/file", data);
             console.log("> Upload response:", res);
             if (res == undefined)
