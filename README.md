@@ -12,7 +12,7 @@ If you want to register an account, just send me a message on discord or reach o
 
 ![index](./imgs/index.png)
 
-![home](./imgs/home.png)
+![home](./imgs/home_screen.png)
 
 
 
