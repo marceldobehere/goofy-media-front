@@ -347,6 +347,8 @@ export default function Home() {
                                 else
                                     alert("Failed to delete account");
 
+                                await logout();
+
                                 goPath("/")
                             }}>Delete Account and all associated Data
                             </button>
