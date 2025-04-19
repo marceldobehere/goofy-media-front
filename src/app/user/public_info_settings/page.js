@@ -68,7 +68,7 @@ export default function Home() {
         mainDivData={
             <div>
                 <div className={styles.MainDiv}>
-                    <h1>Public Info Settings</h1>
+                    <h1>Public Profile Settings</h1>
 
                     Generated Handle: @<span>{userId}</span><br/>
                     <br/>

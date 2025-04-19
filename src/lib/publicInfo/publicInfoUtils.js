@@ -148,7 +148,7 @@ export async function getSimilarUsers(query) {
 
 
 
-export const displayNameCache = new CoolCache({localStorageKey: "DISPLAY_NAMES", cacheEntryTimeout: 1000  * 60 * 30});
+export const displayNameCache = new CoolCache({localStorageKey: "DISPLAY_NAMES", cacheEntryTimeout: 1000  * 60 * 60 * 12});
 export const recentlyFailedDisplayNamesCache = new CoolCache({localStorageKey: "DISPLAY_NAMES_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
 
 export async function getDisplayNameFromUserId(userId) {
@@ -190,7 +190,7 @@ export async function getDisplayNameFromUserId(userId) {
 
 
 
-export const userPfpCache = new CoolCache({localStorageKey: "USER_PFP", cacheEntryTimeout: 1000  * 60 * 30});
+export const userPfpCache = new CoolCache({localStorageKey: "USER_PFP", cacheEntryTimeout: 1000  * 60 * 60 * 12});
 export const recentlyFailedUserPfpsCache = new CoolCache({localStorageKey: "USER_PFP_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
 
 export async function getUserPfpFromUserId(userId) {

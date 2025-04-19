@@ -18,6 +18,7 @@ export default function CommentEntry({comment}) {
     const [replies, setReplies] = useState(undefined);
     const [replyCount, setReplyCount] = useState(comment.replyCount);
     const [displayName, setDisplayName] = useState();
+    const [pfpUrl, setPfpUrl] = useState();
     let [canDelete, setCanDelete] = useState(false);
 
     useGlobalState(pathName, false, false, async () => {
@@ -36,6 +37,12 @@ export default function CommentEntry({comment}) {
         if (comment.displayName)
             comment.displayName().then((res) => {
                 setDisplayName(res);
+            });
+
+    if (pfpUrl == undefined)
+        if (comment.pfpUrl)
+            comment.pfpUrl().then((res) => {
+                setPfpUrl(res);
             });
 
     const validStuff = [
@@ -113,8 +120,11 @@ export default function CommentEntry({comment}) {
 
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
-            <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
-                                                        href={getProfileUrl(comment.userId)}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+            <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+            <span className={styles.CommentUserHeaderSpan}>
+                <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
+                                                            href={getProfileUrl(comment.userId)}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}
+            </span>
         </div>
         <hr/>
 

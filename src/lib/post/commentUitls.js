@@ -5,7 +5,7 @@ import {verifyObj} from "@/lib/rsa";
 import {getHashFromObj, getRandomIntInclusive, userHash} from "@/lib/cryptoUtils";
 import {sleep} from "@/lib/utils";
 import {CoolCache} from "@/lib/coolCache";
-import {getDisplayNameFromUserId, getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getDisplayNameFromUserId, getPublicKeyFromUserId, getUserPfpFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 
 
 const validCommentSigCache = new CoolCache({localStorageKey: "COMMENT_SIG_VALID", maxSize: 2000, saveToLocalStorageFreq: 5});
@@ -132,7 +132,10 @@ export async function transformCommentObjArr(commentObjArr) {
                 if (res == undefined || !res.ok)
                     await validCommentSigCache.delete(commentHash);
                 return res;
-            }
+            },
+            pfpUrl: async () => {
+                return await getUserPfpFromUserId(commentObj.userId);
+            },
         };
         comments.push(post);
     }

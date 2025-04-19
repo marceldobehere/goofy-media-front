@@ -216,9 +216,9 @@ export default function Home() {
                            setTagSearchRes(undefined);
                        }
                    }} onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                    attemptPost();
-                }
+                // if (e.key === 'Enter') {
+                //     attemptPost();
+                // }
             }}></input><br/>
 
             <div>

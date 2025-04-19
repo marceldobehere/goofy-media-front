@@ -6,6 +6,16 @@
     margin: 0rem 0 2rem 0;
 }
 
+.ViewingProfileDiv {
+    height: 2rem
+}
+
+.ViewingProfileDiv button {
+    border: 2px solid var(--text-gray);
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+
 .MainInfo {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -82,5 +92,13 @@
         width: 4rem;
         height: 4rem;
         margin: 0 0.1rem 0.1rem 0.1rem;
+    }
+
+    .ViewingProfileDiv {
+        height: 4rem
+    }
+
+    .ViewingProfileDiv button {
+        margin: 1rem 0.5rem 0.5rem 0;
     }
 }

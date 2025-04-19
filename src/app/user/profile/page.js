@@ -147,17 +147,25 @@ export default function Profile() {
 
     const profilePageData = <div>
         <div className={usefulStyles.CenterContentDiv} style={{minHeight: "200px"}}>
-            <h3>Viewing Profile Info for: @{query.userId}</h3>
-            <button id={"copy-post-link"} style={{float: "right"}} onClick={() => {
-                const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
-                navigator.clipboard.writeText(URL);
-                const button = document.getElementById("copy-post-link");
-                button.innerText = "Copied!";
-                setTimeout(() => {
-                    button.innerText = "Copy Smol Link";
-                }, 2000);
-            }}>Copy Smol Link
-            </button>
+            <div className={styles.ViewingProfileDiv}>
+                <h3>Viewing Profile Info for: @{query.userId}</h3>
+                <button id={"copy-post-link"} style={{float: "right"}} onClick={() => {
+                    const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
+                    navigator.clipboard.writeText(URL);
+                    const button = document.getElementById("copy-post-link");
+                    button.innerText = "Copied!";
+                    setTimeout(() => {
+                        button.innerText = "Copy Smol Link";
+                    }, 2000);
+                }}>Copy Smol Link
+                </button>
+
+                {(GlobalStuff.loggedIn && GlobalStuff.userId == query.userId) ?
+                    <button style={{float: "right", marginRight: "1rem"}} onClick={() => {
+                        goPath("/user/public_info_settings")
+                    }}>Edit Profile</button>
+                    : <></>}
+            </div>
 
             <br/>
             <div>
