@@ -10,6 +10,7 @@ import {usePathname} from "next/navigation";
 import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
 import {useInterval} from "@/comp/unified_layout/userInterval";
 import {getProfileUrl} from "@/lib/publicInfo/links";
+import {initAssistant} from "@/comp/assistant/assistantStuff";
 
 export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     // divSizes = {left: "20vw", main: "60vw", right: "20vw"}
@@ -69,9 +70,12 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
 
     useGlobalState(pathName, false, false, async () => {
         setAdmin(GlobalStuff.admin);
+        initAssistant(pathName).then();
         if (GlobalStuff.loggedIn)
             loadNotifs().then();
-    }, checkSizes);
+    }, () => {
+        checkSizes();
+    });
 
     const isHome = (typeof window !== "undefined") ? window.location.href.includes("/home") : false;
 

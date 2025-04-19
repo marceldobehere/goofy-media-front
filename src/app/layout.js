@@ -15,6 +15,8 @@ export default function RootLayout({children}) {
         </head>
         <body>
         <div id={"main-loading-div"} style={{display: "none", zIndex: 150}}></div>
+        <div id={"main-assistant-div"} style={{display: "none"}}>?</div>
+        <div id={"main-assistant-body-div"} style={{display: "none"}}><div>?</div></div>
         <Dynamic>{children}</Dynamic>
         </body>
         </html>

@@ -232,7 +232,7 @@ Here are some of the implemented features:
 ### TODOs
 Here are some of my TODOs:
 * [ ] Helper / Assistant Thingy for new users (Will give you like tips and force you to do stuff)
-  * [ ] Basic Thingy showing up on a page
+  * [X] Basic Thingy showing up on a page
   * [ ] Set up public info / your profile / bio
   * [ ] Read the rules
   * [ ] Try making a post
