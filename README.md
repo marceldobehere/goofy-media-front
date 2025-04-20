@@ -242,11 +242,15 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Fallback font for mobile devices (bc of Comic Sans)
+* [ ] Private Like Counts for your own posts
+* [ ] Guide Entry for pinning a post
 * [ ] Documenting the CSS vars for custom css
 * [ ] Adding all important classes for the custom css
 * [ ] Improving the Navbar with a separator
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop
+* [ ] Sending a test notification when setting up Webhooks
 * [ ] Potentially Comment Previews on the homepage
 * [ ] Clicking on an image wil open it in a preview before opening it in a new tab
 * [ ] Resizable Post Preview
@@ -255,6 +259,8 @@ Here are some of my TODOs:
 * [ ] Setting to open less stuff in a new tab
 * [ ] Ability to post a post without it being in the global feed
 * [ ] Asking for feedback after having used the site for a while
+* [ ] Showing the status of a user (New User, Normal User, Trusted User, Admin, etc.)
+* [ ] Public Stats (How many posts, comments, likes, maybe logins per day)
 * [ ] Helper / Assistant Thingy for new users (Will give you like tips and force you to do stuff)
   * [X] Basic Thingy showing up on a page
   * [ ] Set up public info / your profile / bio
