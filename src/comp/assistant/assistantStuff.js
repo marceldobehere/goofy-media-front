@@ -56,6 +56,7 @@ async function assistantClicked() {
             <li>Look through the Global Feed or maybe Search for something</li>
             <li>Share your Profile Page or a Post with your friends!</li>
             <li>Force your friends to try Goofy Media lol</li>
+            <li>Pin a Post to your Profile! You can do that by opening a post and clicking "Copy Post UUID" and Setting it in your Profile Settings!</li>
         </ul>
         <br><br>
         

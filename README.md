@@ -161,6 +161,15 @@ done
 </style></style></style></style></style>
 ```
 
+### Custom CSS
+You can add custom css to the entire page in the `Local Settings`!
+
+This is a work in progress and will be improved over time, though most classes should be there.
+
+You can find the details [here](./styles.md).
+
+
+
 
 ## Features
 Goofy Media is still a WIP and far from done but it has enough features to be usable currently.
@@ -239,15 +248,16 @@ Here are some of the implemented features:
 * [X] Drag and Drop / Paste Media into the Post Composer
 * [X] Don't show post composer for guests
 * [X] Have the correct orientation for JPEGs
+* [X] Guide Entry for pinning a post
+* [X] Fallback silly font for mobile devices
+* [X] Documenting the CSS vars for custom css
+* [X] Adding all important classes for the custom css
+* [X] Download and Upload Custom CSS as Files
 
 ### TODOs
 Here are some of my TODOs:
 * [ ] Post Composer tag search + general search min time between refreshes so its not too laggy
-* [ ] Fallback font for mobile devices (bc of Comic Sans)
 * [ ] Private Like Counts for your own posts
-* [ ] Guide Entry for pinning a post
-* [ ] Documenting the CSS vars for custom css
-* [ ] Adding all important classes for the custom css
 * [ ] Improving the Navbar with a separator
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop

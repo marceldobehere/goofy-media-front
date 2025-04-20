@@ -57,7 +57,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
         }
         if (typeof document !== "undefined") {
             if (count != undefined && count > 0)
-                document.title = `Goofy Media (${notifCount})`;
+                document.title = `Goofy Media (${count})`;
             else
                 document.title = "Goofy Media";
         }

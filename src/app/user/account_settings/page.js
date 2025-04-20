@@ -12,6 +12,7 @@ import QRCodeGen from "@/lib/qrgen/qrcodegen";
 import {deleteWithAuth, postNoAuth, postWithAuth} from "@/lib/req";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {registerUserWebhook} from "@/lib/notifications/notificationUtils";
+import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
 
 const QrCode = QRCodeGen.QrCode;
 
@@ -250,12 +251,9 @@ export default function Home() {
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <button onClick={async () => {
-                            setCustomCss(LocalSettings.customCss);
-                        }}>Revert
-                        </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                            if (!confirm("Are you sure?"))
+                                return;
 
-                        <button onClick={async () => {
                             setCustomCss("");
                             await saveLocalSettingsKey("customCss", "");
                         }}>Reset
@@ -263,9 +261,28 @@ export default function Home() {
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <button onClick={async () => {
-                            const classNames = getAllAvailableClassNames();
-                            alert("All available classes: \n" + classNames.join("\n"));
-                        }}>Show All Custom Classes
+                            downloadTextFile(customCss, "customCss.css");
+                        }}>Download
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button onClick={async () => {
+                            if (!confirm("Are you sure?"))
+                                return;
+                            const files = await uploadData();
+                            if (files == undefined || files.length == 0)
+                                return;
+
+                            const text = await fileToString(files[0]);
+                            setCustomCss(text);
+                            await saveLocalSettingsKey("customCss", text);
+                        }}>Upload
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button onClick={async () => {
+                            alert("All available classes can be found on the Github Repo");
+                        }}>Help
                         </button>
                     </div>
                     <br/>
