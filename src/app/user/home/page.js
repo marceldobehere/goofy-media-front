@@ -42,6 +42,7 @@ export default function Home() {
             setPostArr(res);
         }
     }
+
     async function loadNews() {
         const res = await loadHomeNewsPosts(10);
         if (res === undefined)
@@ -50,6 +51,7 @@ export default function Home() {
     }
 
     let morePostBusy = false;
+
     async function loadMorePosts() {
         if (morePostBusy)
             return;
@@ -73,6 +75,7 @@ export default function Home() {
     }
 
     let prevPos = undefined;
+
     async function onPostScroll() {
         let btn = document.getElementById("load-more-posts-btn");
         if (btn === null)
@@ -105,7 +108,7 @@ export default function Home() {
         loadPosts();
     }
 
-    if (typeof  window !== "undefined")
+    if (typeof window !== "undefined")
         window.onscroll = onPostScroll;
     useGlobalState(pathName, false, false, async () => {
         setOverrideShowGlobalPosts(LocalSettings.overrideShowGlobalFeed);
@@ -121,21 +124,23 @@ export default function Home() {
     });
 
     return <>
-        <Image style={{
-            position: "fixed",
-            bottom: "5rem",
-            right: "3rem",
-            width: "3rem",
-            height: "3rem",
-            backgroundColor: "rgba(0,0,0,0.7)",
-            borderRadius: "50%",
-            cursor: "pointer",
-            display: "block",
-            zIndex: 100
-        }} src={"/goofy-media-front/write_icon.png"} alt={"Write Icon"} width={"100"} height={"100"}
-               onClick={() => {
-                   goPath("/user/post_composer")
-               }}></Image>
+        {(GlobalStuff.loggedIn) ?
+            <Image style={{
+                position: "fixed",
+                bottom: "5rem",
+                right: "3rem",
+                width: "3rem",
+                height: "3rem",
+                backgroundColor: "rgba(0,0,0,0.7)",
+                borderRadius: "50%",
+                cursor: "pointer",
+                display: "block",
+                zIndex: 100
+            }} src={"/goofy-media-front/write_icon.png"} alt={"Write Icon"} width={"100"} height={"100"}
+                   onClick={() => {
+                       goPath("/user/post_composer")
+                   }}></Image> :
+            <></>}
 
         <UnifiedMenu
             mainDivData={

@@ -237,9 +237,13 @@ Here are some of the implemented features:
 * [X] Showing post validation details on mobile
 * [X] Better Share Post and Profile Button
 * [X] Drag and Drop / Paste Media into the Post Composer
+* [X] Don't show post composer for guests
+* [X] Have the correct orientation for JPEGs
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Documenting the CSS vars for custom css
+* [ ] Adding all important classes for the custom css
 * [ ] Improving the Navbar with a separator
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop
@@ -248,8 +252,6 @@ Here are some of my TODOs:
 * [ ] Resizable Post Preview
 * [ ] The ability to export your keypair as a file 
 * [ ] The ability to change your password
-* [ ] Documenting the CSS vars for custom css
-* [ ] Adding all important classes for the custom css
 * [ ] Setting to open less stuff in a new tab
 * [ ] Ability to post a post without it being in the global feed
 * [ ] Asking for feedback after having used the site for a while

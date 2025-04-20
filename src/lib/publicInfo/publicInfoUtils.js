@@ -16,7 +16,7 @@ function dataURLtoFile(dataurl, filename) {
     while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
-    return new File([u8arr], filename, { type: mime });
+    return new File([u8arr], filename, {type: mime});
 }
 
 
@@ -36,26 +36,41 @@ export async function uploadMediaToServer(files) {
 
             const reader = new FileReader();
             const dataPromise = new Promise((res, rej) => {
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // read EXIF data and dump
                     try {
                         const exif = piexif.load(e.target.result);
                         console.log(exif);
 
+                        let orientation = exif["0th"]["274"]; // piexif.ImageIFDName.Orientation
+                        console.log("Orientation: ", orientation);
+
                         // remove EXIF data
                         const newData = piexif.remove(e.target.result);
-                        // console.log(newData);
+
+                        // Add Rotation data
+                        const newData2 = piexif.insert(
+                            piexif.dump({
+                                "0th": {
+                                    "274": orientation,
+                                }
+                            }),
+                            newData
+                        );
+
+                        // Check EXIF data
+                        // const exif2 = piexif.load(newData2);
+                        // console.log(exif2);
 
                         // convert to file
-                        const newFile = dataURLtoFile(newData, file.name);
-
+                        const newFile = dataURLtoFile(newData2, file.name);
                         res(newFile);
                     } catch (e) {
                         console.info("Failed to read EXIF data: ", e);
                         res(file);
                     }
                 };
-                reader.onerror = function(e) {
+                reader.onerror = function (e) {
                     console.info("Failed to read file: ", e);
                     rej(e);
                 };
@@ -92,6 +107,7 @@ export async function uploadMediaToServer(files) {
 
 
 export const publicKeyCache = new CoolCache({localStorageKey: "PUBLIC_KEYS"});
+
 export async function getPublicKeyFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
         console.error("> User ID MISSING");
@@ -149,9 +165,14 @@ export async function getSimilarUsers(query) {
 }
 
 
-
-export const displayNameCache = new CoolCache({localStorageKey: "DISPLAY_NAMES", cacheEntryTimeout: 1000  * 60 * 60 * 12});
-export const recentlyFailedDisplayNamesCache = new CoolCache({localStorageKey: "DISPLAY_NAMES_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
+export const displayNameCache = new CoolCache({
+    localStorageKey: "DISPLAY_NAMES",
+    cacheEntryTimeout: 1000 * 60 * 60 * 12
+});
+export const recentlyFailedDisplayNamesCache = new CoolCache({
+    localStorageKey: "DISPLAY_NAMES_FAILED",
+    cacheEntryTimeout: 1000 * 60 * 5
+});
 
 export async function getDisplayNameFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
@@ -191,9 +212,11 @@ export async function getDisplayNameFromUserId(userId) {
 }
 
 
-
-export const userPfpCache = new CoolCache({localStorageKey: "USER_PFP", cacheEntryTimeout: 1000  * 60 * 60 * 12});
-export const recentlyFailedUserPfpsCache = new CoolCache({localStorageKey: "USER_PFP_FAILED", cacheEntryTimeout: 1000  * 60 * 5});
+export const userPfpCache = new CoolCache({localStorageKey: "USER_PFP", cacheEntryTimeout: 1000 * 60 * 60 * 12});
+export const recentlyFailedUserPfpsCache = new CoolCache({
+    localStorageKey: "USER_PFP_FAILED",
+    cacheEntryTimeout: 1000 * 60 * 5
+});
 
 export async function getUserPfpFromUserId(userId) {
     if (userId === undefined || typeof userId !== 'string') {
@@ -231,9 +254,6 @@ export async function getUserPfpFromUserId(userId) {
 
     return pfpUrl;
 }
-
-
-
 
 
 export async function getPublicInfoForUser(userId, inside) {
