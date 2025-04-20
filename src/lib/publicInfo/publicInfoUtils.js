@@ -20,6 +20,37 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 
+async function stripExifDataAndRotateCorrectly(ogDataUrlImage) {
+    return await new Promise((res, rej) => {
+            const image = new Image();
+            image.onload = () => {
+                // Create Canvas
+                const canvas = document.createElement("canvas");
+                canvas.width = image.width;
+                canvas.height = image.height;
+
+                // Set canvas context and store current state
+                const ctx = canvas.getContext("2d");
+
+                // Draw image on canvas
+                ctx.drawImage(image, 0, 0);
+
+                // Get data URL
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+
+                // Return data URL
+                // console.log("Data URL: ", dataUrl);
+                res(dataUrl);
+            };
+            image.onerror = (e) => {
+                console.info("Failed to load image: ", e);
+                rej(e);
+            };
+            image.src = ogDataUrlImage;
+    });
+}
+
+
 export async function uploadMediaToServer(files) {
     try {
         if (files == undefined)
@@ -36,34 +67,20 @@ export async function uploadMediaToServer(files) {
 
             const reader = new FileReader();
             const dataPromise = new Promise((res, rej) => {
-                reader.onload = function (e) {
+                reader.onload = async (e) => {
                     // read EXIF data and dump
                     try {
-                        const exif = piexif.load(e.target.result);
-                        console.log(exif);
-
-                        let orientation = exif["0th"]["274"]; // piexif.ImageIFDName.Orientation
-                        console.log("Orientation: ", orientation);
-
-                        // remove EXIF data
-                        const newData = piexif.remove(e.target.result);
-
-                        // Add Rotation data
-                        const newData2 = piexif.insert(
-                            piexif.dump({
-                                "0th": {
-                                    "274": orientation,
-                                }
-                            }),
-                            newData
-                        );
+                        const resData = await stripExifDataAndRotateCorrectly(e.target.result); // we get a DATA URL
 
                         // Check EXIF data
-                        // const exif2 = piexif.load(newData2);
-                        // console.log(exif2);
+                        const exif2 = piexif.load(resData);
+                        console.log(exif2);
+
+                        // console.log("Size 1: ", e.target.result.length);
+                        // console.log("Size 2: ", resData.length);
 
                         // convert to file
-                        const newFile = dataURLtoFile(newData2, file.name);
+                        const newFile = dataURLtoFile(resData, file.name);
                         res(newFile);
                     } catch (e) {
                         console.info("Failed to read EXIF data: ", e);
@@ -72,6 +89,7 @@ export async function uploadMediaToServer(files) {
                 };
                 reader.onerror = function (e) {
                     console.info("Failed to read file: ", e);
+                    return undefined;
                     rej(e);
                 };
             })

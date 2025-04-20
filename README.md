@@ -242,6 +242,7 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Post Composer tag search + general search min time between refreshes so its not too laggy
 * [ ] Fallback font for mobile devices (bc of Comic Sans)
 * [ ] Private Like Counts for your own posts
 * [ ] Guide Entry for pinning a post
