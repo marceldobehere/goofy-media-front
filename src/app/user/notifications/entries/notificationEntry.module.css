@@ -1,14 +1,41 @@
 .NotificationEntryDiv {
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     border: 2px solid var(--post-border);
-    padding: 10px;
-    margin: 10px;
-    max-height: 250px;
+    padding: 0.3rem 1rem 0.5rem 0.5rem;
+    margin: 0.5rem 0.5rem 1.1rem 0.5rem;
+    max-height: 20rem;
     word-wrap: normal;
-    word-break: break-word;
+    word-break: normal;
     white-space: pre-line;
     background: var(--post-background);
+    border-radius: 0.5rem;
+}
+
+.NotificationEntryDiv hr {
+    border-color: var(--text-gray);
+    margin: 0.5rem 0 0.8rem 0;
+}
+
+.NotificationEntryDivStart {
+    font-size: 1.1rem;
+    text-align: left;
+    display: grid;
+    grid-template-columns: max-content auto;
+    overflow-x: auto;
+}
+
+.NotificationEntryDivStart > img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 25%;
+    margin-right: 0.6rem;
+    margin-left: 0.1rem;
+    align-self: center;
+}
+
+.NotificationEntryDivStart > div {
+
 }
 
 .Unread {
@@ -17,4 +44,14 @@
 
 .Read {
 
+}
+
+@media (max-width: 900px) {
+    .NotificationEntryDiv {
+        max-height: 15rem;
+    }
+
+    .NotificationEntryDivStart {
+        font-size: 0.9rem;
+    }
 }

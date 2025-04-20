@@ -7,7 +7,7 @@ import {useGlobalState} from "@/lib/globalStateStuff";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {loadCommentByUuid} from "@/lib/post/commentUitls";
 import {usePathname} from "next/navigation";
-import {getDisplayNameFromUserId} from "@/lib/publicInfo/publicInfoUtils";
+import {getDisplayNameFromUserId, getUserPfpFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getPostUrl, getProfileUrl} from "@/lib/publicInfo/links";
 import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
 
@@ -17,6 +17,7 @@ export default function NotificationEntry({notification}) {
     const [commentText1, setCommentText1] = useState(undefined);
     const [commentText2, setCommentText2] = useState(undefined);
     const [displayName, setDisplayName] = useState(undefined);
+    const [pfpUrl, setPfpUrl] = useState(undefined);
 
     const userIdLink = <a
         href={getProfileUrl(notification.otherUserId)}
@@ -52,10 +53,9 @@ export default function NotificationEntry({notification}) {
     useGlobalState(pathName, false, false, async () => {
         if (notification.otherUserId == undefined)
             return;
-        const res = await getDisplayNameFromUserId(notification.otherUserId);
-        if (res != undefined)
-            setDisplayName(res);
 
+        setDisplayName(await getDisplayNameFromUserId(notification.otherUserId));
+        setPfpUrl(await getUserPfpFromUserId(notification.otherUserId));
     }, () => {
         setTimeout(async () => {
             if (notification.type == "comment") {
@@ -66,7 +66,7 @@ export default function NotificationEntry({notification}) {
 
                     const comment = await loadCommentByUuid(notification.commentResponseUuid);
                     if (comment)
-                        setCommentText1(`Them> ${convertTextWithEmojis(comment.text)}`);
+                        setCommentText1(`Comment: ${convertTextWithEmojis(comment.text)}`);
                 }
             } else if (notification.type == "reply") {
                 if (postTitle == undefined) {
@@ -80,7 +80,7 @@ export default function NotificationEntry({notification}) {
 
                     const comment2 = await loadCommentByUuid(notification.commentResponseUuid);
                     if (comment2)
-                        setCommentText2(`Them: ${convertTextWithEmojis(comment2.text)}`);
+                        setCommentText2(`Reply: ${convertTextWithEmojis(comment2.text)}`);
                 }
             } else if (notification.type == "mention") {
                 if (postTitle == undefined) {
@@ -100,9 +100,19 @@ export default function NotificationEntry({notification}) {
 
     return (
         <div className={`${styles.NotificationEntryDiv} ${notification.isRead ? styles.Read : styles.Unread}`}>
-            <span className={styles.NotificationTime}>{new Date(notification.createdAt).toLocaleString()}</span><br/>
-            {resElement}
-            {commentText1 == undefined ? "" : <><br/><div style={{padding:"5px", marginTop:"10px", background: "rgba(0,0,0,0.4)"}}>{commentText1}</div></>}
-            {commentText2 == undefined ? "" : <><div style={{padding:"5px", marginTop:"10px", background: "rgba(0,0,0,0.4)"}}>{commentText2}</div></>}
+            <div className={styles.NotificationEntryDivStart}>
+                <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+                <div>
+                    <span className={styles.NotificationTime}>{new Date(notification.createdAt).toLocaleString()}</span><br/>
+                    {resElement}
+                </div>
+            </div>
+            {commentText1 == undefined && commentText2 == undefined ? "" : <hr/>}
+            {commentText1 == undefined ? "" : <>
+                <div style={{padding: "5px", marginTop: "10px", background: "rgba(0,0,0,0.4)"}}>{commentText1}</div>
+            </>}
+            {commentText2 == undefined ? "" : <>
+                <div style={{padding: "5px", marginTop: "10px", background: "rgba(0,0,0,0.4)"}}>{commentText2}</div>
+            </>}
         </div>)
 }

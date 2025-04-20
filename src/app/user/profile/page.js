@@ -38,6 +38,7 @@ export default function Profile() {
     const [isFollowed, setisFollowed] = useState();
     const [profileInfo, setProfileInfo] = useState({});
     const [pinnedPostObj, setPinnedPostObj] = useState();
+    const [shareClicked, setShareClicked] = useState(false);
 
     const setQuery = (q) => {
         _setQuery(q);
@@ -149,22 +150,36 @@ export default function Profile() {
         <div className={usefulStyles.CenterContentDiv} style={{minHeight: "200px"}}>
             <div className={styles.ViewingProfileDiv}>
                 <h3>Viewing Profile Info for: @{query.userId}</h3>
-                <button id={"copy-post-link"} style={{float: "right"}} onClick={() => {
-                    const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
-                    navigator.clipboard.writeText(URL);
-                    const button = document.getElementById("copy-post-link");
-                    button.innerText = "Copied!";
-                    setTimeout(() => {
-                        button.innerText = "Copy Smol Link";
-                    }, 2000);
-                }}>Copy Smol Link
-                </button>
+                {/*<button id={"copy-post-link"} style={{float: "right"}} onClick={() => {*/}
+                {/*    const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;*/}
+                {/*    navigator.clipboard.writeText(URL);*/}
+                {/*    const button = document.getElementById("copy-post-link");*/}
+                {/*    button.innerText = "Copied!";*/}
+                {/*    setTimeout(() => {*/}
+                {/*        button.innerText = "Copy Smol Link";*/}
+                {/*    }, 2000);*/}
+                {/*}}>Copy Smol Link*/}
+                {/*</button>*/}
+                <div>
+                    {(GlobalStuff.loggedIn && GlobalStuff.userId == query.userId) ?
+                        <img
+                            className={styles.ShareBtn}
+                            src={"/goofy-media-front/edit_icon.png"} onClick={() => {
+                            goPath("/user/public_info_settings")
+                        }}></img>
+                        : <></>}
 
-                {(GlobalStuff.loggedIn && GlobalStuff.userId == query.userId) ?
-                    <button style={{float: "right", marginRight: "1rem"}} onClick={() => {
-                        goPath("/user/public_info_settings")
-                    }}>Edit Profile</button>
-                    : <></>}
+                    <img
+                        className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : styles.ShareBtn)}
+                        src={"/goofy-media-front/share_icon.png"} onClick={() => {
+                        setShareClicked(true);
+                        const URL = `${GlobalStuff.server}/smol/user/${encodeURIComponent(query.userId)}`;
+                        navigator.clipboard.writeText(URL).then();
+                        setTimeout(() => {
+                            setShareClicked(false);
+                        }, 800);
+                    }}></img>
+                </div>
             </div>
 
             <br/>
@@ -174,10 +189,11 @@ export default function Profile() {
                 <div className={styles.MainInfo}>
                     <h3>Info</h3>
                     <img
-                        src={profileInfo.profilePictureUrl ? profileInfo.profilePictureUrl : "/goofy-media-front/unknown_user.png"} onClick={() => {
+                        src={profileInfo.profilePictureUrl ? profileInfo.profilePictureUrl : "/goofy-media-front/unknown_user.png"}
+                        onClick={() => {
                             if (profileInfo.profilePictureUrl)
                                 window.open(profileInfo.profilePictureUrl, "_blank").focus();
-                    }}></img>
+                        }}></img>
                     Display name: {profileInfo.displayName !== undefined ?
                     <b>{profileInfo.displayName}</b> : "N/A"}<br/>
                     Pronouns: {profileInfo.profilePronouns !== undefined ?

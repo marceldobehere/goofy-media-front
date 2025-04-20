@@ -54,7 +54,7 @@ async function assistantClicked() {
             <li>Take a look at the Post Composer and look through the Styling Infos</li>
             <li>Make your first Post!</li>
             <li>Look through the Global Feed or maybe Search for something</li>
-            <li>Share your Profile Page using the &quot;Smol Link&quot;</li>
+            <li>Share your Profile Page or a Post with your friends!</li>
             <li>Force your friends to try Goofy Media lol</li>
         </ul>
         <br><br>

@@ -12,6 +12,16 @@ import {getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getProfileUrl} from "@/lib/publicInfo/links";
 let idSet = new Set();
 
+// https://stackoverflow.com/questions/7627000/javascript-convert-string-to-safe-class-name-for-css
+function makeSafeForCSS(name) {
+    return name.replace(/[^a-z0-9]/g, function(s) {
+        let c = s.charCodeAt(0);
+        if (c == 32) return '-';
+        if (c >= 65 && c <= 90) return '_' + s.toLowerCase();
+        return '__' + ('000' + c.toString(16)).slice(-4);
+    });
+}
+
 function waitForElm(selector, func) {
     if (idSet.has(selector))
         return;
@@ -19,12 +29,16 @@ function waitForElm(selector, func) {
     // console.log("> Waiting for element: ", selector, idSet);
 
     const observer = new MutationObserver(mutations => {
-        if (document.querySelector(selector)) {
-            // console.log("> Found element: ", selector);
-            // observer.disconnect();
-            const elem = document.querySelector(selector);
-            elem.id = `done-${elem.id}`;
-            func(elem);
+        try {
+            if (document.querySelector(selector)) {
+                // console.log("> Found element: ", selector);
+                // observer.disconnect();
+                const elem = document.querySelector(selector);
+                elem.id = `done-${elem.id}`;
+                func(elem);
+            }
+        } catch (e) {
+            console.info("Error waiting for element: ", selector, e);
         }
     });
 
@@ -204,7 +218,12 @@ const renderer = {
                     }
                     else
                     {
-                        element.textContent = `[Unknown ${text}]`;
+                        element.textContent = `[File: ${text}]`;
+                        element.onclick = () => {
+                            // open file in new tab
+                            let newTab = window.open(url, "_blank");
+                            newTab.focus();
+                        }
                     }
                 });
                 return `<a id="img-${randomId}">[Loading]</a>`;
@@ -347,7 +366,7 @@ const renderer = {
             {
                 let ping = part.substring(1);
                 let randomInt = getRandomIntInclusive(100000, 9999999);
-                let pingId = `chat-ping-${randomInt}-user-${ping}`;
+                let pingId = makeSafeForCSS(`chat-ping-${randomInt}-user-${ping}`);
                 waitForElm(`#${pingId}`, async (element) => {
                     if (ping == "everyone") {
                         element.textContent = `@everyone`;

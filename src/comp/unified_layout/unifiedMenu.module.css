@@ -143,6 +143,10 @@
     text-decoration: none;
 }
 
+.GoofyFont {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
 
 
 @media (max-width: 900px) {

@@ -1,10 +1,30 @@
 .UserEntry {
     background-color: var(--post-background);
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     border: 2px solid var(--post-border);
     padding: 10px;
     margin: 10px auto 10px auto;
+    border-radius: 0.5rem;
+
+    display: grid;
+    grid-template-columns: max-content auto;
+}
+
+.UserEntry > img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 25%;
+    margin-right: 0.7rem;
+    align-self: center;
+}
+
+.UserEntry > span {
+    font-size: 1.1rem;
+    text-align: left;
+    display: block;
+    vertical-align: center;
+    align-self: center;
 }
 
 .UserLink {

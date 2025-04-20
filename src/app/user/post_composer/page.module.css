@@ -27,3 +27,48 @@
 .TagSearchList {
     height: 0;
 }
+
+.CreatePostButtons {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.CreatePostButtonsBtn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+@media (max-width: 1100px) {
+    .CreatePostButtons {
+        gap: 0.2rem;
+    }
+
+    .CreatePostButtonsBtn {
+        padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .MainContainer {
+        width: 95%;
+    }
+
+    .PostPreviewDiv > div {
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .CreatePostButtons {
+        width: 16rem;
+        padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .CreatePostButtonsBtn {
+        padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+        font-size: 0.93rem;
+    }
+}

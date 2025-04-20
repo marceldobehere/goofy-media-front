@@ -45,6 +45,9 @@ export default function Register() {
     })
 
     async function registerLocal() {
+        if (!confirm(`Are you happy with the handle @${uHash}?\nThe handle cannot be changed after registering!\nIf you are not happy, please generate a new keypair.\nJust click on the "Show Key Details" checkbox\nThen click on "Generate Keypair".`))
+            return;
+        
         updateState("registerButtonText", "Registering");
         if (state.keys.publicKey === "" || state.keys.privateKey === "" || uHash === "") {
             alert("Please generate a keypair first!");
@@ -85,6 +88,9 @@ export default function Register() {
     }
 
     async function registerServer() {
+        if (!confirm(`Are you happy with the handle @${uHash}?\nThe handle cannot be changed after registering!\nIf you are not happy, please generate a new keypair.\nJust click on the "Show Key Details" checkbox\nThen click on "Generate Keypair".`))
+            return;
+
         updateState("registerButtonText", "Registering");
         if (state.keys.publicKey === "" || state.keys.privateKey === "" || state.username === "") {
             alert("Please generate a keypair first!");

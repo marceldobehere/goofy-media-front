@@ -6,14 +6,33 @@
     margin: 0rem 0 2rem 0;
 }
 
-.ViewingProfileDiv {
-    height: 2rem
+.ShareBtn {
+    cursor: pointer;
 }
 
-.ViewingProfileDiv button {
-    border: 2px solid var(--text-gray);
-    margin: 0.5rem 0.5rem 0.5rem 0;
-    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+.ShareBtnNo {
+    cursor: not-allowed;
+}
+
+.ShareBtnClicked {
+    transform: rotate(360deg);
+    transition: transform 0.45s ease-in-out;
+    filter: brightness(0.7);
+}
+
+.ViewingProfileDiv {
+    height: 1.6rem;
+    display: grid;
+    grid-template-columns: auto max-content;
+}
+
+.ViewingProfileDiv h3 {
+    overflow-x: auto;
+}
+
+.ViewingProfileDiv img {
+    height: 3rem;
+    width: 3rem;
 }
 
 .MainInfo {
@@ -95,10 +114,21 @@
     }
 
     .ViewingProfileDiv {
-        height: 4rem
+        height: 1.5rem;
+        width: 100%;
+    }
+
+    .ViewingProfileDiv img {
+        height: 2.5rem;
+        width: 2.5rem;
+        margin-left: 0.4rem;
     }
 
     .ViewingProfileDiv button {
         margin: 1rem 0.5rem 0.5rem 0;
+    }
+
+    .ViewingProfileDiv h3 {
+        font-size: 1rem;
     }
 }

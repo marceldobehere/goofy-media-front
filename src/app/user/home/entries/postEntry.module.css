@@ -38,11 +38,25 @@
     margin-bottom: 0.3rem;
 }
 
+.ShareBtn {
+    cursor: pointer;
+}
+
+.ShareBtnNo {
+    cursor: not-allowed;
+}
+
+.ShareBtnClicked {
+    transform: rotate(360deg);
+    transition: transform 0.45s ease-in-out;
+    filter: brightness(0.7);
+}
+
 .PostUserHeader {
     font-size: 1.1rem;
     text-align: left;
     display: grid;
-    grid-template-columns: max-content auto;
+    grid-template-columns: max-content auto 2rem;
     padding: 0.8rem 1rem 0.8rem 1rem;
     background: rgba(0,0,0,0.6);
     overflow-x: auto;
@@ -99,7 +113,7 @@
 
 @media (max-width: 900px) {
     .PostEntryFooter button {
-        margin: 0 0 0 0.6rem;
+        margin: 0 0.6rem 0 0;
     }
 
     .PostUserHeader {
@@ -115,5 +129,10 @@
 
     .PostUserHeaderSpan {
         font-size: 1rem;
+    }
+
+    .PostEntryFooterComments {
+        display: block;
+        margin-bottom: 0.4rem;
     }
 }

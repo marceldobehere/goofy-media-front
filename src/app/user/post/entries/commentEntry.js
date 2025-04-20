@@ -163,7 +163,7 @@ export default function CommentEntry({comment}) {
                 </>}
         </div>
 
-        <div style={{display: "inline", position: "absolute", bottom: "5px", right: "5px"}}
-             title={validChoice.title}>{validChoice.emoji}</div>
+        <div style={{display: "inline", position: "absolute", bottom: "0.7rem", right: "0.5rem"}}
+             title={validChoice.title} onClick={() => {alert(validChoice.title)}}>{validChoice.emoji}</div>
     </div>;
 }

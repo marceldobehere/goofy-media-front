@@ -32,6 +32,7 @@ export default function PostEntry({post}) {
     const [displayName, setDisplayName] = useState();
     const [pfpUrl, setPfpUrl] = useState();
     let [canDelete, setCanDelete] = useState(false);
+    const [shareClicked, setShareClicked] = useState(false);
 
     const openInNewTab = LocalSettings.openPostInNewTab;
 
@@ -130,6 +131,16 @@ export default function PostEntry({post}) {
                     <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                                                 href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
                 </span>
+                <img className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : (post.likeOverride ? styles.ShareBtnNo : styles.ShareBtn))} src={"/goofy-media-front/share_icon.png"} onClick={() => {
+                    if (post.likeOverride)
+                        return;
+                    setShareClicked(true);
+                    const URL = `${GlobalStuff.server}/smol/post/${post.uuid}`;
+                    navigator.clipboard.writeText(URL).then();
+                    setTimeout(() => {
+                        setShareClicked(false);
+                    }, 800);
+                }}></img>
             </div>
             <hr/>
 
@@ -158,7 +169,7 @@ export default function PostEntry({post}) {
 
 
             <div style={{display: "inline", position: "absolute", bottom: "0.7rem", right: "0.5rem"}}
-                 title={validChoice.title}>{validChoice.emoji}</div>
+                 title={validChoice.title} onClick={() => {alert(validChoice.title)}}>{validChoice.emoji}</div>
 
             <p className={styles.PostTags}>{(post.tags.length == 0) ? "No tags" : ""}{post.tags.map((tag, idx) => (
                 <span key={idx}><a
@@ -166,7 +177,7 @@ export default function PostEntry({post}) {
 
             <hr/>
             <div className={styles.PostEntryFooter}>
-                <a style={{textDecoration: "none"}}
+                <a className={styles.PostEntryFooterComments} style={{textDecoration: "none"}}
                    href={`${getPostUrl(post.uuid)}&scrollToComments=true`}
                    target={openInNewTab ? "_blank" : ""}>{post.commentCount} Comment{(post.commentCount == 1) ? "" : "s"}</a>
 

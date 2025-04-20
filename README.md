@@ -226,31 +226,31 @@ Here are some of the implemented features:
 * [X] Optional Anonymous Feedback
 * [X] Admins mentioning @everyone
 * [X] Basic Notifications using Webhooks
+* [X] Showing Profile Pictures for Notifications, Followers and Following
+* [X] Silly Font for Header
+* [X] Warning about the handle not being changeable
+* [X] Easy way to regenerate the handle when registering + Confirm
+* [X] Rename Add Img to Add Media
+* [X] Unknown Embed Links will be treated as File Links
+* [X] Less Margin on the Post Composer for mobile users
+* [X] Fixing the bottom part of a post on mobile
+* [X] Showing post validation details on mobile
+* [X] Better Share Post and Profile Button
 
 
 ### TODOs
 Here are some of my TODOs:
-* [ ] Less Margin on the Post Composer for mobile users
-* [ ] Fixing the bottom part of a post on mobile
 * [ ] Improving the Navbar with a separator
-* [ ] Resizable Post Preview
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop
 * [ ] Potentially Comment Previews on the homepage
-* [ ] Unknown Embed Links will be treated as File Links
+* [ ] Resizable Post Preview
 * [ ] The ability to export your keypair as a file 
 * [ ] The ability to change your password
-* [ ] Warning about the handle not being changeable
-* [ ] Easy way to regenerate the handle when registering + Confirm
-* [ ] Silly Font for Header
-* [ ] Showing Profile Pictures for Notifications, Followers and Following
 * [ ] Drag and Drop Media into the Post Composer
-* [ ] Rename Add Img to Add Media
 * [ ] Documenting the CSS vars for custom css
 * [ ] Adding all important classes for the custom css
 * [ ] Setting to open less stuff in a new tab
-* [ ] Better Share Post Button
-* [ ] Helper add an entry for sharing your post
 * [ ] Ability to post a post without it being in the global feed
 * [ ] Asking for feedback after having used the site for a while
 * [ ] Helper / Assistant Thingy for new users (Will give you like tips and force you to do stuff)

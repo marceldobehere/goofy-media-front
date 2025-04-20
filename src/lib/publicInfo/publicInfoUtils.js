@@ -116,7 +116,7 @@ export async function getPublicKeyFromUserId(userId) {
     });
 
     if (publicKey == undefined || typeof publicKey !== "string" || publicKey.length < 1) {
-        console.error("> Failed to get public key for userId: ", userId, publicKey);
+        console.info("> Failed to get public key for userId: ", userId, publicKey);
         await publicKeyCache.delete(userId);
         return undefined;
     }

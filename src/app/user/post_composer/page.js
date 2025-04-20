@@ -134,7 +134,7 @@ export default function Home() {
     // Using My server that uses https://catbox.moe to upload files
     // POST /user/upload/file
     async function uploadMedia() {
-        if (!confirm("The uploaded image will not be hosted on goofy media, instead it will be hosted on https://catbox.moe\nIt may disappear at some point or not work!\nYou can also just embed your own media from a link."))
+        if (!confirm("The uploaded file will not be hosted on goofy media, instead it will be hosted on https://catbox.moe\nIt may disappear at some point or not work!\nIf you want to upload the file, press OK."))
             return;
 
         const res = await uploadMediaToServer();
@@ -222,17 +222,14 @@ export default function Home() {
             }}></input><br/>
 
             <div>
-                <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
-                    <button className={"cont-inp-btn"}
-                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                <div className={styles.CreatePostButtons}>
+                    <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
                             onClick={toggleEdit}>Preview
                     </button>
-                    <button className={"cont-inp-btn"}
-                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
-                            onClick={uploadMedia}>Add Img
+                    <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
+                            onClick={uploadMedia}>Add Media
                     </button>
-                    <button className={"cont-inp-btn"}
-                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                    <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
                             onClick={attemptPost}>Post
                     </button>
                 </div>
@@ -247,7 +244,7 @@ export default function Home() {
     }
 
     function getPreview(livePrev) {
-        return (<>
+        return (<div className={styles.PostPreviewDiv}>
             <PostEntry post={{
                 displayName: async () => (displayName),
                 author: GlobalStuff.userId,
@@ -262,15 +259,14 @@ export default function Home() {
             }}></PostEntry>
 
             {livePrev ? "" :
-                <div style={{display: "block", width: "max-content", margin: "auto", padding: "5px 10px 5px 10px"}}>
-                    <button className={"cont-inp-btn"}
-                            style={{padding: "5px 10px 5px 10px", margin: "5px 10px 5px 10px"}}
+                <div style={{display: "block", width: "max-content", margin: "auto"}}>
+                    <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
                             onClick={toggleEdit}>Edit
                     </button>
                 </div>
             }
 
-        </>);
+        </div>);
     }
 
     return <UnifiedMenu
