@@ -244,6 +244,7 @@ Here are some of my TODOs:
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop
 * [ ] Potentially Comment Previews on the homepage
+* [ ] Clicking on an image wil open it in a preview before opening it in a new tab
 * [ ] Resizable Post Preview
 * [ ] The ability to export your keypair as a file 
 * [ ] The ability to change your password
