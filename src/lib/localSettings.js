@@ -2,7 +2,7 @@
 
 import {convertCssString} from "@/lib/customCssConverter";
 
-const defaultTrustedUrls = ["https://buzzheavier.com/", "https://cdn.marceldobehere.com/", "https://www.dropbox.com/", "https://files.catbox.moe/"];
+const defaultTrustedUrls = ["https://buzzheavier.com/", "https://cdn.marceldobehere.com/", "https://www.dropbox.com/", "https://files.catbox.moe/", "https://media.discordapp.net/"];
 
 export let LocalSettings = {
     autoLoadMedia: false,

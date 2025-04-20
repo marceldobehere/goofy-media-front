@@ -236,7 +236,7 @@ Here are some of the implemented features:
 * [X] Fixing the bottom part of a post on mobile
 * [X] Showing post validation details on mobile
 * [X] Better Share Post and Profile Button
-
+* [X] Drag and Drop / Paste Media into the Post Composer
 
 ### TODOs
 Here are some of my TODOs:
@@ -247,7 +247,6 @@ Here are some of my TODOs:
 * [ ] Resizable Post Preview
 * [ ] The ability to export your keypair as a file 
 * [ ] The ability to change your password
-* [ ] Drag and Drop Media into the Post Composer
 * [ ] Documenting the CSS vars for custom css
 * [ ] Adding all important classes for the custom css
 * [ ] Setting to open less stuff in a new tab

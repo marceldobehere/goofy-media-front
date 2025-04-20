@@ -20,9 +20,11 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 
-export async function uploadMediaToServer() {
+export async function uploadMediaToServer(files) {
     try {
-        let files = await uploadData();
+        if (files == undefined)
+            files = await uploadData();
+
         if (files === undefined || files.length < 1)
             return undefined;
 

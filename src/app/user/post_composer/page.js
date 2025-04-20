@@ -133,11 +133,11 @@ export default function Home() {
 
     // Using My server that uses https://catbox.moe to upload files
     // POST /user/upload/file
-    async function uploadMedia() {
+    async function uploadMedia(files) {
         if (!confirm("The uploaded file will not be hosted on goofy media, instead it will be hosted on https://catbox.moe\nIt may disappear at some point or not work!\nIf you want to upload the file, press OK."))
             return;
 
-        const res = await uploadMediaToServer();
+        const res = await uploadMediaToServer(files);
         if (res == undefined)
             return;
 
@@ -155,10 +155,29 @@ export default function Home() {
                       style={{resize: "vertical", height: "200px", minHeight: "80px", maxHeight: "600px"}}
                       onChange={(e) => {
                           setText(e.target.value);
-                      }}></textarea>
+                      }}
+                      onDrop={(e) => {
+                          e.preventDefault();
+                          const files = e.dataTransfer.files;
+                          if (files.length > 0) {
+                              console.info(`File dropped in text area`, e);
+                              uploadMedia(files).then();
+                          }
+                      }}
+                      onPaste={(e) => {
+                          const dT = e.clipboardData || window.clipboardData;
+                          const files = dT.files;
+                          if (files.length > 0) {
+                              console.info(`File pasted in text area`, e);
+                              e.preventDefault();
+                              uploadMedia(files).then();
+                          }
+                      }}
+            ></textarea>
 
             <p className={"cont-inp-header"}>Tags</p>
-            <div className={styles.TagSearchList} style={{display: (tagSearchRes && !tagSearchHide) ? "block" : "none"}}>
+            <div className={styles.TagSearchList}
+                 style={{display: (tagSearchRes && !tagSearchHide) ? "block" : "none"}}>
                 <div>
                     <ul>
                         {(tagSearchRes || []).map((tag, idx) => (
@@ -215,11 +234,13 @@ export default function Home() {
                        } else {
                            setTagSearchRes(undefined);
                        }
-                   }} onKeyUp={(e) => {
-                // if (e.key === 'Enter') {
-                //     attemptPost();
-                // }
-            }}></input><br/>
+                   }}
+                   onKeyUp={(e) => {
+                       // if (e.key === 'Enter') {
+                       //     attemptPost();
+                       // }
+                   }}
+            ></input><br/>
 
             <div>
                 <div className={styles.CreatePostButtons}>
@@ -227,7 +248,9 @@ export default function Home() {
                             onClick={toggleEdit}>Preview
                     </button>
                     <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
-                            onClick={uploadMedia}>Add Media
+                            onClick={() => {
+                                uploadMedia().then()
+                            }}>Add Media
                     </button>
                     <button className={`cont-inp-btn ${styles.CreatePostButtonsBtn}`}
                             onClick={attemptPost}>Post
