@@ -256,6 +256,7 @@ Here are some of the implemented features:
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Post Preview in Smol Link, make Headers add new lines
 * [ ] Post Composer tag search + general search min time between refreshes so its not too laggy
 * [ ] Private Like Counts for your own posts
 * [ ] Improving the Navbar with a separator
