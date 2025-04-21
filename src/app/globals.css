@@ -179,7 +179,7 @@ main {
     text-shadow: 0 0rem 0.4rem #f2ac37, 0 0rem 0.2rem #f2ac37;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out;
 }
 
 #main-assistant-body-div {
@@ -209,11 +209,14 @@ main {
     overflow: auto;
 }
 
+#main-assistant-div:hover {
+    font-weight: bold;
+}
+
 .assistant-div-active {
     /*rotate 180° animation*/
     animation: rotate 0.5s ease-in-out;
     transform: rotate(180deg);
-
 }
 
 

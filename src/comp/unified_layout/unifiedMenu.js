@@ -80,14 +80,34 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     const isHome = (typeof window !== "undefined") ? window.location.href.includes("/home") : false;
 
     const btnCol = notifCount > 0 ? "orange" : "white";
-    const navLinks = <p>
+    const navLinks = <div>
         {(GlobalStuff.loggedIn) ? <>
             <Link
                 href={"/user/notifications"}
                 style={{color: btnCol}}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
         </> : ""}
-        {isHome ? <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"}>Github Repo</a> : <Link href={"/user/home"}>Home</Link>}
-        <Link href={"/guest/search?tag=global"}>Global Feed</Link>
+        {(!GlobalStuff.loggedIn) ? <><Link href={"/"}>Index Page</Link></> : ""}
+        {isHome ? <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"}>Github Repo</a> :
+            <Link href={"/user/home"}>Home</Link>}
+
+        {(GlobalStuff.loggedIn) ? <Link href={"/guest/search?tag=global"}>Global Feed</Link> : <></>}
+
+        <a href={`${basePath}/guest/search`}>Search</a>
+        <Link href={"/guest/news"}>News</Link>
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/following"}>Following</Link></> : ""}
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link></> : ""}
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link></> : ""}
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link></> : ""}
+
+        {!mobileDevice ? <hr/> : <></>}
+
+        {(GlobalStuff.loggedIn) ? <><a href={getProfileUrl(GlobalStuff.userId)}>View Profile</a></> : ""}
+        {(GlobalStuff.loggedIn) ? <><Link href={"/user/public_info_settings"}>Profile Settings</Link></> : ""}
+        <Link href={"/user/account_settings"}>Local Settings</Link>
+
+
+        {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
+
         {(GlobalStuff.loggedIn) ? (<>
             <a onClick={async () => {
                 if (confirm("Are you sure?")) {
@@ -96,22 +116,12 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                 }
             }}>Logout</a>
         </>) : (<>
-            <a onClick={async () => {
-                goPath("/guest/login")
-            }}>Login</a>
+            <Link href={"/guest/login"}>Login</Link>
+            <Link href={"/guest/register"}>Register</Link>
         </>)}
-        <Link href={"/guest/news"}>News</Link>
-        <a href={`${basePath}/guest/search`}>Search</a>
-        {(GlobalStuff.loggedIn) ? <><Link href={"/user/following"}>Following</Link></> : ""}
-        {(GlobalStuff.loggedIn) ? <><Link href={"/user/followers"}>Followers</Link></> : ""}
-        {(GlobalStuff.loggedIn) ? <><Link href={"/user/liked_posts"}>Liked Posts</Link></> : ""}
-        <Link href={"/user/account_settings"}>Local Settings</Link>
-        {(GlobalStuff.loggedIn) ? <><a href={getProfileUrl(GlobalStuff.userId)}>View Profile</a></> : ""}
-        {(GlobalStuff.loggedIn) ? <><Link href={"/user/public_info_settings"}>Profile Settings</Link></> : ""}
-        {(GlobalStuff.loggedIn) ? <><Link href={"/user/post_composer"}>Post Composer</Link></> : ""}
-        {(!GlobalStuff.loggedIn) ? <><Link href={"/user/account_settings"}>Anonymous Feedback</Link></> : ""}
-        {admin ? (<><Link href={"/admin/dashboard"}>Admin Dashboard</Link></>) : (<></>)}
-    </p>;
+
+        {(!GlobalStuff.loggedIn) ? <><Link href={"/user/account_settings"}>Guest Feedback</Link></> : ""}
+    </div>;
 
     const hamburger = <div>
         <svg viewBox="0 0 120 80" width="2rem" height="2rem" fill={btnCol}>

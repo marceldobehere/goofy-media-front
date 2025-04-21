@@ -60,6 +60,11 @@
     border-radius: 0.5rem;
 }
 
+.LeftNavDivDesktop hr {
+    background-color: var(--text-gray);
+    margin: 0.2rem 0 0.2rem 0;
+}
+
 .LeftNavDivDesktop a {
     text-decoration: none;
     font-weight: bold;
@@ -92,7 +97,7 @@
     border: 3px solid var(--nav-body-mobile-border);
 }
 
-.LeftNavDivMobileBody p {
+.LeftNavDivMobileBody > div {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
