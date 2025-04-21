@@ -65,6 +65,7 @@ export class AsyncLock {
         } catch (e) {
             this.disable();
             console.error("Error: ", e);
+            return null;
         }
     }
 };
@@ -109,8 +110,15 @@ async function attemptToRunFunctionWithTimeout(func, timeout) {
 
 export class CoolCache {
     constructor(
-        {maxSize = 1000, loadTimeout = null, cacheEntryTimeout, localStorageKey = null, extLoadFunc = null, saveToLocalStorageFreq = 1}
-        = {}) {
+        {
+            maxSize = 1000,
+            loadTimeout = null,
+            cacheEntryTimeout,
+            localStorageKey = null,
+            extLoadFunc = null,
+            saveToLocalStorageFreq = 1
+        }
+            = {}) {
         if (typeof window === 'undefined')
             return;
 
@@ -125,6 +133,7 @@ export class CoolCache {
 
         this.setAsyncLock = new AsyncLock();
         this.cache = new Map();
+        this.keyLockCache = new Map();
         this.readyResolver = null;
         this.readyPromise = new Promise((resolve) => {
             this.readyResolver = resolve;
@@ -145,7 +154,7 @@ export class CoolCache {
 
     }
 
-    async loadFromLocalStorage()  {
+    async loadFromLocalStorage() {
         if (this.localStorageKey == null) {
             return;
         }
@@ -222,56 +231,41 @@ export class CoolCache {
 
     async get(key, loadFunc) {
         await this.readyPromise;
-        const now = Date.now();
+        if (!this.keyLockCache.has(key))
+            this.keyLockCache.set(key, new AsyncLock());
+        const lock = this.keyLockCache.get(key);
 
-        // Check if the cache contains the key
-        if (this.cache.has(key)) {
-            const entry = this.cache.get(key);
-            if (this.cacheEntryTimeout && entry.lastAccess + this.cacheEntryTimeout < now) {
-                await this.delete(key);
-                console.info("> Cache entry expired for key " + key);
-                // Cache entry expired
-                // Continue to load
-            } else {
-                // entry.lastAccess = now;
-                if (entry.promise) {
-                    try {
-                        return await entry.promise;
-                    } catch (e) {
-                        console.info("> Error loading value promise for key " + key + ": ", e);
-                        return null;
-                    }
+        // Only allow one thread to access the same key of a cache at a time
+        const result = await lock.do(async () => {
+            // Check if the cache contains the key and if the entry is not expired
+            if (this.cache.has(key)) {
+                const entry = this.cache.get(key);
+                if (this.cacheEntryTimeout && entry.lastAccess + this.cacheEntryTimeout < Date.now()) {
+                    await this.delete(key);
+                    console.info("> Cache entry expired for key " + key);
+                    // Cache entry expired -> Continue to load
                 } else {
+                    // entry.lastAccess = Date.now();
                     return entry.value;
                 }
             }
-        }
 
-        // Try to load the value if it doesn't exist
-        if (loadFunc) {
-            let promiseRes = undefined;
-            let promiseRej = undefined;
-            const valuePromise = new Promise((resolve, reject) => {
-                promiseRes = resolve;
-                promiseRej = reject;
-            });
+            // Try to load the value if it doesn't exist
+            if (loadFunc) {
+                let value = undefined;
+                try {
+                    value = await attemptToRunFunctionWithTimeout(loadFunc, this.loadTimeout);
+                } catch (e) {
+                    console.info(`Error loading value for key ${key}:`, e);
+                    return null;
+                }
 
-            this.cache.set(key, {
-                value: undefined,
-                promise: valuePromise,
-                lastAccess: Date.now()
-            });
-
-            try {
-                let value = await attemptToRunFunctionWithTimeout(loadFunc, this.loadTimeout);
                 if (value === null)
                     value = undefined;
-                promiseRes(value);
 
                 // Update the cache with the new value
                 this.cache.set(key, {
                     value,
-                    promise: undefined,
                     lastAccess: Date.now()
                 });
 
@@ -279,19 +273,13 @@ export class CoolCache {
                 await this.maybeSave();
 
                 return value;
-            } catch (e) {
-                console.info(`Error loading value for key ${key}:`, e);
-                promiseRes(null); // bc goofy exceptions that are caught but also arent
-                await this.delete(key);
-                // try {
-                //     promiseRej(new Error(`Error loading value for key ${key}: ` + e.message));
-                // } catch (e) {
-                //     console.error("Error rejecting promise: ", e);
-                // }
             }
-        }
 
-        return null;
+            // If no load function is provided, return null
+            return null;
+        });
+
+        return result;
     }
 
     async set(key, value) {
@@ -329,7 +317,7 @@ export class CoolCache {
 
     async trimToSize() {
         while (this.cache.size > 1 &&
-            this.cache.size >= this.maxSize) {
+        this.cache.size >= this.maxSize) {
             // Remove the oldest entry
             let oldestKey = null;
             let oldestTime = Infinity;
