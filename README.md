@@ -18,6 +18,13 @@ If you want to register an account, just send me a message on discord or reach o
 
 ## General Infos
 
+### Server Rules
+Please do not post any illegal content on Goofy Media or anything that would violate the rules of the server you are using.
+
+Specific server rules will be added but for now the most important thing is no illegal or inappropriate content, using some commonsense.
+
+Additionally, you may not use the data of Goofy Media instances for AI training or datamining without permission of the users and instance owners.
+
 ### Security
 Users have a public/private keypair that is used to encrypt and verify/sign data.
 
@@ -68,12 +75,6 @@ Users will be able to send DMs to other users, which will be End-to-End encrypte
 DM messages will be stored on the server, but they will be stored encrypted and only the sender and receiver will be able to decrypt them.
 
 Detailed info will follow when the feature is implemented.
-
-### Server Rules
-Please do not post any illegal content on Goofy Media or anything that would violate the rules of the server you are using.
-
-Specific server rules will be added but for now the most important thing is no illegal or inappropriate content, using some commonsense.
-
 
 ### Styling Info
 Posts can be styled with several things!
