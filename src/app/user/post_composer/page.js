@@ -236,9 +236,38 @@ export default function Home() {
                        }
                    }}
                    onKeyUp={(e) => {
-                       // if (e.key === 'Enter') {
-                       //     attemptPost();
-                       // }
+                       if (e.key === 'Escape') {
+                           setTimeout(() => {
+                               setTagSearchRes(undefined);
+                           }, 50);
+                       }
+                   }}
+                   onKeyDown={(e) => {
+                       // check if tab pressed
+                       if (e.key === 'Tab') {
+                           e.preventDefault();
+                           if (tagSearchRes == undefined || tagSearchRes.length < 1) {
+                               if (!tagStr.endsWith(" "))
+                                   setTagStr(tagStr + ", ");
+
+                               setTagSearchRes(undefined);
+                               return;
+                           }
+
+                           const tags = tagStr.split(",");
+                           if (tags.length < 1)
+                               tags.push("");
+                           tags[tags.length - 1] = tagSearchRes[0].tag;
+                           for (let i = 0; i < tags.length; i++) {
+                               tags[i] = tags[i].trim();
+                               if (tags[i] === "") {
+                                   tags.splice(i, 1);
+                                   i--;
+                               }
+                           }
+                           setTagStr(tags.join(", ") + ", ");
+                           setTagSearchRes(undefined);
+                       }
                    }}
             ></input><br/>
 
