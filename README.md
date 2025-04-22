@@ -254,6 +254,7 @@ Here are some of the implemented features:
 * [X] Documenting the CSS vars for custom css
 * [X] Adding all important classes for the custom css
 * [X] Download and Upload Custom CSS as Files
+* [X] Read More Button
 
 ### TODOs
 Here are some of my TODOs:

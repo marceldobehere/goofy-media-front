@@ -33,6 +33,8 @@ export default function PostEntry({post}) {
     const [pfpUrl, setPfpUrl] = useState();
     let [canDelete, setCanDelete] = useState(false);
     const [shareClicked, setShareClicked] = useState(false);
+    const [readMore, setReadmore] = useState(false);
+    const [showReadMore, setShowReadMore] = useState("none");
 
     const openInNewTab = LocalSettings.openPostInNewTab;
 
@@ -123,6 +125,25 @@ export default function PostEntry({post}) {
     ];
     const validChoice = validStuff[isValid ? (isValid.ok ? 1 : 0) : 2];
 
+    const sillyId = `silly-post-${getRandomIntInclusive(1000000, 100000000)}`;
+
+    useEffect(() => {
+        const div = document.getElementById(sillyId);
+        if (div == null)
+            return;
+
+        // Create a ResizeObserver instance
+        const observer = new ResizeObserver(() => {
+            // Check if the element is scrollable
+            setTimeout(() => {
+                const isScrollable = div.scrollHeight > div.clientHeight;
+                setShowReadMore(isScrollable ? "block" : "none");
+            }, 500);
+        });
+        observer.observe(div);
+
+    }, []);
+
     return (
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
@@ -131,7 +152,9 @@ export default function PostEntry({post}) {
                     <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                                                 href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
                 </span>
-                <img className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : (post.likeOverride ? styles.ShareBtnNo : styles.ShareBtn))} src={"/goofy-media-front/share_icon.png"} onClick={() => {
+                <img
+                    className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : (post.likeOverride ? styles.ShareBtnNo : styles.ShareBtn))}
+                    src={"/goofy-media-front/share_icon.png"} onClick={() => {
                     if (post.likeOverride)
                         return;
                     setShareClicked(true);
@@ -161,15 +184,35 @@ export default function PostEntry({post}) {
                 goPath(`/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`, openInNewTab);
                 event.preventDefault();
             }}>
-                {innerHTML !== undefined ?
-                    <p className={styles.PostBody} style={{isolation: "isolate"}}
-                       dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
-                    <p className={styles.PostBody}>{post.text}</p>}
+                <div className={styles.PostBody} style={{isolation: "isolate"}}>
+                    <div id={sillyId} className={readMore ? styles.PostBodyReadMore : styles.PostBodyReadLess}>
+                        {innerHTML !== undefined ?
+                            <p dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                            <p>{post.text}</p>}
+                    </div>
+
+                    <div style={{display: (readMore ? "block" : showReadMore)}} className={styles.PostReadMoreBtn}
+                         onClick={() => {
+                             if (readMore) {
+                                 const div = document.getElementById(sillyId);
+                                 if (div == null)
+                                     return;
+                                 div.scrollTop = 0;
+                             }
+
+                             setReadmore(!readMore);
+                             setShowReadMore("block");
+                         }}>Read {readMore ? "Less" : "More"}
+                    </div>
+                </div>
+
             </div>
 
 
             <div style={{display: "inline", position: "absolute", bottom: "0.7rem", right: "0.5rem"}}
-                 title={validChoice.title} onClick={() => {alert(validChoice.title)}}>{validChoice.emoji}</div>
+                 title={validChoice.title} onClick={() => {
+                alert(validChoice.title)
+            }}>{validChoice.emoji}</div>
 
             <p className={styles.PostTags}>{(post.tags.length == 0) ? "No tags" : ""}{post.tags.map((tag, idx) => (
                 <span key={idx}><a

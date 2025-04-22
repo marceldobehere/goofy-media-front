@@ -25,9 +25,27 @@
     margin-bottom: 0rem;
     white-space: pre-line;
     display: block;
-    max-height: 340px;
     overflow-y: auto;
     padding: 0rem 1rem 0rem 1rem;
+}
+
+.PostBodyReadMore {
+    max-height: min(36rem, 70vh);
+    overflow-y: auto;
+}
+
+.PostBodyReadLess {
+    max-height: 12.5rem;
+    overflow-y: hidden;
+}
+
+.PostReadMoreBtn {
+    cursor: pointer;
+    margin: 0.5rem 0 0 0;
+    color: orange;
+    font-weight: bold;
+    display: block;
+    width: max-content;
 }
 
 .PostBody ul {
@@ -137,5 +155,14 @@
     .PostEntryFooterComments {
         display: block;
         margin-bottom: 0.4rem;
+    }
+
+    .PostBodyReadLess {
+        max-height: 10rem;
+    }
+
+    .PostBodyReadMore {
+        max-height: min(35.5rem, 50vh);
+        overflow-y: auto;
     }
 }

@@ -35,9 +35,11 @@ export default function NewsEntry({post}) {
                 goPath(`/user/post?uuid=${encodeURIComponent(post.uuid)}&serverId=${encodeURIComponent(GlobalStuff.server)}`, openInNewTab);
                 event.preventDefault();
             }}>
-                {innerHTML !== undefined ?
-                    <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
-                    <p className={styles.PostBody}>{post.text}</p>}
+                <div style={{maxHeight: "18rem", overflowY: "auto"}}>
+                    {innerHTML !== undefined ?
+                        <p className={styles.PostBody} dangerouslySetInnerHTML={{__html: innerHTML}}></p> :
+                        <p className={styles.PostBody}>{post.text}</p>}
+                </div>
             </div>
             <br/>
         </div>

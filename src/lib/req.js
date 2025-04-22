@@ -108,7 +108,7 @@ export async function reqWithAuth(path, method, data, headers, sendRawResponse, 
     }
 
     if (res.status !== 200 && res.status !== 201) {
-        console.info("> Failed sent request: ", await res.text(), res);
+        console.info("> Failed sent request: ", await res.text(), res, GlobalStuff.server, path);
         return undefined;
     }
 
