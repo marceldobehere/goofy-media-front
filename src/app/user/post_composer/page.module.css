@@ -41,7 +41,7 @@
     font-size: 1rem;
 }
 
-.PostPreviewDiv [id^="silly-post-"][class$="ReadMore"] {
+.PostPreviewDiv [id^="silly-post-"][class*="ReadMore"] {
     max-height: min(35rem, 40vh);
 }
 
