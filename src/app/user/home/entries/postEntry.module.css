@@ -30,7 +30,7 @@
 }
 
 .PostBodyReadMore {
-    max-height: min(36rem, 70vh);
+    max-height: min(35rem, 72vh);
     overflow-y: auto;
 }
 
