@@ -6,6 +6,7 @@ import {userHash} from "@/lib/cryptoUtils";
 import {CoolCache} from "@/lib/coolCache";
 import {uploadData} from "@/lib/fileUtils";
 import piexif from "@/lib/piexif/piexif"
+import {doesImageExist} from "@/lib/markedExtension";
 
 function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(","),
@@ -261,6 +262,13 @@ export async function getUserPfpFromUserId(userId) {
         }
 
         console.log("> Got pfp for userId: ", userId, " -> ", publicInfo.profilePictureUrl);
+
+        if (!(await doesImageExist(publicInfo.profilePictureUrl))) {
+            console.info("> PFP is not valid: ", publicInfo.profilePictureUrl);
+            await recentlyFailedUserPfpsCache.set(userId, true);
+            return undefined;
+        }
+
         await recentlyFailedUserPfpsCache.delete(userId);
         return publicInfo.profilePictureUrl;
     });

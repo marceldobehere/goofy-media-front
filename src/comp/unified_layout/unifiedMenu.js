@@ -86,7 +86,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                 href={"/user/notifications"}
                 style={{color: btnCol}}>Notifications {((notifCount == undefined || notifCount == 0) ? "" : `(${notifCount})`)}</Link>
         </> : ""}
-        {(!GlobalStuff.loggedIn) ? <><Link href={"/"}>Index Page</Link></> : ""}
+        {(!GlobalStuff.loggedIn) ? <><a onClick={()=>{goPath("/")}}>Index Page</a></> : ""}
         {isHome ? <a href={"https://github.com/marceldobehere/goofy-media-front"} target={"_blank"}>Github Repo</a> :
             <Link href={"/user/home"}>Home</Link>}
 

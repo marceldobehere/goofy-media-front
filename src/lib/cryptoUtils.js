@@ -84,8 +84,8 @@ async function userHashInternal(str) {
 
     // Strength of usernames
     // c = 2 -> ~44 bit (134611^2 * 1000)
-    // c = 3 -> ~61 bit (134611^2 * 1000)
-    // c = 4 -> ~78 bit (134611^2 * 1000)
+    // c = 3 -> ~61 bit (134611^3 * 1000)
+    // c = 4 -> ~78 bit (134611^4 * 1000)
 
     for (let i = 0; i < c; i++) {
         let tHash = CryptoJS.PBKDF2(hash, "GoofyWordHash123", {keySize: 16, iterations: 1234}).words[0];

@@ -52,7 +52,7 @@ function waitForElm(selector, func) {
 const UrlElementCache = new CoolCache();
 
 const doesExistCache = new CoolCache();
-const doesImageExist = async (url) => {
+export const doesImageExist = async (url) => {
     return await doesExistCache.get(`IMG_${url}`, async () => {
         return await new Promise(async (resolve) => {
             const img = new Image();

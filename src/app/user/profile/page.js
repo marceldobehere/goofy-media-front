@@ -20,6 +20,7 @@ import usefulStyles from "@/comp/useful.module.css";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {getPublicInfoForUser} from "@/lib/publicInfo/publicInfoUtils";
 import {convertTextWithEmojis} from "@/lib/emoji/emojiUtils";
+import {doesImageExist} from "@/lib/markedExtension";
 
 const followingUserCache = new CoolCache({
     localStorageKey: "IS_USER_FOLLOWED",
@@ -46,6 +47,9 @@ export default function Profile() {
         if (q.page == 0)
             getPublicInfoForUser(q.userId).then(async (info) => {
                 if (info !== undefined) {
+                    if (!await (doesImageExist(info.profilePictureUrl)))
+                        info.profilePictureUrl = undefined;
+
                     setProfileInfo(info);
                     if (info.pinnedPostUuid !== undefined) {
                         const res = await loadPost(info.pinnedPostUuid);
