@@ -41,6 +41,10 @@
     font-size: 1rem;
 }
 
+.PostPreviewDiv [id^="silly-post-"][class$="ReadMore"] {
+    max-height: min(35rem, 40vh);
+}
+
 @media (max-width: 1100px) {
     .CreatePostButtons {
         gap: 0.2rem;
