@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {signObj} from "@/lib/rsa";
 import {postWithAuth, putWithAuth, rawPostWithAuth} from "@/lib/req";
 import {goPath} from "@/lib/goPath";
@@ -27,7 +27,7 @@ export default function Home() {
     const [pfpUrl, setPfpUrl] = useState();
     const [tagSearchRes, setTagSearchRes] = useState(undefined);
     const [tagSearchHide, setTagSearchHide] = useState(true);
-
+    const timeoutId = useRef(undefined);
 
     useGlobalState(pathName, true, false, async () => {
         if (!GlobalStuff.loggedIn)
@@ -220,7 +220,7 @@ export default function Home() {
                            setTagSearchHide(false);
                        }, 200);
                    }}
-                   onChange={async (e) => {
+                   onChange={(e) => {
                        setTagStr(e.target.value);
 
                        const tags = e.target.value.split(",");
@@ -228,12 +228,19 @@ export default function Home() {
                            tags.push("");
 
                        const lastTag = tags[tags.length - 1].trim();
-                       if (lastTag.length > 0) {
-                           const tags = await getSimilarTags(lastTag);
-                           setTagSearchRes(tags)
-                       } else {
-                           setTagSearchRes(undefined);
-                       }
+
+                       const timeOutId = setTimeout(async () => {
+                           if (lastTag.length > 0) {
+                               const tags = await getSimilarTags(lastTag);
+                               setTagSearchRes(tags)
+                           } else {
+                               setTagSearchRes(undefined);
+                           }
+                       }, 100);
+
+                       if (timeoutId.current !== undefined)
+                           clearTimeout(timeoutId.current);
+                       timeoutId.current = timeOutId;
                    }}
                    onKeyUp={(e) => {
                        if (e.key === 'Escape') {

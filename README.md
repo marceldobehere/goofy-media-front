@@ -194,7 +194,7 @@ Here are some of the implemented features:
 * [X] Tag System
 * [X] Search Page
   * [X] Tag Search (With post counts)
-  * [X] User Search
+  * [X] User Search (By Display Name and Handle)
 * [X] Post Tag Validation
 * [X] Home Page with infinite scroll and dynamic post loading
 * [X] Profile Page
@@ -255,11 +255,12 @@ Here are some of the implemented features:
 * [X] Adding all important classes for the custom css
 * [X] Download and Upload Custom CSS as Files
 * [X] Read More Button
+* [X] Post Preview in Smol Link, make Headers add new lines
+* [X] Webhook show Display Names
+* [X] Improved Performance for Post Composer and Search
 
 ### TODOs
 Here are some of my TODOs:
-* [ ] Post Preview in Smol Link, make Headers add new lines
-* [ ] Post Composer tag search + general search min time between refreshes so its not too laggy
 * [ ] Private Like Counts for your own posts
 * [ ] Improving the Navbar with a separator
 * [ ] Navbar with Icons
@@ -323,7 +324,6 @@ Here are some of my TODOs:
   * [ ] Profile Custom CSS
   * [ ] Profile Banner
   * [ ] Improved Settings + Display
-* [ ] User search (by handle or display name)
 * [ ] Potentially post search by text (posts that contain ...)
 * [ ] Server Lockdown / Privacy Settings (Decide how public endpoints are)
 * [ ] Direct Messaging System (Planning on having a limited amount of DMs per user for data storage reasons)

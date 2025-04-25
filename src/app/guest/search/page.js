@@ -1,12 +1,12 @@
 'use client';
 
 import styles from "./page.module.css";
-import {useState} from "react";
-import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
+import {useRef, useState} from "react";
+import {useGlobalState} from "@/lib/globalStateStuff";
 import {usePathname} from "next/navigation";
 import EntryList from "@/app/user/home/entries/EntryList";
 import PostEntry from "@/app/user/home/entries/postEntry";
-import {basePath, goPath} from "@/lib/goPath";
+import {goPath} from "@/lib/goPath";
 import {
     getSimilarTags, loadGlobalPosts, loadSearchGlobalPosts,
     loadSearchPosts,
@@ -26,6 +26,8 @@ export default function Search() {
     const [searchText, setSearchText] = useState({search: "", resTags: [], resUsers: []});
     const [query, _setQuery] = useState({tag: "", page: 0});
     const [postData, setPostData] = useState({posts: undefined, isOnLastPage: true, isOnFirstPage: true});
+    const timeoutId = useRef(undefined);
+
     const setQuery = (q) => {
         _setQuery(q);
         loadPosts(q);
@@ -124,15 +126,24 @@ export default function Search() {
                                    resUsers: searchText.resUsers
                                });
 
-                               const tags = await getSimilarTags(tagVal);
-                               const users = await getSimilarUsers(tagVal);
-                               // console.log(tags)
-                               setSearchText((prevState) => {
-                                   if (prevState == undefined || prevState.search == tagVal) {
-                                       return {search: tagVal, resTags: tags, resUsers: users};
-                                   }
-                                   return prevState;
-                               })
+                               const timeOutId = setTimeout(async () => {
+                                   const tProm = getSimilarTags(tagVal);
+                                   const uProm = getSimilarUsers(tagVal);
+
+                                   const tags = await tProm;
+                                   const users = await uProm;
+
+                                   // console.log(tags, users)
+                                   setSearchText((prevState) => {
+                                       if (prevState == undefined || prevState.search == tagVal) {
+                                           return {search: tagVal, resTags: tags, resUsers: users};
+                                       }
+                                       return prevState;
+                                   })
+                               }, 100);
+                               if (timeoutId.current !== undefined)
+                                   clearTimeout(timeoutId.current);
+                               timeoutId.current = timeOutId;
                            }}
                            onKeyUp={async (e) => {
                                if (e.key === 'Enter') {
