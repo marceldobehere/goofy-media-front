@@ -147,13 +147,14 @@ export default function PostEntry({post}) {
     return (
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
-                <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+                <img alt={"Profile Picture"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
                 <span className={styles.PostUserHeaderSpan}>
                     <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                                                 href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
                 </span>
                 <img
                     className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : (post.likeOverride ? styles.ShareBtnNo : styles.ShareBtn))}
+                    alt={"Share Post"}
                     src={"/goofy-media-front/share_icon.png"} onClick={() => {
                     if (post.likeOverride)
                         return;

@@ -106,7 +106,7 @@ export default function Home() {
                     <br/><br/>
 
                     <h3>Profile Picture</h3>
-                    <img src={profilePictureUrl ? profilePictureUrl : "/goofy-media-front/unknown_user.png"}></img>
+                    <img alt={"Profile Picture"} src={profilePictureUrl ? profilePictureUrl : "/goofy-media-front/unknown_user.png"}></img>
                     <button onClick={async () => {
                         const res = await uploadMediaToServer();
                         if (res == undefined) {

@@ -167,6 +167,7 @@ export default function Profile() {
                 <div>
                     {(GlobalStuff.loggedIn && GlobalStuff.userId == query.userId) ?
                         <img
+                            alt={"Edit Profile"}
                             className={styles.ShareBtn}
                             src={"/goofy-media-front/edit_icon.png"} onClick={() => {
                             goPath("/user/public_info_settings")
@@ -174,6 +175,7 @@ export default function Profile() {
                         : <></>}
 
                     <img
+                        alt={"Share Profile"}
                         className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : styles.ShareBtn)}
                         src={"/goofy-media-front/share_icon.png"} onClick={() => {
                         setShareClicked(true);
@@ -193,6 +195,7 @@ export default function Profile() {
                 <div className={styles.MainInfo}>
                     <h3>Info</h3>
                     <img
+                        alt={"Profile Picture"}
                         src={profileInfo.profilePictureUrl ? profileInfo.profilePictureUrl : "/goofy-media-front/unknown_user.png"}
                         onClick={() => {
                             if (profileInfo.profilePictureUrl)

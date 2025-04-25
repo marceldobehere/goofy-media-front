@@ -120,7 +120,7 @@ export default function CommentEntry({comment}) {
 
     return <div className={styles.CommentDiv} style={{position: "relative"}}>
         <div className={styles.CommentUserHeader}>
-            <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+            <img alt={"Profile Picture"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
             <span className={styles.CommentUserHeaderSpan}>
                 <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                                             href={getProfileUrl(comment.userId)}>@{comment.userId}</a> - {new Date(comment.createdAt).toLocaleString()}

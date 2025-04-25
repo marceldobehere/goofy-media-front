@@ -21,7 +21,7 @@ export default function UserEntry({userEntry}) {
     const userText = displayName ? <span>{displayName} <span className={styles.UserIdLink}>(@{userEntry.userId})</span></span> : `@${userEntry.userId}`;
 
     return <div className={styles.UserEntry}>
-        <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+        <img alt={"Profile Picture"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
         <span>
             {userEntry.extraTextPre ? <span>{userEntry.extraTextPre} </span> : <></>}
             <a className={styles.UserLink}

@@ -101,7 +101,7 @@ export default function NotificationEntry({notification}) {
     return (
         <div className={`${styles.NotificationEntryDiv} ${notification.isRead ? styles.Read : styles.Unread}`}>
             <div className={styles.NotificationEntryDivStart}>
-                <img src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+                <img alt={"Profile Picture"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
                 <div>
                     <span className={styles.NotificationTime}>{new Date(notification.createdAt).toLocaleString()}</span><br/>
                     {resElement}
