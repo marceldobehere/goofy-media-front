@@ -10,11 +10,12 @@ import marked from "@/lib/marked";
 import DOMPurify from "@/lib/purify";
 import {getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getProfileUrl} from "@/lib/publicInfo/links";
+
 let idSet = new Set();
 
 // https://stackoverflow.com/questions/7627000/javascript-convert-string-to-safe-class-name-for-css
 function makeSafeForCSS(name) {
-    return name.replace(/[^a-z0-9]/g, function(s) {
+    return name.replace(/[^a-z0-9]/g, function (s) {
         let c = s.charCodeAt(0);
         if (c == 32) return '-';
         if (c >= 65 && c <= 90) return '_' + s.toLowerCase();
@@ -52,7 +53,17 @@ function waitForElm(selector, func) {
 const UrlElementCache = new CoolCache();
 
 const doesExistCache = new CoolCache();
-export const doesImageExist = async (url) => {
+export const doesImageExist = async (url, skipCache) => {
+    if (skipCache) {
+        return await new Promise(async (resolve) => {
+            const img = new Image();
+
+            img.src = url;
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+        });
+    }
+
     return await doesExistCache.get(`IMG_${url}`, async () => {
         return await new Promise(async (resolve) => {
             const img = new Image();
@@ -161,8 +172,7 @@ const renderer = {
 
                 waitForElm(`#img-${randomId}`, async (element) => {
                     // console.log("> Found image: " + randomId, element);
-                    if (await doesImageExist(url))
-                    {
+                    if (await doesImageExist(url)) {
                         let node = await UrlElementCache.get(url, async () => {
                             let imgNode = document.createElement("img");
                             imgNode.src = url;
@@ -181,11 +191,9 @@ const renderer = {
                             element.replaceWith(node.cloneNode(false));
                         else
                             element.replaceWith(node);
-                    }
-                    else if (await doesVideoExist(url))
-                    {
+                    } else if (await doesVideoExist(url)) {
                         let node = await UrlElementCache.get(url, async () => {
-                            let videoNode= document.createElement("video");
+                            let videoNode = document.createElement("video");
                             videoNode.src = url;
                             videoNode.alt = text;
                             videoNode.className = postStyles.chatVideo;
@@ -198,11 +206,9 @@ const renderer = {
                             element.replaceWith(node.cloneNode(false));
                         else
                             element.replaceWith(node);
-                    }
-                    else if (await doesAudioExist(url))
-                    {
+                    } else if (await doesAudioExist(url)) {
                         let node = await UrlElementCache.get(url, async () => {
-                            let audioNode= document.createElement("audio");
+                            let audioNode = document.createElement("audio");
                             audioNode.src = url;
                             audioNode.alt = text;
                             audioNode.className = postStyles.chatAudio;
@@ -215,9 +221,7 @@ const renderer = {
                             element.replaceWith(node.cloneNode(false));
                         else
                             element.replaceWith(node);
-                    }
-                    else
-                    {
+                    } else {
                         element.textContent = `[File: ${text}]`;
                         element.onclick = () => {
                             // open file in new tab
@@ -227,9 +231,7 @@ const renderer = {
                     }
                 });
                 return `<a id="img-${randomId}">[Loading]</a>`;
-            }
-            else
-            {
+            } else {
                 text = text.replaceAll("<", "&lt;");
                 text = text.replaceAll(">", "&gt;");
 
@@ -250,18 +252,16 @@ const renderer = {
     code(token) {
         let codeRes = token.text;
         let lang = token.lang;
-        if (lang)
-        {
+        if (lang) {
             // console.log("Highlighting code with language: " + lang);
             try {
-                let code = hljs.highlight(codeRes, {language:lang, ignoreIllegals:true});
+                let code = hljs.highlight(codeRes, {language: lang, ignoreIllegals: true});
                 // console.log("> RES: ", code);
                 codeRes = code.value;
             } catch (e) {
                 console.error(e);
             }
-        }
-        else
+        } else
             codeRes = codeRes.replaceAll("\n", "<br>");
 
         return `<code class="${postStyles.code} ${postStyles.codeBlock}">${codeRes}</code>`;
@@ -338,7 +338,7 @@ const renderer = {
             try {
                 const dirty = marked.parse(text.substring(last + 2, styleEnd));
                 // console.log(dirty);
-                const clean = DOMPurify.sanitize(dirty, { ADD_ATTR: ['target'] });
+                const clean = DOMPurify.sanitize(dirty, {ADD_ATTR: ['target']});
                 // console.log(clean);
                 inbetweenHtml = clean;
             } catch (e) {
@@ -360,10 +360,8 @@ const renderer = {
     text(token) {
         let parts = token.text.split(" ");
         let partRes = [];
-        for (let part of parts)
-        {
-            if (part.startsWith("@") && part.length > 1)
-            {
+        for (let part of parts) {
+            if (part.startsWith("@") && part.length > 1) {
                 let ping = part.substring(1);
                 let randomInt = getRandomIntInclusive(100000, 9999999);
                 let pingId = makeSafeForCSS(`chat-ping-${randomInt}-user-${ping}`);
@@ -389,12 +387,11 @@ const renderer = {
                     element.replaceWith(linkElement);
                 });
                 partRes.push(`<span id="${pingId}">${part}</span>`);
-            }
-            else
+            } else
                 partRes.push(part);
         }
         return partRes.join(" ");
     }
 };
 
-export default {useNewRenderer: true, renderer, breaks: true };
+export default {useNewRenderer: true, renderer, breaks: true};

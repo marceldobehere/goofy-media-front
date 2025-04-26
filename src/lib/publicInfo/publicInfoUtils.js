@@ -263,7 +263,7 @@ export async function getUserPfpFromUserId(userId) {
 
         console.log("> Got pfp for userId: ", userId, " -> ", publicInfo.profilePictureUrl);
 
-        if (!(await doesImageExist(publicInfo.profilePictureUrl))) {
+        if (!(await doesImageExist(publicInfo.profilePictureUrl, true))) {
             console.info("> PFP is not valid: ", publicInfo.profilePictureUrl);
             await recentlyFailedUserPfpsCache.set(userId, true);
             return undefined;
@@ -288,6 +288,8 @@ export async function getPublicInfoForUser(userId, inside) {
         return undefined;
     }
 
+    console.trace("> Getting public info for userId: ", userId);
+
     const res = await getNoAuth(`/user/public-info/user/${userId}`);
     if (res === undefined) {
         console.info("> Failed to get public info for userId: ", userId);
@@ -306,11 +308,14 @@ export async function getPublicInfoForUser(userId, inside) {
         return undefined;
     }
 
+    console.log("> Got public info for userId: ", userId, " -> ", publicInfo);
+
     if (!inside) {
-        await displayNameCache.delete(userId);
-        await recentlyFailedDisplayNamesCache.delete(userId);
-        await userPfpCache.delete(userId);
         await recentlyFailedUserPfpsCache.delete(userId);
+        await recentlyFailedDisplayNamesCache.delete(userId);
+
+        await displayNameCache.delete(userId);
+        await userPfpCache.delete(userId);
     }
 
     return publicInfo;
@@ -343,6 +348,9 @@ export async function setPublicInfo(infoObj) {
         return false;
 
     await recentlyFailedDisplayNamesCache.delete(infoObj.userId);
+    await displayNameCache.delete(infoObj.userId);
+    await userPfpCache.delete(infoObj.userId);
+    await recentlyFailedUserPfpsCache.delete(infoObj.userId);
     await publicKeyCache.delete(infoObj.userId);
 
     return true;

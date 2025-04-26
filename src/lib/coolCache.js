@@ -204,7 +204,8 @@ export class CoolCache {
             lastAccess: Date.now()
         };
 
-        console.log(`> Saving Cache to Localstorage at ${this.localStorageKey}: `, dataToSave);
+        console.log(`> Saving Cache to Localstorage at ${this.localStorageKey}: `, dataToSave, JSON.parse(JSON.stringify(dataToSave)));
+        // console.trace("Save Cache trace " + this.localStorageKey)
 
         LsSet(this.localStorageKey, JSON.stringify(dataToSave));
     }
@@ -248,6 +249,9 @@ export class CoolCache {
                     // entry.lastAccess = Date.now();
                     return entry.value;
                 }
+            } else {
+                if (this.localStorageKey != undefined && !this.localStorageKey.includes("FAILED"))
+                    console.info("> Cool Cache does not have key " + key, this);
             }
 
             // Try to load the value if it doesn't exist
@@ -269,6 +273,7 @@ export class CoolCache {
                     lastAccess: Date.now()
                 });
 
+                // console.log("Maybe Save " + key, value, this.cache)
                 // Maybe save to local storage
                 await this.maybeSave();
 
