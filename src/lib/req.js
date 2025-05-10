@@ -55,7 +55,7 @@ async function getSignatureAndId(body) {
     if (body == undefined)
         body = {};
     let id = getRandomIntInclusive(10000000, 10000000000);
-    let validUntil = Date.now() + 1000 * 10;
+    let validUntil = Date.now() + 1000 * 30;
     let signature = await signObj({body, id, validUntil});
     // console.log("> Doing Sign of: ", {body, id, validUntil}, " got: ", signature)
     return {signature, id, validUntil, publicKey: GlobalStuff.publicKey};
