@@ -1,8 +1,7 @@
 'use client';
-
 import styles from "@/app/user/home/entries/postEntry.module.css";
 import {basePath, goPath, refreshPage} from "@/lib/goPath";
-import {useEffect, useState} from "react";
+import {memo, useEffect, useState} from "react";
 import {getRandomIntInclusive} from "@/lib/cryptoUtils";
 import {GlobalStuff, useGlobalState} from "@/lib/globalStateStuff";
 import {LocalSettings} from "@/lib/localSettings";
@@ -24,7 +23,7 @@ const likedPostCache = new CoolCache({
     cacheEntryTimeout: 1000 * 60 * 60 * 24 * 5 // 5 days
 });
 
-export default function PostEntry({post}) {
+function PostEntry({post}) {
     const pathName = usePathname();
     const [innerHTML, setInnerHTML] = useState();
     const [isValid, setIsValid] = useState();
@@ -144,10 +143,21 @@ export default function PostEntry({post}) {
 
     }, []);
 
+    // console.log("ME EXIST!!!", post)
+
+    // return (
+    //     <div className={styles.PostEntryDiv} style={{position: "relative"}}>
+    //         <div className={styles.PostUserHeader}>
+    //         A
+    //         A
+    //         </div>
+    //         A
+    //     </div>);
+
     return (
         <div className={styles.PostEntryDiv} style={{position: "relative"}}>
             <div className={styles.PostUserHeader}>
-                <img alt={"Profile Picture"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
+                <img alt={"Profile Picture"} loading={"lazy"} src={pfpUrl ? pfpUrl : "/goofy-media-front/unknown_user.png"}></img>
                 <span className={styles.PostUserHeaderSpan}>
                     <b>{displayName ? displayName : "?"}</b> <a style={{textDecoration: "none"}}
                                                                 href={getProfileUrl(post.author)}>@{post.author}</a> - {new Date(post.createdAt).toLocaleString()}
@@ -155,6 +165,7 @@ export default function PostEntry({post}) {
                 <img
                     className={(shareClicked ? `${styles.ShareBtn} ${styles.ShareBtnClicked}` : (post.likeOverride ? styles.ShareBtnNo : styles.ShareBtn))}
                     alt={"Share Post"}
+                    loading={"lazy"}
                     src={"/goofy-media-front/share_icon.png"} onClick={() => {
                     if (post.likeOverride)
                         return;
@@ -267,3 +278,11 @@ export default function PostEntry({post}) {
         </div>
     );
 }
+
+
+export default memo(PostEntry, (prevProps, nextProps) => {
+    const res = JSON.stringify(prevProps.post) === JSON.stringify(nextProps.post);
+    if (!res)
+        console.log("> COMP RENDERING", prevProps.post, " WITH ", nextProps.post, " ->", res)
+    return true;
+});

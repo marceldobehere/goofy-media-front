@@ -45,8 +45,9 @@
 
 .MainInfo img {
     float:right;
-    width: 6rem;
-    height: 6rem;
+    min-width: 6rem;
+    max-width: 6rem;
+    max-height: 6rem;
     border-radius: 25%;
     margin: 0 1rem 1rem 0.5rem;
 }
@@ -108,8 +109,9 @@
     }
 
     .MainInfo img {
-        width: 4rem;
-        height: 4rem;
+        min-width: 4rem;
+        max-width: 4rem;
+        max-height: 4rem;
         margin: 0 0.1rem 0.1rem 0.1rem;
     }
 

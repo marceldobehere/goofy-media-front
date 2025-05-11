@@ -23,20 +23,83 @@ function makeSafeForCSS(name) {
     });
 }
 
+// https://dev.to/kapantzak/waiting-for-visible-element-4ck9
+function waitVisible(elem, callback) {
+    if (!elem)
+        return () => {};
+
+    {
+        const pos = elem.getBoundingClientRect().top;
+        if (pos != 0 && pos < window.innerHeight + 400) {
+            // console.log("> YOOOO I EXIST 1", elem, pos,  window.innerHeight + 400)
+            callback()
+            return () => {};
+        }
+    }
+
+    // console.log("> WAITING FOR ", elem)
+    let prevPos = undefined;
+    let timer = setInterval(() => {
+        // console.log("> CHECK", elem)
+        const pos = elem.getBoundingClientRect().top;
+        // Ignore if scrolling up
+        if (prevPos === undefined)
+            prevPos = pos;
+        if (pos > prevPos) {
+            prevPos = pos;
+            return;
+        }
+        prevPos = pos;
+
+        if (pos != 0 && pos < window.innerHeight + 400) {
+            // console.log("> YOOOO I EXIST 2", elem, pos,  window.innerHeight + 400)
+            clearInterval(timer);
+            timer = null;
+            callback();
+        } else {
+            // console.log("> AWW I DONT EXIST", elem)
+        }
+    }, 250 + Math.random() * 100);
+
+    return () => {
+        if (!timer)
+            return;
+        // console.log("> Clearing interval for", elem)
+        clearInterval(timer);
+        timer = null;
+    };
+}
+
 function waitForElm(selector, func) {
     if (idSet.has(selector))
         return;
     idSet.add(selector);
     // console.log("> Waiting for element: ", selector, idSet);
 
+    let lastCallBack = undefined;
     const observer = new MutationObserver(mutations => {
         try {
-            if (document.querySelector(selector)) {
+            const elem = document.querySelector(selector);
+            if (elem) {
                 // console.log("> Found element: ", selector);
-                // observer.disconnect();
-                const elem = document.querySelector(selector);
+                // observer.disconnect(
                 elem.id = `done-${elem.id}`;
-                func(elem);
+
+                if (lastCallBack) {
+                    lastCallBack();
+                    lastCallBack = null;
+                }
+
+                lastCallBack = waitVisible(elem, () => {
+                    func(elem);
+                })
+            } else {
+                // if (lastCallBack != undefined)
+                //     console.log("KILLING ", elem, selector, lastCallBack)
+                // if (!lastCallBack)
+                //     return;
+                // lastCallBack();
+                // lastCallBack = null;
             }
         } catch (e) {
             console.info("Error waiting for element: ", selector, e);

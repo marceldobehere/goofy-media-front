@@ -12,6 +12,7 @@ export default function RootLayout({children}) {
         <html lang="en">
         <head>
             <link rel={"icon"} href={"/goofy-media-front/icon.ico"} sizes={"any"}></link>
+            <link rel="preconnect" href="https://goofy.media"></link>
         </head>
         <body>
         <div id={"main-loading-div"} style={{display: "none", zIndex: 150}}></div>

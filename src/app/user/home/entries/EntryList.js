@@ -1,4 +1,7 @@
-export default function EntryList({elements, compFn, keyFn, extra}) {
+'use client';
+import { memo } from 'react';
+
+function EntryList({elements, compFn, keyFn, extra}) {
     return (
         <ul style={{listStyle: "none"}}>
             {elements.map((post) => {
@@ -13,3 +16,9 @@ export default function EntryList({elements, compFn, keyFn, extra}) {
         </ul>
     );
 }
+
+export default memo(EntryList, (prevProps, nextProps) => {
+    const res = JSON.stringify(prevProps.elements) === JSON.stringify(nextProps.elements);
+    // console.log("> COMP RENDERING", prevProps.elements, " WITH ", nextProps.elements, " ->", res)
+    return res;
+});

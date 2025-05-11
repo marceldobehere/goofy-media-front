@@ -81,8 +81,9 @@
 }
 
 .PostUserHeader img {
-    width: 2rem;
-    height: 2rem;
+    min-width: 2rem;
+    max-width: 2rem;
+    max-height: 2rem;
     border-radius: 25%;
     margin-right: 1rem;
     align-self: center;
@@ -143,8 +144,9 @@
     }
 
     .PostUserHeader img {
-        width: 1.9rem;
-        height: 1.9rem;
+        min-width: 1.9rem;
+        max-width: 1.9rem;
+        max-height: 1.9rem;
         margin-right: 0.8rem;
     }
 

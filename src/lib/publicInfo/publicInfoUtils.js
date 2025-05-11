@@ -248,7 +248,7 @@ export async function getDisplayNameFromUserId(userId) {
     });
 
     if (displayName == undefined) {
-        console.error("> Failed to get display name for userId: ", userId);
+        console.info("> Failed to get display name for userId: ", userId);
         return undefined;
     }
 
@@ -299,7 +299,7 @@ export async function getUserPfpFromUserId(userId) {
     });
 
     if (pfpUrl == undefined) {
-        console.error("> Failed to get pfp for userId: ", userId);
+        console.info("> Failed to get pfp for userId: ", userId);
         return undefined;
     }
 

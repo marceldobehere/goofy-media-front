@@ -12,8 +12,9 @@
 }
 
 .UserEntry > img {
-    width: 2.5rem;
-    height: 2.5rem;
+    min-width: 2.5rem;
+    max-width: 2.5rem;
+    max-height: 2.5rem;
     border-radius: 25%;
     margin-right: 0.7rem;
     align-self: center;
