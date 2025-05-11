@@ -134,7 +134,7 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     const navContent = mobileDevice ?
         <div className={styles.LeftNavDivMobile}>
             <div className={styles.LeftNavDivMobileHeader}>
-                <button onClick={() => {
+                <button title={"Hamburger Menu"} onClick={() => {
                     setBurger(!showBurgerMenu);
                 }}>
                     {showBurgerMenu ?

@@ -10,6 +10,7 @@ import marked from "@/lib/marked";
 import DOMPurify from "@/lib/purify";
 import {getPublicKeyFromUserId} from "@/lib/publicInfo/publicInfoUtils";
 import {getProfileUrl} from "@/lib/publicInfo/links";
+import {SpinActivity} from "@/lib/spinner";
 
 let idSet = new Set();
 
@@ -26,14 +27,16 @@ function makeSafeForCSS(name) {
 // https://dev.to/kapantzak/waiting-for-visible-element-4ck9
 function waitVisible(elem, callback) {
     if (!elem)
-        return () => {};
+        return () => {
+        };
 
     {
         const pos = elem.getBoundingClientRect().top;
         if (pos != 0 && pos < window.innerHeight + 400) {
             // console.log("> YOOOO I EXIST 1", elem, pos,  window.innerHeight + 400)
             callback()
-            return () => {};
+            return () => {
+            };
         }
     }
 
@@ -50,7 +53,6 @@ function waitVisible(elem, callback) {
     //
     // intersectionObserver.observe(elem);
     // return () => {};
-
 
 
     // console.log("> WAITING FOR ", elem)
@@ -134,45 +136,53 @@ const UrlElementCache = new CoolCache();
 const doesExistCache = new CoolCache();
 export const doesImageExist = async (url, skipCache) => {
     if (skipCache) {
-        return await new Promise(async (resolve) => {
-            const img = new Image();
+        return await SpinActivity(async () => (
+            await new Promise(async (resolve) => {
+                const img = new Image();
 
-            img.src = url;
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-        });
+                img.src = url;
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+            })
+        ));
     }
 
     return await doesExistCache.get(`IMG_${url}`, async () => {
-        return await new Promise(async (resolve) => {
-            const img = new Image();
+        return await SpinActivity(async () => (
+            await new Promise(async (resolve) => {
+                const img = new Image();
 
-            img.src = url;
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-        });
+                img.src = url;
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+            })
+        ));
     })
 }
 const doesVideoExist = async (url) => {
     return await doesExistCache.get(`VID_${url}`, async () => {
-        return await new Promise(async (resolve) => {
-            const video = document.createElement("video");
+        return await SpinActivity(async () => (
+            await new Promise(async (resolve) => {
+                const video = document.createElement("video");
 
-            video.src = url;
-            video.onloadedmetadata = () => resolve(video.videoHeight > 0 && video.videoWidth > 0);
-            video.onerror = () => resolve(false);
-        });
+                video.src = url;
+                video.onloadedmetadata = () => resolve(video.videoHeight > 0 && video.videoWidth > 0);
+                video.onerror = () => resolve(false);
+            })
+        ));
     })
 }
 const doesAudioExist = async (url) => {
     return await doesExistCache.get(`AUD_${url}`, async () => {
-        return await new Promise(async (resolve) => {
-            const audio = document.createElement("audio");
+        return await SpinActivity(async () => (
+            await new Promise(async (resolve) => {
+                const audio = document.createElement("audio");
 
-            audio.src = url;
-            audio.onloadedmetadata = () => resolve(audio.duration > 0);
-            audio.onerror = () => resolve(false);
-        });
+                audio.src = url;
+                audio.onloadedmetadata = () => resolve(audio.duration > 0);
+                audio.onerror = () => resolve(false);
+            })
+        ));
     })
 }
 

@@ -87,12 +87,14 @@ export function SpinLevelRemove() {
 }
 
 export async function SpinActivity(callback) {
+    let res = null;
     SpinLevelAdd();
     try {
-        await callback();
+        res = await callback();
     } catch (e) {
         SpinLevelRemove();
         throw e;
     }
     SpinLevelRemove();
+    return res;
 }
