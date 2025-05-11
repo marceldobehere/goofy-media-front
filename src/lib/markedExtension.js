@@ -37,6 +37,22 @@ function waitVisible(elem, callback) {
         }
     }
 
+
+    // Causes weird issues so we can't use that sadly :(
+    // const intersectionObserver = new IntersectionObserver((entries) => {
+    //     if (entries[0].intersectionRatio <= 0)
+    //         return console.log("> NOT HERE", elem);
+    //
+    //     console.log("> YOOOO I EXIST 3", elem, entries[0].intersectionRatio);
+    //     callback();
+    //     intersectionObserver.disconnect();
+    // });
+    //
+    // intersectionObserver.observe(elem);
+    // return () => {};
+
+
+
     // console.log("> WAITING FOR ", elem)
     let prevPos = undefined;
     let timer = setInterval(() => {
@@ -252,6 +268,7 @@ const renderer = {
                             let imgNode = document.createElement("img");
                             imgNode.src = url;
                             imgNode.alt = text;
+                            imgNode.loading = "lazy";
                             imgNode.className = postStyles.chatImage;
                             imgNode.onload = () => fixSizeScroll(imgNode);
                             imgNode.onclick = () => {
