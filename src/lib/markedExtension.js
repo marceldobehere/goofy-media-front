@@ -172,6 +172,13 @@ const renderer = {
 
                 waitForElm(`#img-${randomId}`, async (element) => {
 
+                    // console.log(url)
+                    url = url.replaceAll(
+                        "https://files.catbox.moe/",
+                        "https://upload.goofy.media:444/file/");
+                    // console.log(url)
+
+
                     element.textContent = `[Loading: ${url}]`;
                     element.href = url;
                     element.target = "_blank";

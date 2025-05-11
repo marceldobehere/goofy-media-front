@@ -231,7 +231,7 @@ export async function getDisplayNameFromUserId(userId) {
         return undefined;
     }
 
-    const displayName = displayNameCache.get(userId, async () => {
+    const displayName = await displayNameCache.get(userId, async () => {
         console.log("> Getting display name for userId: ", userId);
         const publicInfo = await getPublicInfoForUser(userId, true);
         if (publicInfo === undefined || publicInfo.displayName == undefined || publicInfo.displayName == "") {
@@ -275,7 +275,7 @@ export async function getUserPfpFromUserId(userId) {
         return undefined;
     }
 
-    const pfpUrl = userPfpCache.get(userId, async () => {
+    const pfpUrl = await userPfpCache.get(userId, async () => {
         console.log("> Getting pfp for userId: ", userId);
         const publicInfo = await getPublicInfoForUser(userId, true);
         if (publicInfo === undefined || publicInfo.profilePictureUrl == undefined || publicInfo.profilePictureUrl == "") {
@@ -303,7 +303,11 @@ export async function getUserPfpFromUserId(userId) {
         return undefined;
     }
 
-    return pfpUrl;
+    console.log(pfpUrl);
+
+    return pfpUrl.replaceAll(
+        "https://files.catbox.moe/",
+        "https://upload.goofy.media:444/file/");
 }
 
 
