@@ -37,7 +37,14 @@ async function stripExifDataAndRotateCorrectly(ogDataUrlImage) {
                 ctx.drawImage(image, 0, 0);
 
                 // Get data URL
-                const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+                const quality =
+                    (ogDataUrlImage.length > 5_000_000) ? 0.75 :
+                    (ogDataUrlImage.length > 3_000_000) ? 0.80 :
+                    (ogDataUrlImage.length > 2_000_000) ? 0.83 :
+                    (ogDataUrlImage.length > 1_500_000) ? 0.85 :
+                    (ogDataUrlImage.length > 1_000_000) ? 0.9 : 1;
+                console.log(`> Size: ${ogDataUrlImage.length} -> Quality ${quality}`);
+                const dataUrl = canvas.toDataURL("image/jpeg", quality);
 
                 // Return data URL
                 // console.log("Data URL: ", dataUrl);
@@ -73,12 +80,12 @@ export async function uploadMediaToServer(files) {
                     try {
                         const resData = await stripExifDataAndRotateCorrectly(e.target.result); // we get a DATA URL
 
-                        // Check EXIF data
-                        const exif2 = piexif.load(resData);
-                        console.log(exif2);
+                        // // Check EXIF data
+                        // const exif2 = piexif.load(resData);
+                        // console.log(exif2);
 
-                        // console.log("Size 1: ", e.target.result.length);
-                        // console.log("Size 2: ", resData.length);
+                        console.log("> Size 1: ", e.target.result.length);
+                        console.log("> Size 2: ", resData.length);
 
                         // convert to file
                         const newFile = dataURLtoFile(resData, file.name);
@@ -102,16 +109,34 @@ export async function uploadMediaToServer(files) {
                 console.error("Failed to read file: ", e);
             }
 
-            data.append('file', file);
-            console.log("> File: ", file);
 
-            const res = await rawPostWithAuth("/user/upload/file", data);
-            console.log("> Upload response:", res);
-            if (res == undefined)
-                return alert("Failed to upload image");
 
-            const url = res.url;
-            console.log("> Upload URL:", url);
+            let url;
+            if (true) { // Use this if you have an extra proxy for uploading, otherwise set it to false to use the normal backend
+                data.set('reqtype', 'fileupload');
+                data.set('fileToUpload', file, file.name);
+
+                const _res = await fetch('https://upload.goofy.media:444', {
+                    method: 'POST',
+                    body: data
+                });
+
+                url = await _res.text();
+                console.log("> Upload URL:", url);
+            } else {
+                data.append('file', file);
+                console.log("> File: ", file);
+
+                const res = await rawPostWithAuth("/user/upload/file", data);
+                console.log("> Upload response:", res);
+                if (res == undefined)
+                    return alert("Failed to upload image");
+
+                url = res.url;
+                console.log("> Upload URL:", url);
+            }
+
+
 
             return {filename: file.name, url: url};
         } catch (e) {

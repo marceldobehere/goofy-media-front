@@ -163,14 +163,19 @@ const renderer = {
             if (LocalSettings.autoLoadMedia || window.location.href.includes("post_composer") || checkIfUrlIsInTrusted(url))// (settingsObj["chat"]["allow-external-sources-global"])
             {
                 let randomId = getRandomIntInclusive(100000, 9999999);
-                let element = document.createElement("a");
-                element.href = url;
-                element.target = "_blank";
-                element.textContent = `[Image ${text}]`;
-                element.id = `img-${randomId}`;
+                // let element = document.createElement("a");
+                // element.href = url;
+                // element.target = "_blank";
+                // element.textContent = `[Image ${text}]`;
+                // element.id = `img-${randomId}`;
                 // console.log("> Loading image: " + randomId);
 
                 waitForElm(`#img-${randomId}`, async (element) => {
+
+                    element.textContent = `[Loading: ${url}]`;
+                    element.href = url;
+                    element.target = "_blank";
+
                     // console.log("> Found image: " + randomId, element);
                     if (await doesImageExist(url)) {
                         let node = await UrlElementCache.get(url, async () => {
