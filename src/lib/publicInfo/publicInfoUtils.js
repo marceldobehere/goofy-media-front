@@ -303,7 +303,7 @@ export async function getUserPfpFromUserId(userId) {
         return undefined;
     }
 
-    console.log(pfpUrl);
+    // console.log(pfpUrl);
 
     return pfpUrl.replaceAll(
         "https://files.catbox.moe/",
@@ -317,7 +317,7 @@ export async function getPublicInfoForUser(userId, inside) {
         return undefined;
     }
 
-    console.trace("> Getting public info for userId: ", userId);
+    console.info("> Getting public info for userId: ", userId);
 
     const res = await getNoAuth(`/user/public-info/user/${userId}`);
     if (res === undefined) {
