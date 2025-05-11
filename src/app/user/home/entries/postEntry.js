@@ -282,7 +282,7 @@ function PostEntry({post}) {
 
 export default memo(PostEntry, (prevProps, nextProps) => {
     const res = JSON.stringify(prevProps.post) === JSON.stringify(nextProps.post);
-    if (!res)
-        console.log("> COMP RENDERING", prevProps.post, " WITH ", nextProps.post, " ->", res)
-    return true;
+    // if (!res)
+    //     console.log("> COMP RENDERING", prevProps.post, " WITH ", nextProps.post, " ->", res)
+    return res;
 });
