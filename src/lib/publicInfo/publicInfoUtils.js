@@ -5,8 +5,8 @@ import {signObj, verifyObj} from "@/lib/rsa";
 import {userHash} from "@/lib/cryptoUtils";
 import {CoolCache} from "@/lib/coolCache";
 import {uploadData} from "@/lib/fileUtils";
-import piexif from "@/lib/piexif/piexif"
 import {doesImageExist} from "@/lib/markedExtension";
+import {SpinActivity} from "@/lib/spinner";
 
 function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(","),
@@ -104,7 +104,9 @@ export async function uploadMediaToServer(files) {
             reader.readAsDataURL(file);
 
             try {
-                file = await dataPromise;
+                await SpinActivity(async () => {
+                    file = await dataPromise;
+                });
             } catch (e) {
                 console.error("Failed to read file: ", e);
             }
@@ -116,10 +118,12 @@ export async function uploadMediaToServer(files) {
                 data.set('reqtype', 'fileupload');
                 data.set('fileToUpload', file, file.name);
 
-                const _res = await fetch('https://upload.goofy.media:444', {
-                    method: 'POST',
-                    body: data
-                });
+                const _res = await SpinActivity(async () => {
+                    return await fetch('https://upload.goofy.media:444', {
+                        method: 'POST',
+                        body: data
+                    });
+                })
 
                 url = await _res.text();
                 console.log("> Upload URL:", url);
