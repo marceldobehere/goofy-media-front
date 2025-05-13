@@ -7,11 +7,15 @@ import {GlobalStuff, logout, useGlobalState} from "@/lib/globalStateStuff";
 import {basePath, goPath} from "@/lib/goPath";
 import {useState} from "react";
 import {usePathname} from "next/navigation";
-import {getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
+import {getNewestNotification, getUnreadNotificationCount} from "@/lib/notifications/notificationUtils";
 import {useInterval} from "@/comp/unified_layout/userInterval";
 import {getProfileUrl} from "@/lib/publicInfo/links";
 import {initAssistant} from "@/comp/assistant/assistantStuff";
+import {initNotifications, tryGeneralNotification} from "@/lib/notifications";
 
+
+let initNotifDone = false;
+let lastNotifCount = undefined;
 export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     // divSizes = {left: "20vw", main: "60vw", right: "20vw"}
     let customStyles = {};
@@ -62,6 +66,9 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
                 document.title = "Goofy Media";
         }
         setNotifCount(count);
+        if (lastNotifCount != undefined && (count > lastNotifCount))
+            tryGeneralNotification(await getNewestNotification()).then();
+        lastNotifCount = count;
     }
 
     useInterval(() => {
@@ -71,8 +78,13 @@ export default function UnifiedMenu({mainDivData, rightDivData, divSizes}) {
     useGlobalState(pathName, false, false, async () => {
         setAdmin(GlobalStuff.admin);
         initAssistant(pathName).then();
-        if (GlobalStuff.loggedIn)
+        if (GlobalStuff.loggedIn) {
             loadNotifs().then();
+            if (!initNotifDone) {
+                initNotifDone = true;
+                initNotifications().then();
+            }
+        }
     }, () => {
         checkSizes();
     });

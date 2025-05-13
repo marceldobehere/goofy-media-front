@@ -14,6 +14,8 @@ export let LocalSettings = {
     openPostInNewTab: true,
     extendPostClickHitbox: false,
     overrideShowGlobalFeed: false,
+    generalNotificationType: "none",
+    newPostNotificationType: "none",
 };
 
 async function customCssReady() {
@@ -97,6 +99,8 @@ export async function loadLocalSettings() {
     LocalSettings.openPostInNewTab = await loadKeyOrDefault("openPostInNewTab", true);
     LocalSettings.extendPostClickHitbox = await loadKeyOrDefault("extendPostClickHitbox", false);
     LocalSettings.overrideShowGlobalFeed = await loadKeyOrDefault("overrideShowGlobalFeed", false);
+    LocalSettings.generalNotificationType = await loadKeyOrDefault("generalNotificationType", "none");
+    LocalSettings.newPostNotificationType = await loadKeyOrDefault("newPostNotificationType", "none");
 
     console.info("> Loaded Local Settings");
 }
@@ -111,6 +115,8 @@ export async function saveLocalSettings() {
     await saveKey("openPostInNewTab", LocalSettings.openPostInNewTab);
     await saveKey("extendPostClickHitbox", LocalSettings.extendPostClickHitbox);
     await saveKey("overrideShowGlobalFeed", LocalSettings.overrideShowGlobalFeed);
+    await saveKey("generalNotificationType", LocalSettings.generalNotificationType);
+    await saveKey("newPostNotificationType", LocalSettings.newPostNotificationType);
 
     await updateCustomCss();
 

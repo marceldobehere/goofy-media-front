@@ -13,6 +13,7 @@ import {deleteWithAuth, postNoAuth, postWithAuth} from "@/lib/req";
 import UnifiedMenu from "@/comp/unified_layout/unifiedMenu";
 import {registerUserWebhook} from "@/lib/notifications/notificationUtils";
 import {downloadTextFile, fileToString, uploadData} from "@/lib/fileUtils";
+import {checkNotifications, playBeep} from "@/lib/notifications";
 
 const QrCode = QRCodeGen.QrCode;
 
@@ -45,6 +46,8 @@ export default function Home() {
     const [openPostNewTab, setOpenPostNewTab] = useState(true);
     const [extendPostHitbox, setExtendPostHitbox] = useState(false);
     const [customCss, setCustomCss] = useState("");
+    const [generalNotifType, setGeneralNotifType] = useState("none");
+    const [newPostNotifType, setNewPostNotifType] = useState("none");
 
     const [qrSvg, setQrSvg] = useState({html: "", size: "0px"});
 
@@ -81,6 +84,9 @@ export default function Home() {
         setOpenPostNewTab(LocalSettings.openPostInNewTab);
         setExtendPostHitbox(LocalSettings.extendPostClickHitbox);
         setEnabledCustomPostAnimations(LocalSettings.enabledCustomPostAnimations);
+        setGeneralNotifType(LocalSettings.generalNotificationType);
+        setNewPostNotifType(LocalSettings.newPostNotificationType);
+
     });
 
     return <UnifiedMenu
@@ -158,8 +164,9 @@ export default function Home() {
                                 <hr/>
                                 <br/>
                                 <h3 style={{textAlign: "left"}}>Notification Settings</h3>
+                                <br/>
 
-                                General Notifications: &nbsp;
+                                <h4>General Notifications:</h4>
                                 <button onClick={async () => {
                                     const url = prompt("Enter Webhook URL: (Leave empty to remove notifications)")
                                     if (url == undefined)
@@ -170,11 +177,24 @@ export default function Home() {
                                     } else {
                                         alert("Failed to set webhook!");
                                     }
-                                }}>Set
+                                }}>Set Discord Webhook
                                 </button>
                                 <br/>
 
-                                New Posts from people you follow: &nbsp;
+                                Browser Notification: &nbsp;
+                                <select id="notification-type" onChange={async (e) => {
+                                    const type = e.target.value;
+                                    setGeneralNotifType(type);
+                                    await saveLocalSettingsKey("generalNotificationType", type);
+                                    await checkNotifications()
+                                }} value={generalNotifType}>
+                                    <option value="none">None</option>
+                                    <option value="audio">Audio</option>
+                                    <option value="notification">Notification</option>
+                                </select>
+
+                                <br/><br/>
+                                <h4>New Posts from people you follow:</h4>
                                 <button onClick={async () => {
                                     const url = prompt("Enter Webhook URL: (Leave empty to remove notifications)")
                                     if (url == undefined)
@@ -185,12 +205,28 @@ export default function Home() {
                                     } else {
                                         alert("Failed to set webhook!");
                                     }
-                                }}>Set
+                                }}>Set Discord Webhook
                                 </button>
                                 <br/>
 
 
+                                Browser Notification: &nbsp;
+                                <select id="notification-type" onChange={async (e) => {
+                                    const type = e.target.value;
+                                    setNewPostNotifType(type);
+                                    await saveLocalSettingsKey("newPostNotificationType", type);
+                                    await checkNotifications()
+                                }} value={newPostNotifType}>
+                                    <option value="none">None</option>
+                                    {/*<option value="audio">Audio</option>*/}
+                                    {/*<option value="notification">Notification</option>*/}
+                                </select>
+
+
                                 <br/><br/>
+                                <br/>
+                                <button onClick={playBeep}>Play Notification Sound</button>
+                                <br/>
                                 <button onClick={() => {
                                     alert("To set up webhook notifications you need to do the following:\n" +
                                         " - Create a Discord server (Or use one you own)\n" +

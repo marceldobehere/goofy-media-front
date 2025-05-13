@@ -257,12 +257,15 @@ Here are some of the implemented features:
 * [X] Read More Button
 * [X] Post Preview in Smol Link, make Headers add new lines
 * [X] Webhook show Display Names
+* [X] Improving the Navbar with a separator
 * [X] Improved Performance for Post Composer and Search
+* [X] Basic Desktop Notifications
+
 
 ### TODOs
 Here are some of my TODOs:
+* [ ] Upload without canvas stuff for security conscious people
 * [ ] Private Like Counts for your own posts
-* [ ] Improving the Navbar with a separator
 * [ ] Navbar with Icons
 * [ ] Make Navbar collapsible on desktop
 * [ ] Sending a test notification when setting up Webhooks
@@ -352,7 +355,8 @@ Here are some of my TODOs:
   * Maybe add grouping to the page based on topics/tags
 * [ ] Docs for writing bots + Example code?
 * [ ] Improving Trusted Domains (As a setting with a list of domains)
-* [ ] Potentially (optional) Push Notifications
+* [ ] Desktop Notifications for New Posts
+* [ ] Potentially Push Notifications
 * [ ] Potentially posts with HTML/CSS/JS embedded as iframes
 * [ ] Potentially support for ActivityPub / RSS for public servers
 * [ ] Live Notification polling using WS
@@ -361,7 +365,6 @@ Here are some of my TODOs:
 * [ ] Some form of user verification (like a badge or something)
 * [ ] Logging Register Code Requests + Feedback + Anonymous Feedback in the DB for Admins
 * [ ] Adding a way to contact the server owner (like a contact form or something)
-* 
 * [ ] Improving Client Caching
 * [ ] Improving Backend Caching
 * [ ] Improve Credits

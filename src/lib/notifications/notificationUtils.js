@@ -64,3 +64,11 @@ export async function registerUserWebhook(type, webhookUrl) {
 
     return true;
 }
+
+export async function getNewestNotification() {
+    const notifications = await getWithAuth("/user/notifications/", {"query-limit": 1, "query-start": 0});
+    if (notifications === undefined)
+        return undefined; // alert("Failed to get notifications");
+
+    return notifications[0];
+}
