@@ -95,7 +95,7 @@ export default function NotificationEntry({notification}) {
                         setPostTitle(post.title);
                 }
             }
-        }, getRandomIntInclusive(80,500));
+        }, getRandomIntInclusive(40,200));
     })
 
     return (

@@ -61,12 +61,12 @@ function PostEntry({post}) {
                 loadGetPostHtml().then((getPostHtml) => {
                     setInnerHTML(getPostHtml(post.text));
                 });
-            }, getRandomIntInclusive(50, 250))
+            }, getRandomIntInclusive(30, 210))
     }, [post]);
 
     useGlobalState(pathName, false, false, () => {
         if (post.likeOverride == undefined && GlobalStuff.loggedIn) {
-            setTimeout(checkLikedStatus, getRandomIntInclusive(50, 250));
+            setTimeout(checkLikedStatus, getRandomIntInclusive(70, 230));
 
             if (GlobalStuff.admin || post.author == GlobalStuff.userId)
                 setCanDelete(true);

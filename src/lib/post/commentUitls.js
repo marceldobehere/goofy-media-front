@@ -122,7 +122,7 @@ export async function transformCommentObjArr(commentObjArr) {
             createdAt: commentObj.comment.createdAt,
             replyCount: commentObj.replyCount,
             valid: async () => {
-                await sleep(getRandomIntInclusive(150, 1000));
+                await sleep(getRandomIntInclusive(120, 500));
                 const commentHash = await getHashFromObj(commentObj);
                 const res = await validCommentSigCache.get(commentHash, async () => {
                     return await validateCommentSignature(commentObj);

@@ -130,7 +130,7 @@ export async function transformPostObjArr(postObjArr) {
             uuid: postObj.uuid,
             commentCount: postObj.commentCount,
             valid: async () => {
-                await sleep(getRandomIntInclusive(150, 1000));
+                await sleep(getRandomIntInclusive(100, 500));
                 const postHash = await getHashFromObj(postObj);
                 const res = await validPostSigCache.get(postHash, async () => {
                     return await validatePostSignature(postObj);
