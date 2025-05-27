@@ -48,6 +48,7 @@ export default function Home() {
     const [customCss, setCustomCss] = useState("");
     const [generalNotifType, setGeneralNotifType] = useState("none");
     const [newPostNotifType, setNewPostNotifType] = useState("none");
+    const [uploadImagesUsingCanvas, setUploadImagesUsingCanvas] = useState(true);
 
     const [qrSvg, setQrSvg] = useState({html: "", size: "0px"});
 
@@ -86,7 +87,7 @@ export default function Home() {
         setEnabledCustomPostAnimations(LocalSettings.enabledCustomPostAnimations);
         setGeneralNotifType(LocalSettings.generalNotificationType);
         setNewPostNotifType(LocalSettings.newPostNotificationType);
-
+        setUploadImagesUsingCanvas(LocalSettings.uploadImagesUsingCanvas);
     });
 
     return <UnifiedMenu
@@ -156,6 +157,13 @@ export default function Home() {
                             const yes = e.target.checked;
                             await saveLocalSettingsKey("extendPostClickHitbox", yes);
                             setExtendPostHitbox(yes);
+                        }}/><br/>
+
+                        Upload Images using Canvas API: &nbsp;
+                        <input type="checkbox" checked={uploadImagesUsingCanvas} onChange={async (e) => {
+                            const yes = e.target.checked;
+                            await saveLocalSettingsKey("uploadImagesUsingCanvas", yes);
+                            setUploadImagesUsingCanvas(yes);
                         }}/><br/>
 
                         {GlobalStuff.loggedIn ?

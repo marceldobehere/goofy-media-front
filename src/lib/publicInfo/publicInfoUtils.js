@@ -7,6 +7,8 @@ import {CoolCache} from "@/lib/coolCache";
 import {uploadData} from "@/lib/fileUtils";
 import {doesImageExist} from "@/lib/markedExtension";
 import {SpinActivity} from "@/lib/spinner";
+import {LocalSettings} from "@/lib/localSettings";
+import piexif from "@/lib/piexif/piexif";
 
 function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(","),
@@ -21,7 +23,7 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 
-async function stripExifDataAndRotateCorrectly(ogDataUrlImage) {
+async function stripExifRotateAndCompressCanvas(ogDataUrlImage) {
     return await new Promise((res, rej) => {
             const image = new Image();
             image.onload = () => {
@@ -59,6 +61,35 @@ async function stripExifDataAndRotateCorrectly(ogDataUrlImage) {
 }
 
 
+async function stripExifRotateNoCanvas(ogDataUrlImage) {
+    const exif = piexif.load(ogDataUrlImage);
+    console.log(exif);
+
+    let orientation = exif["0th"]["274"]; // piexif.ImageIFDName.Orientation
+    console.log("Orientation: ", orientation);
+
+    // remove EXIF data
+    const newData = piexif.remove(ogDataUrlImage);
+
+    // Add Rotation data
+    const newData2 = piexif.insert(
+        piexif.dump({
+            "0th": {
+                "274": orientation,
+            }
+        }),
+        newData
+    );
+
+    // Check EXIF data
+    const exif2 = piexif.load(newData2);
+    console.log(exif2);
+
+    // console.log("Size 1: ", e.target.result.length);
+    // console.log("Size 2: ", resData.length);
+    return newData2;
+}
+
 export async function uploadMediaToServer(files) {
     try {
         if (files == undefined)
@@ -78,7 +109,10 @@ export async function uploadMediaToServer(files) {
                 reader.onload = async (e) => {
                     // read EXIF data and dump
                     try {
-                        const resData = await stripExifDataAndRotateCorrectly(e.target.result); // we get a DATA URL
+                        const resData =
+                            LocalSettings.uploadImagesUsingCanvas ?
+                                (await stripExifRotateAndCompressCanvas(e.target.result)) :
+                                (await stripExifRotateNoCanvas(e.target.result)); // we get a DATA URL
 
                         // // Check EXIF data
                         // const exif2 = piexif.load(resData);

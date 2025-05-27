@@ -16,6 +16,7 @@ export let LocalSettings = {
     overrideShowGlobalFeed: false,
     generalNotificationType: "none",
     newPostNotificationType: "none",
+    uploadImagesUsingCanvas: true,
 };
 
 async function customCssReady() {
@@ -101,6 +102,7 @@ export async function loadLocalSettings() {
     LocalSettings.overrideShowGlobalFeed = await loadKeyOrDefault("overrideShowGlobalFeed", false);
     LocalSettings.generalNotificationType = await loadKeyOrDefault("generalNotificationType", "none");
     LocalSettings.newPostNotificationType = await loadKeyOrDefault("newPostNotificationType", "none");
+    LocalSettings.uploadImagesUsingCanvas = await loadKeyOrDefault("uploadImagesUsingCanvas", true);
 
     console.info("> Loaded Local Settings");
 }
@@ -117,6 +119,7 @@ export async function saveLocalSettings() {
     await saveKey("overrideShowGlobalFeed", LocalSettings.overrideShowGlobalFeed);
     await saveKey("generalNotificationType", LocalSettings.generalNotificationType);
     await saveKey("newPostNotificationType", LocalSettings.newPostNotificationType);
+    await saveKey("uploadImagesUsingCanvas", LocalSettings.uploadImagesUsingCanvas);
 
     await updateCustomCss();
 
