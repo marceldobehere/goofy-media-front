@@ -119,7 +119,7 @@ export async function uploadMediaToServer(files) {
                 data.set('fileToUpload', file, file.name);
 
                 const _res = await SpinActivity(async () => {
-                    return await fetch('https://upload.goofy.media:444', {
+                    return await fetch('https://upload.goofy.media', {
                         method: 'POST',
                         body: data
                     });
@@ -311,7 +311,7 @@ export async function getUserPfpFromUserId(userId) {
 
     return pfpUrl.replaceAll(
         "https://files.catbox.moe/",
-        "https://upload.goofy.media:444/file/");
+        "https://upload.goofy.media/file/");
 }
 
 

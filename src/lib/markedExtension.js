@@ -264,7 +264,7 @@ const renderer = {
                     // console.log(url)
                     url = url.replaceAll(
                         "https://files.catbox.moe/",
-                        "https://upload.goofy.media:444/file/");
+                        "https://upload.goofy.media/file/");
                     // console.log(url)
 
 
